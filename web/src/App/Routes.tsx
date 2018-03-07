@@ -6,8 +6,9 @@ import { Home } from '../Containers/Home';
 // const AsyncHome = createAsyncComponent(() =>
 //   import('../Containers/Home').then(m => m.Home),
 // );
-const AsyncAdmin = createAsyncComponent(() =>
-  import('../Containers/Admin').then(m => m.Admin),
+const AsyncAdmin = createAsyncComponent(
+  () => import('../Containers/Admin').then(m => m.Admin),
+  () => <div>Loading...</div>,
 );
 
 export const Routes = () => (
