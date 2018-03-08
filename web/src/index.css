@@ -1,5 +1,86 @@
+:root {
+  --black: hsla(0, 0%, 0%, 0.8);
+  --black-alpha025: hsla(0, 0%, 0%, 0.25);
+  --default-color: hsla(0, 0%, 88%, 1);
+  --default-color-alpha07: hsla(0, 0%, 88%, 0.7);
+  --default-color-alpha02: hsla(0, 0%, 88%, 0.2);
+  --primary-color: hsla(207, 90%, 54%, 1);
+  --primary-color-alpha07: hsla(207, 90%, 54%, 0.7);
+  --primary-color-alpha02: hsla(207, 90%, 54%, 0.2);
+  --secondary-color: hsla(340, 100%, 63%, 1);
+  --secondary-color-alpha07: hsla(340, 100%, 63%, 0.7);
+  --secondary-color-alpha02: hsla(340, 100%, 63%, 0.2);
+  --error-color: hsla(348, 100%, 55%, 1);
+  --error-color-alpha02: hsla(348, 100%, 55%, 0.2);
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+}
+body * {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+button {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 16px;
+  background: transparent;
+  color: #2196f3;
+  line-height: 30px;
+}
+
+h1 {
+  font-weight: 300;
+  font-size: 32px;
+  margin: 12px 0;
+}
+h2 {
+  font-weight: 300;
+  font-size: 24px;
+  margin: 6px 0;
+}
+h3 {
+  font-weight: 300;
+  font-size: 20px;
+  margin: 6px 0;
+}
+span,
+p {
+  font-size: 16px;
+}
+ol,
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+dl {
+  margin: 0;
+}
+dl > * + * {
+  margin-top: 6px;
+}
+dl dt {
+  color: hsla(0, 0%, 0%, 0.6);
+}
+
+.BlueBackground {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+@keyframes Spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
