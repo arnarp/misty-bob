@@ -4,8 +4,10 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.5",
+    "draft-js": "^0.10.5",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
+    "normalize.css": "^8.0.0",
     "prettier": "^1.11.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.3",
+    "@types/draft-js": "^0.10.20",
     "@types/jest": "^22.2.0",
     "@types/node": "^9.4.6",
     "@types/react": "^16.0.40",
