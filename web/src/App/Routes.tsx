@@ -10,10 +10,14 @@ const AsyncAdmin = createAsyncComponent(
   () => import('../Containers/Admin').then(m => m.Admin),
   () => <div>Loading...</div>,
 );
+const AsyncTestBench = createAsyncComponent(() =>
+  import('../Containers/TestBench').then(m => m.TestBench),
+);
 
 export const Routes = () => (
   <Switch>
     <Route path="/" exact component={Home} />
     <Route path="/admin" component={AsyncAdmin} />
+    <Route path="/test" component={AsyncTestBench} />
   </Switch>
 );

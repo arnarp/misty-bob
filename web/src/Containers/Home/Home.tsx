@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../../Components/Buttons';
 
 interface HomeProps {}
 interface HomeState {}
@@ -10,7 +9,6 @@ export class Home extends React.PureComponent<HomeProps, HomeState> {
       <main>
         <h1>Home</h1>
         <Link to="/admin">Admin</Link>
-        <Button color="Default">Test</Button>
       </main>
     );
   }
