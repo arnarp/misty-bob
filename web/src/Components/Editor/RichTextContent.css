@@ -1,0 +1,19 @@
+.RichText {
+}
+.RichText .P,
+.RichText p {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+.RichText strong {
+  font-weight: bold;
+}
+@media (max-width: 767px) {
+  body {
+    font-size: 18px;
+  }
+  .RichText .P,
+  .RichText p {
+    margin-top: 6px;
+  }
+}

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Button } from '../../Components/Buttons';
-import { MyEditor } from '../../Components/Editor/MyEditor';
+import { RichTextEditorTestBench } from './RichEditorTestBench';
 
 interface TestBenchProps {}
 interface TestBenchState {}
@@ -14,8 +13,7 @@ export class TestBench extends React.PureComponent<
   render() {
     return (
       <main>
-        <Button color="Default">Test</Button>
-        <MyEditor />
+        <RichTextEditorTestBench />
       </main>
     );
   }

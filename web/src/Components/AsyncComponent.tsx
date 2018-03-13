@@ -22,9 +22,9 @@ export function createAsyncComponent<P>(
         this.setState(() => ({ pastDelay: true }));
       }, DELAY);
       const component = await importComponent();
-      this.setState({
+      this.setState(() => ({
         component,
-      });
+      }));
     }
 
     componentWillUnmount() {
