@@ -23,13 +23,13 @@ export class RichTextEditorTestBench extends React.PureComponent<
   render() {
     return (
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <div style={{ flexBasis: '50%' }}>
+        <div style={{ width: '50%' }}>
           <RichTextEditor
             editorState={this.state.editorState}
             onChange={this.onChange}
           />
         </div>
-        <div style={{ flexBasis: '50%' }}>
+        <div style={{ width: '50%' }}>
           <RichTextContent
             content={this.state.editorState.getCurrentContent()}
           />

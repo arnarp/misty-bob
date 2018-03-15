@@ -11,6 +11,7 @@ import {
 import 'draft-js/dist/Draft.css';
 import './RichTextContent.css';
 import './RichTextEditor.css';
+import { EditorControls } from './EditorControls';
 
 interface RichTextEditorProps {
   editorState: EditorState;
@@ -39,26 +40,24 @@ export class RichTextEditor extends React.PureComponent<
   render() {
     return (
       <div className="RichText RichTextEditor">
+        <EditorControls
+          onChange={this.props.onChange}
+          editorState={this.props.editorState}
+          blocks={['H2', 'H3']}
+        />
         <Editor
           editorState={this.props.editorState}
           onChange={this.props.onChange}
           blockStyleFn={getBlockStyle}
-          keyBindingFn={this.mapKeyToEditorCommand}
+          keyBindingFn={this.keyBindingFn}
           handleKeyCommand={this.handleKeyCommand}
         />
       </div>
     );
   }
-  private mapKeyToEditorCommand = (
+  private keyBindingFn = (
     e: React.KeyboardEvent<{}>,
   ): DraftEditorCommand | string | null => {
-    if (e.keyCode === 9 /* TAB */) {
-      const newEditorState = RichUtils.onTab(e, this.state.editorState, 4);
-      if (newEditorState !== this.state.editorState) {
-        this.props.onChange(newEditorState);
-      }
-      return null;
-    }
     return getDefaultKeyBinding(e);
   };
   private handleKeyCommand = (

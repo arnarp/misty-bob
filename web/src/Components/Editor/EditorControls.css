@@ -1,0 +1,9 @@
+.EditorControls {
+  display: flex;
+  flex-direction: row;
+  /* border-bottom: 1px solid var(--black-alpha025); */
+  box-shadow: inset 0px -1px 0px 0px var(--black-alpha025);
+}
+.EditorControls > * + * {
+  margin-left: 10px;
+}
