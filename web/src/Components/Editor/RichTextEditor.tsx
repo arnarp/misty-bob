@@ -18,7 +18,7 @@ interface RichTextEditorProps {
   onChange: (editorState: EditorState) => void;
 }
 
-const initialState = { editorState: EditorState.createEmpty() };
+const initialState = {};
 type RichTextEditorState = Readonly<typeof initialState>;
 
 const getBlockStyle = (block: ContentBlock): string => {
@@ -43,7 +43,7 @@ export class RichTextEditor extends React.PureComponent<
         <EditorControls
           onChange={this.props.onChange}
           editorState={this.props.editorState}
-          blocks={['H2', 'H3']}
+          blocks={['H2', 'H3', 'UL']}
         />
         <Editor
           editorState={this.props.editorState}
@@ -51,10 +51,22 @@ export class RichTextEditor extends React.PureComponent<
           blockStyleFn={getBlockStyle}
           keyBindingFn={this.keyBindingFn}
           handleKeyCommand={this.handleKeyCommand}
+          onTab={this.onTab}
         />
       </div>
     );
   }
+  private onTab = (e: React.KeyboardEvent<{}>): void => {
+    console.log('onTab', { ...e }, this.state, this.props);
+    const newEditorState = RichUtils.onTab(
+      e,
+      this.props.editorState,
+      4 /* maxDepth */,
+    );
+    if (newEditorState !== this.props.editorState) {
+      this.props.onChange(newEditorState);
+    }
+  };
   private keyBindingFn = (
     e: React.KeyboardEvent<{}>,
   ): DraftEditorCommand | string | null => {
@@ -64,6 +76,7 @@ export class RichTextEditor extends React.PureComponent<
     command: DraftEditorCommand | string,
     editorState: EditorState,
   ): DraftHandleValue => {
+    console.log('handleKeyCommand', command, this.props, this);
     const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
       this.props.onChange(newState);

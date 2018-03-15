@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  EditorState,
-  convertToRaw,
-  // RichUtils,
-  // getDefaultKeyBinding,
-} from 'draft-js';
+import { EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { RichTextEditor } from '../../Components/Editor';
 import { RichTextContent } from '../../Components/Editor/RichTextContent';
@@ -39,7 +34,5 @@ export class RichTextEditorTestBench extends React.PureComponent<
   }
   private onChange = (editorState: EditorState) => {
     this.setState(() => ({ editorState }));
-    // tslint:disable-next-line:no-console
-    console.log(convertToRaw(editorState.getCurrentContent()));
   };
 }
