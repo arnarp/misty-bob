@@ -57,7 +57,6 @@ export class RichTextEditor extends React.PureComponent<
     );
   }
   private onTab = (e: React.KeyboardEvent<{}>): void => {
-    console.log('onTab', { ...e }, this.state, this.props);
     const newEditorState = RichUtils.onTab(
       e,
       this.props.editorState,
@@ -76,7 +75,6 @@ export class RichTextEditor extends React.PureComponent<
     command: DraftEditorCommand | string,
     editorState: EditorState,
   ): DraftHandleValue => {
-    console.log('handleKeyCommand', command, this.props, this);
     const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
       this.props.onChange(newState);
