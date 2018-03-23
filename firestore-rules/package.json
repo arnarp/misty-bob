@@ -1,0 +1,8 @@
+{
+  "name": "misty-bob-firestore-rules",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "deploy": "firebase deploy --only firestore:rules"
+  }  
+}
