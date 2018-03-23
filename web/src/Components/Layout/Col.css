@@ -1,0 +1,19 @@
+.Col {
+  display: flex;
+  flex-direction: column;
+}
+.Col.Spacing-Medium > * + * {
+  margin-top: 12px;
+}
+.Col.JustifyContentStart {
+  justify-content: flex-start;
+}
+.Col.JustifyContentEnd {
+  justify-content: flex-end;
+}
+.Col.JustifyContentSpaceBetween {
+  justify-content: space-between;
+}
+.Col.JustifyContentCenter {
+  justify-content: center;
+}

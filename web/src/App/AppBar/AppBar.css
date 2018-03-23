@@ -1,0 +1,96 @@
+.AppBar {
+  height: 48px;
+  width: 100vw;
+  padding: 0 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 610px) {
+  .AppBar {
+    padding: 0 0 0 12px;
+  }
+}
+.AppBarNav {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+.AppBarNav > a {
+  color: white;
+}
+.AppBarNav > * + * {
+  margin-left: 24px;
+}
+.AppBar .UserBtn {
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background: transparent;
+  height: 48px;
+  width: 60px;
+  padding: 0 12px;
+  display: flex;
+  justify-content: flex-end;
+  outline: none;
+  position: relative;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.AppBar .UserBtn:active {
+  transform: scale(0.9);
+}
+.AppBar .UserBtn:before {
+  transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  content: '';
+  position: absolute;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  top: 6px;
+  left: 13px;
+}
+.AppBar .UserBtn:focus:before {
+  box-shadow: inset 1px 0px 0px 2px var(--primary-color-alpha02);
+}
+.AppBar .UserImg {
+  height: 32px;
+  width: 32px;
+  border-radius: 17px;
+}
+.AppBarAccountPopover {
+  display: flex;
+  flex-direction: column;
+}
+.AppBarAccountPopover .Info {
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  line-height: 24px;
+  overflow: hidden;
+}
+.AppBarAccountPopover .Info span {
+  font-size: 16px;
+}
+.AppBarAccountPopover .Info span.Bold {
+  font-weight: 400;
+}
+.AppBarAccountPopover .Info > * + * {
+  margin-left: 12px;
+}
+.AppBarAccountPopover .Info img {
+  height: 96px;
+  width: 96px;
+  border-radius: 48px;
+}
+.AppBarAccountPopover .ActionFooter {
+  /* background: #f5f5f5; */
+  border-top: 1px solid #ccc;
+  height: 51px;
+  width: 100%;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}

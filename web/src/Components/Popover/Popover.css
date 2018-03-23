@@ -1,0 +1,30 @@
+.PopoverContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+}
+.PopoverContainer.exited {
+  display: none;
+}
+.PopoverContainer .TransparentBackdrop {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.PopoverContainer .Popover {
+  position: fixed;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  max-width: calc(100vw - 24px);
+}
+.PopoverContainer .Popover.entering {
+  opacity: 0;
+}
+.PopoverContainer .Popover.entered {
+  opacity: 1;
+}

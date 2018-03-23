@@ -1,0 +1,6 @@
+.FixedActionPanel {
+  padding: 24px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}

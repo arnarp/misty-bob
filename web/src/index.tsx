@@ -5,5 +5,11 @@ import * as ReactDOM from 'react-dom';
 import { App } from './App';
 import registerServiceWorker from './registerServiceWorker';
 
+declare global {
+  interface HTMLElement {
+    inert: boolean
+  }
+}
+
 ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
 registerServiceWorker();

@@ -1,0 +1,31 @@
+.Svg.Fill-Default {
+  fill: var(--default-color);
+}
+.Svg.Fill-White {
+  fill: white;
+}
+.Svg.Fill-Primary {
+  fill: var(--primary-color);
+}
+.Svg.Fill-Secondary {
+  fill: var(--secondary-color);
+}
+.Svg.Fill-Error {
+  fill: var(--error-color);
+}
+.Svg.Size-Small {
+  height: 18px;
+  width: 18px;
+}
+.Svg.Size-Medium {
+  height: 24px;
+  width: 24px;
+}
+.Svg.Size-Large {
+  height: 36px;
+  width: 36px;
+}
+.Svg.Size-XLarge {
+  height: 48px;
+  width: 48px;
+}
