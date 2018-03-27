@@ -7,7 +7,7 @@ import { AddIcon } from 'src/Components/Icons/AddIcon';
 
 interface HomeProps {}
 interface HomeState {}
-export class Home extends React.PureComponent<HomeProps, HomeState> {
+export class HomePage extends React.PureComponent<HomeProps, HomeState> {
   render() {
     return (
       <main>
@@ -15,7 +15,7 @@ export class Home extends React.PureComponent<HomeProps, HomeState> {
         <h1>Home</h1>
         <Link to="/admin">Admin</Link>
         <FixedActionPanel>
-          <Button color="Primary" style="Action">
+          <Button color="Primary" style="Action" to="/create">
             <AddIcon color="White" size="Large" />
           </Button>
         </FixedActionPanel>

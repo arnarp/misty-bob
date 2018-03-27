@@ -3,9 +3,9 @@ import { User } from 'firebase/app';
 import { BrowserRouter } from 'react-router-dom';
 import { Routes } from './Routes';
 import './App.css';
-import { auth } from 'src/firebase';
-import { b64DecodeUnicode } from 'src/Utils/converters';
-import { UserClaims } from '../../../types/UserTokens';
+import { auth } from '../firebase';
+import { b64DecodeUnicode } from '../Utils/converters';
+import { UserClaims } from '../types/UserTokens';
 import { AppBar } from './AppBar';
 
 const initialState = {
@@ -41,7 +41,7 @@ export class App extends React.Component<{}, AppState> {
       <BrowserRouter>
         <>
           <AppBar user={this.state.user} onLogout={this.onLogout} />
-          <Routes />
+          <Routes user={this.state.user} />
         </>
       </BrowserRouter>
     );

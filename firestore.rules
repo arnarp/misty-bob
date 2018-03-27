@@ -1,0 +1,11 @@
+service cloud.firestore {
+  function isRequestResourceAuthor() {
+    return request.auth.uid == request.resource.data.authorUid;
+  }
+  match /databases/{database}/documents {
+    match /posts/{id} {
+      allow read;
+      allow create: if isRequestResourceAuthor();
+    }
+  }
+}

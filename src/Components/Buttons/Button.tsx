@@ -1,32 +1,45 @@
 import * as React from 'react';
-import './Button.css';
+import { Link } from 'react-router-dom';
 import * as classNames from 'classnames';
+import './Button.css';
 
 type ButtonStyle = 'Raised' | 'Action' | 'Flat';
 
-interface ButtonProps {
+type ButtonProps = {
   onClick?: () => void;
   disabled?: boolean;
   lookLikeDisabled?: boolean;
   color: 'Default' | 'Primary' | 'Secondary' | 'White';
   style?: ButtonStyle;
   type?: 'button' | 'submit';
-}
-interface ButtonState {}
-export class Button extends React.PureComponent<ButtonProps, ButtonState> {
-  constructor(props: ButtonProps) {
-    super(props);
-  }
+  to?: string;
+  width?: 'fit-content';
+};
+export class Button extends React.PureComponent<ButtonProps> {
   render() {
     const style: ButtonStyle = this.props.style || 'Raised';
+    const className = classNames(
+      'Button',
+      this.props.color,
+      `Style-${style}`,
+      this.props.width,
+      {
+        Disabled: this.props.lookLikeDisabled || this.props.disabled,
+      },
+    );
+    if (this.props.to) {
+      return (
+        <Link className={className} to={this.props.to}>
+          {this.props.children}
+        </Link>
+      );
+    }
     return (
       <button
         type={this.props.type || 'button'}
         disabled={this.props.disabled}
         onClick={this.props.onClick}
-        className={classNames('Button', this.props.color, `Style-${style}`, {
-          Disabled: this.props.lookLikeDisabled || this.props.disabled,
-        })}
+        className={className}
       >
         {this.props.children}
       </button>

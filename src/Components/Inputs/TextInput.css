@@ -1,0 +1,110 @@
+.TextInput {
+  margin: 0;
+  border: 0;
+  display: inline-flex;
+  padding: 0;
+  position: relative;
+  min-width: 0;
+  flex-direction: column;
+}
+.TextInput > label {
+  color: rgba(0, 0, 0, 0.54);
+  padding: 0;
+  line-height: 16px;
+  font-size: 16px;
+  transform-origin: top left;
+  top: 0;
+  left: 0;
+  position: absolute;
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  transform: translate(0, 24px) scale(1);
+}
+.TextInput.TextInput.Size-H1 > label {
+  font-size: 32px;
+  transform: translate(0, 32px) scale(1);
+}
+.TextInput.Error > label {
+  color: var(--error-color);
+}
+.TextInput.NotEmpty > label,
+.TextInput.Focus > label {
+  transform: translate(0, 0) scale(0.75);
+}
+.TextInput.TextInput.Size-H1.NotEmpty > label,
+.TextInput.TextInput.Size-H1.Focus > label {
+  transform: translate(0, 0) scale(0.375);
+}
+.TextInput > div {
+  margin-top: 16px;
+  color: rgba(0, 0, 0, 0.87);
+  display: inline-flex;
+  position: relative;
+  font-size: 16px;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+.TextInput.Error > div {
+  margin-bottom: 0;
+}
+.TextInput > div > input {
+  height: 32px;
+  width: 100%;
+  color: currentColor;
+  border: 0;
+  margin: 0;
+  padding: 6px 0 7px;
+  display: block;
+  background: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-size: 16px;
+}
+.TextInput.Size-H1 > div > input {
+  height: 42px;
+  font-size: 32px;
+  font-weight: 300;
+}
+.TextInput > div > input:focus {
+  outline: 0;
+}
+.TextInput > div::before {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  content: '';
+  position: absolute;
+  transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.42);
+}
+.TextInput > div:hover::before {
+  height: 2px;
+}
+.TextInput > div::after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  content: '';
+  position: absolute;
+  transform: scaleX(0);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+  background-color: var(--primary-color);
+}
+.TextInput.Error > div::after {
+  background-color: var(--error-color);
+}
+.TextInput.Focus > div::after {
+  transform: scaleX(1);
+}
+.TextInput p {
+  margin: 0;
+  font-size: 12px;
+  text-align: left;
+  margin-top: 6px;
+  min-height: 12px;
+}
+.TextInput.Error p.ErrorMessage {
+  color: var(--error-color);
+}

@@ -5,6 +5,8 @@ type DocumentTitleProps = {
   title: string;
 };
 
+const SITE_TITLE = 'MistyBob';
+
 class DocumentTitleClass extends React.PureComponent<DocumentTitleProps, {}> {
   render() {
     return null;
@@ -18,8 +20,12 @@ function reducePropsToState(propsList: DocumentTitleProps[]) {
   return undefined;
 }
 
-function handleStateChangeOnClient(props: DocumentTitleProps) {
-  document.title = 'MistyBob - ' + props.title;
+function handleStateChangeOnClient(props: DocumentTitleProps | undefined) {
+  if (props === undefined) {
+    document.title = SITE_TITLE;
+  } else {
+    document.title = `${SITE_TITLE} - ${props.title}`;
+  }
 }
 
 export const DocumentTitle = withSideEffect(
