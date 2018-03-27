@@ -14,11 +14,13 @@ type ButtonProps = {
   type?: 'button' | 'submit';
   to?: string;
   width?: 'fit-content';
+  className?: string;
 };
 export class Button extends React.PureComponent<ButtonProps> {
   render() {
     const style: ButtonStyle = this.props.style || 'Raised';
     const className = classNames(
+      this.props.className,
       'Button',
       this.props.color,
       `Style-${style}`,

@@ -7,7 +7,7 @@ const config = {
   authDomain: 'misty-bob.firebaseapp.com',
   databaseURL: 'https://misty-bob.firebaseio.com',
   projectId: 'misty-bob',
-  storageBucket: '',
+  storageBucket: 'gs://misty-bob.appspot.com/',
   messagingSenderId: '136623417703',
 };
 

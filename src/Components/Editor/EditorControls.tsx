@@ -58,6 +58,7 @@ export const EditorControls: React.SFC<EditorControlsProps> = ({
               RichUtils.toggleBlockType(editorState, BLOCK_STYLES[block].style),
             );
           }}
+          className="EditorControlsButton"
         >
           {BLOCK_STYLES[block].label}
         </Button>
