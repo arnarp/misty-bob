@@ -17,16 +17,3 @@ service cloud.firestore {
     }
   }
 }
-
-service firebase.storage {
-  function isAuthenticated() {
-    return request.auth != null
-  }
-  match /b/{bucket}/o {
-    match /images/{imageId} {
-      allow read;
-      allow write: if isAuthenticated()
-        && request.resource.contentType.matches('image/jpeg');
-    }
-  }
-}
