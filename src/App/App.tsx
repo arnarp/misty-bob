@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { User } from 'firebase/app';
 import { BrowserRouter } from 'react-router-dom';
 import { Routes } from './Routes';
 import './App.css';
 import { auth } from '../firebase';
 import { b64DecodeUnicode } from '../Utils/converters';
-import { UserClaims } from '../types/UserTokens';
+import { UserClaims, UserInfo } from 'src/types';
 import { AppBar } from './AppBar';
 
 const initialState = {
-  user: undefined as User | null | undefined,
+  userInfo: undefined as UserInfo | null | undefined,
   userClaims: undefined as UserClaims | undefined,
   initialized: false,
 };
@@ -29,7 +28,7 @@ export class App extends React.Component<{}, AppState> {
           this.setState(() => ({ userClaims }));
         });
       }
-      this.setState(() => ({ user }));
+      this.setState(() => ({ userInfo: user as UserInfo }));
     });
   }
   componentWillUnmount() {
@@ -40,8 +39,8 @@ export class App extends React.Component<{}, AppState> {
     return (
       <BrowserRouter>
         <>
-          <AppBar user={this.state.user} onLogout={this.onLogout} />
-          <Routes user={this.state.user} />
+          <AppBar userInfo={this.state.userInfo} onLogout={this.onLogout} />
+          <Routes userInfo={this.state.userInfo} />
         </>
       </BrowserRouter>
     );

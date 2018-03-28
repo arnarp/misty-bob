@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { User } from 'firebase/app';
 import { auth } from 'src/firebase';
 import { Popover, PopoverControl } from 'src/Components/Popover';
 import { Col } from 'src/Components/Layout/Col';
 import { Button } from 'src/Components/Buttons/Button';
 import './AppBar.css';
+import { UserInfo } from 'src/types';
 
 interface AppBarProps {
-  user?: User | null;
+  userInfo?: UserInfo | null;
   onLogout: () => void;
 }
 
@@ -20,15 +20,13 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
         <nav className="AppBarNav">
           <Link to="/">Heim </Link>
         </nav>
-        {this.props.user && (
+        {this.props.userInfo && (
           <Popover
             deltaY={-2}
             deltaX={12}
             button={
               <button className="UserBtn">
-                {this.props.user.photoURL && (
-                  <img className="UserImg" src={this.props.user.photoURL} />
-                )}
+                <img className="UserImg" src={this.props.userInfo.photoURL} />
               </button>
             }
             provideControl={ref => {
@@ -37,12 +35,12 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
           >
             <div className="AppBarAccountPopover">
               <div className="Info">
-                {this.props.user.photoURL && (
-                  <img src={this.props.user.photoURL} />
-                )}
+                <img src={this.props.userInfo.photoURL} />
                 <Col>
-                  <span className="Bold">{this.props.user.displayName}</span>
-                  <span>{this.props.user.email}</span>
+                  <span className="Bold">
+                    {this.props.userInfo.displayName}
+                  </span>
+                  <span>{this.props.userInfo.email}</span>
                 </Col>
               </div>
               <div className="ActionFooter">
@@ -65,7 +63,7 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
             </div>
           </Popover>
         )}
-        {!this.props.user && (
+        {!this.props.userInfo && (
           <Button
             color="Primary"
             style="Flat"

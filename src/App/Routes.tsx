@@ -4,7 +4,7 @@ import { createAsyncComponent } from '../Components/AsyncComponent';
 import { HomePage } from '../Containers/Home';
 import { NotFoundPage } from '../Containers/NotFound';
 import { CreateIndexPage } from '../Containers/Create';
-import { User } from 'firebase/app';
+import { UserInfo } from 'src/types';
 
 // const AsyncHome = createAsyncComponent(() =>
 //   import('../Containers/Home').then(m => m.Home),
@@ -18,7 +18,7 @@ const AsyncTestBench = createAsyncComponent(() =>
 );
 
 type RoutesProps = {
-  user?: User | null;
+  userInfo?: UserInfo | null;
 };
 
 export const Routes: React.SFC<RoutesProps> = props => (
@@ -27,8 +27,8 @@ export const Routes: React.SFC<RoutesProps> = props => (
     <Route
       path="/create"
       render={() => {
-        if (props.user) {
-          return <CreateIndexPage user={props.user} />;
+        if (props.userInfo) {
+          return <CreateIndexPage userInfo={props.userInfo} />;
         }
         return null;
       }}

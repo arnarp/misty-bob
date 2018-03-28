@@ -3,10 +3,17 @@ import { firestore } from 'firebase';
 import { RawDraftContentState } from 'draft-js';
 import { Overwrite, Omit } from './Utils';
 
+/**
+ * Base for user authored content.
+ * Extended by Post, Comment.
+ * Remember to edit firestore.rules for all who extend this
+ * when changing this interface.
+ */
 export type Authorable = Readonly<{
   id: string;
   authorUid: string;
   authorName: string;
+  authorPhotoURL: string;
   dateOfCreation: Date;
   dateOfLastUpdate?: Date;
 }>;

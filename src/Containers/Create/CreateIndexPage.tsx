@@ -1,18 +1,17 @@
 import * as React from 'react';
 import { EditorState, convertToRaw } from 'draft-js';
 import * as firebase from 'firebase';
-import { User } from 'firebase/app';
 import { DocumentTitle } from '../../Components/SideEffects/DocumentTitle';
 import { Col } from '../../Components/Layout/Col';
 import { TextInput } from '../../Components/Inputs/TextInput';
 import { RequiredTextInputValidator } from '../../Components/Inputs/TextInputValidators';
 import { RichTextEditor } from '../../Components/Editor';
 import { Button } from '../../Components/Buttons';
-import { NewPostDocument } from '../../types/Post';
+import { NewPostDocument, UserInfo } from 'src/types';
 import { firestore } from '../../firebase';
 
 type CreateIndexPageProps = {
-  user: User;
+  userInfo: UserInfo;
 };
 
 const initialState = {
@@ -77,8 +76,9 @@ export class CreateIndexPage extends React.PureComponent<
     this.setState(() => ({ hasClickedSubmit: true }));
     const post: NewPostDocument = {
       title: this.state.title,
-      authorUid: this.props.user.uid,
-      authorName: this.props.user.displayName || '',
+      authorUid: this.props.userInfo.uid,
+      authorName: this.props.userInfo.displayName,
+      authorPhotoURL: this.props.userInfo.photoURL,
       dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),
       content: convertToRaw(this.state.editorState.getCurrentContent()),
     };
