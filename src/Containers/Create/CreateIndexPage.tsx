@@ -80,6 +80,7 @@ export class CreateIndexPage extends React.PureComponent<
       authorName: this.props.userInfo.displayName,
       authorPhotoURL: this.props.userInfo.photoURL,
       dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),
+      dateOfLastActivity: firebase.firestore.FieldValue.serverTimestamp(),
       content: convertToRaw(this.state.editorState.getCurrentContent()),
     };
     firestore

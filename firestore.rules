@@ -5,8 +5,8 @@ service cloud.firestore {
   }
   match /databases/{database}/documents {
     function isValidNewPostDocument() {
-      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'title', 'content'])
-        && request.resource.data.size() == 6
+      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'dateOfLastActivity', 'title', 'content'])
+        && request.resource.data.size() == 7
         && request.resource.data.authorUid is string
         && request.resource.data.authorName is string
         && request.resource.data.authorPhotoURL is string

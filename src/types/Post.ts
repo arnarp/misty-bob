@@ -15,20 +15,24 @@ export type Authorable = Readonly<{
   authorName: string;
   authorPhotoURL: string;
   dateOfCreation: Date;
-  dateOfLastUpdate?: Date;
+  dateOfLastEdit?: Date;
 }>;
 
 export type Post = Authorable &
   Readonly<{
-    dateOfLastComment?: Date;
+    /** Starts as same as dateOfCreation and then will be the date of last comment */
+    dateOfLastActivity: Date;
     title: string;
     content: RawDraftContentState;
     comments?: Collection<DocumentId, Comment>;
   }>;
 
 export type NewPostDocument = Overwrite<
-  Omit<Post, 'id' | 'dateOfLastUpdate' | 'dateOfLastComment' | 'comments'>,
-  { dateOfCreation: firestore.FieldValue }
+  Omit<Post, 'id' | 'dateOfLastEdit' | 'comments'>,
+  {
+    dateOfCreation: firestore.FieldValue;
+    dateOfLastActivity: firestore.FieldValue;
+  }
 >;
 
 export type Comment = Authorable &
