@@ -1,0 +1,4 @@
+.Discussions a {
+  color: var(--default-text-color);
+  text-decoration: none;
+}

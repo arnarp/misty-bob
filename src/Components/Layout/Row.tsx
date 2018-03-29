@@ -1,35 +1,41 @@
-import * as React from 'react'
-import * as classNames from 'classnames'
-import './Row.css'
-import { ReactNode } from 'react'
+import * as React from 'react';
+import * as classNames from 'classnames';
+import './Row.css';
 
-interface RowProps {
-  children: ReactNode
-  spacing?: 'Medium'
-  justifyContent?: 'Start' | 'End' | 'SpaceBetween' | 'Center'
-  alignItems?: 'Center'
-  growChildren?: boolean
-  wrap?: boolean
-  breakPoint?: '610'
-}
+type RowProps = {
+  spacing?: 'Medium';
+  justifyContent?: 'Start' | 'End' | 'SpaceBetween';
+  alignItems?: 'Center';
+  growChildren?: boolean;
+  wrap?: boolean;
+  breakPoint?: '610';
+  as?: string;
+};
 
-export const Row = (props: RowProps) => (
-  <div
-    className={classNames(
-      'Row',
-      props.spacing ? `Spacing-${props.spacing}` : '',
-      {
-        JustifyContentStart: props.justifyContent === 'Start',
-        JustifyContentEnd: props.justifyContent === 'End',
-        JustifyContentSpaceBetween: props.justifyContent === 'SpaceBetween',
-        JustifyContentCenter: props.justifyContent === 'Center',
-        AlignItemsCenter: props.alignItems === 'Center',
-        GrowChildren: props.growChildren,
-        Wrap: props.wrap,
-        Break610: props.breakPoint === '610',
-      },
-    )}
-  >
-    {props.children}
-  </div>
-)
+export const Row: React.SFC<RowProps> = ({
+  spacing,
+  justifyContent,
+  alignItems,
+  growChildren,
+  wrap,
+  breakPoint,
+  children,
+  as,
+}) => {
+  const As = as || 'div';
+  return (
+    <As
+      className={classNames('Row', spacing ? `Spacing-${spacing}` : '', {
+        JustifyContentStart: justifyContent === 'Start',
+        JustifyContentEnd: justifyContent === 'End',
+        JustifyContentSpaceBetween: justifyContent === 'SpaceBetween',
+        AlignItemsCenter: alignItems === 'Center',
+        GrowChildren: growChildren,
+        Wrap: wrap,
+        Break610: breakPoint === '610',
+      })}
+    >
+      {children}
+    </As>
+  );
+};

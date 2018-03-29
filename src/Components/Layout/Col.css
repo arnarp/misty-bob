@@ -17,3 +17,9 @@
 .Col.JustifyContentCenter {
   justify-content: center;
 }
+ul.Col,
+ol.Col {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

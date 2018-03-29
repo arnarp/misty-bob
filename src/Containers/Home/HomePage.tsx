@@ -6,7 +6,7 @@ import { AddIcon } from 'src/Components/Icons/AddIcon';
 import { firestore } from 'src/firebase';
 import { Post } from 'src/types';
 import { mapDocument } from 'src/types/FirestoreSchema';
-import { Col, Row } from 'src/Components/Layout';
+import { Discussions } from '../../Components/Discussions';
 
 type HomePageProps = {};
 const initialState = { posts: [] as Post[] };
@@ -16,7 +16,7 @@ export class HomePage extends React.PureComponent<
   HomePageProps,
   HomePageState
 > {
-  subscriptions: Array<() => void> = [];
+  readonly subscriptions: Array<() => void> = [];
   readonly state: HomePageState = initialState;
   componentDidMount() {
     const subscription = firestore
@@ -34,8 +34,7 @@ export class HomePage extends React.PureComponent<
     return (
       <main>
         <DocumentTitle title="Forsíða" />
-        <h1>Home</h1>
-        <Col>{this.state.posts.map(p => <Row key={p.id}>{p.title}</Row>)}</Col>
+        <Discussions posts={this.state.posts} />
         <FixedActionPanel>
           <Button color="Primary" style="Action" to="/create">
             <AddIcon color="White" size="Large" />

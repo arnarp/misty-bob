@@ -1,28 +1,37 @@
-import * as React from 'react'
-import * as classNames from 'classnames'
-import './Col.css'
+import * as React from 'react';
+import * as classNames from 'classnames';
+import './Col.css';
 
-interface ColProps {
-  children: React.ReactNode
-  spacing?: 'Medium'
-  justifyContent?: 'Start' | 'End' | 'SpaceBetween' | 'Center'
-  className?: string
-}
+type ColProps = {
+  spacing?: 'Medium';
+  justifyContent?: 'Start' | 'End' | 'SpaceBetween' | 'Center';
+  className?: string;
+  as?: string;
+};
 
-export const Col = (props: ColProps) => (
-  <div
-    className={classNames(
-      'Col',
-      props.spacing ? `Spacing-${props.spacing}` : '',
-      {
-        JustifyContentStart: props.justifyContent === 'Start',
-        JustifyContentEnd: props.justifyContent === 'End',
-        JustifyContentSpaceBetween: props.justifyContent === 'SpaceBetween',
-        JustifyContentCenter: props.justifyContent === 'Center',
-      },
-      props.className,
-    )}
-  >
-    {props.children}
-  </div>
-)
+export const Col: React.SFC<ColProps> = ({
+  as,
+  spacing,
+  justifyContent,
+  className,
+  children,
+}) => {
+  const As = as || 'div';
+  return (
+    <As
+      className={classNames(
+        'Col',
+        spacing ? `Spacing-${spacing}` : '',
+        {
+          JustifyContentStart: justifyContent === 'Start',
+          JustifyContentEnd: justifyContent === 'End',
+          JustifyContentSpaceBetween: justifyContent === 'SpaceBetween',
+          JustifyContentCenter: justifyContent === 'Center',
+        },
+        className,
+      )}
+    >
+      {children}
+    </As>
+  );
+};
