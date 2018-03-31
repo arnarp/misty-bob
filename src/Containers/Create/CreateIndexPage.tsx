@@ -51,6 +51,7 @@ export class CreateIndexPage extends React.PureComponent<
               <RichTextEditor
                 editorState={this.state.editorState}
                 onChange={this.onEditorChange}
+                editorControls={['H2', 'H3']}
               />
               <Button width="fit-content" type="submit" color="Default">
                 Senda

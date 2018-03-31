@@ -12,10 +12,12 @@ import 'draft-js/dist/Draft.css';
 import './RichTextContent.css';
 import './RichTextEditor.css';
 import { EditorControls } from './EditorControls';
+import { Block } from 'src/types/Block';
 
 interface RichTextEditorProps {
   editorState: EditorState;
   onChange: (editorState: EditorState) => void;
+  editorControls?: Block[];
 }
 
 const initialState = {};
@@ -40,11 +42,13 @@ export class RichTextEditor extends React.PureComponent<
   render() {
     return (
       <div className="RichText RichTextEditor">
-        <EditorControls
-          onChange={this.props.onChange}
-          editorState={this.props.editorState}
-          blocks={['H2', 'H3', 'UL']}
-        />
+        {this.props.editorControls && (
+          <EditorControls
+            onChange={this.props.onChange}
+            editorState={this.props.editorState}
+            blocks={this.props.editorControls}
+          />
+        )}
         <Editor
           editorState={this.props.editorState}
           onChange={this.props.onChange}

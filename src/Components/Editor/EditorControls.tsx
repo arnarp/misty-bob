@@ -2,18 +2,7 @@ import * as React from 'react';
 import { EditorState, RichUtils } from 'draft-js';
 import { Button } from '../Buttons';
 import './EditorControls.css';
-
-type Block =
-  | 'H1'
-  | 'H2'
-  | 'H3'
-  | 'H4'
-  | 'H5'
-  | 'H6'
-  | 'Blockquote'
-  | 'UL'
-  | 'OL'
-  | 'Code Block';
+import { Block } from 'src/types';
 
 const BLOCK_STYLES: { [B in Block]: { label: string; style: string } } = {
   H1: { label: 'H1', style: 'header-one' },
