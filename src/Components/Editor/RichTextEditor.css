@@ -1,3 +1,6 @@
+.RichTextEditor {
+  flex-grow: 1;
+}
 .RichTextEditor .public-DraftEditor-content {
   min-height: 100px;
 }

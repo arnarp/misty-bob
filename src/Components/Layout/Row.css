@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
 }
-.Row.Spacing-Medium > * + * {
+.Row.Spacing-medium > * + * {
   margin-left: 12px;
 }
 .Row.JustifyContentStart {

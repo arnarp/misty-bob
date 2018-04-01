@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import './Row.css';
 
 type RowProps = {
-  spacing?: 'Medium';
+  spacing?: 'medium';
   justifyContent?: 'Start' | 'End' | 'SpaceBetween';
   alignItems?: 'Center';
   growChildren?: boolean;

@@ -34,7 +34,10 @@ export const Routes: React.SFC<RoutesProps> = props => (
         return null;
       }}
     />
-    <Route path="/d/:id" component={DiscussionPage} />
+    <Route
+      path="/d/:id"
+      render={p => <DiscussionPage {...p} userInfo={props.userInfo} />}
+    />
     <Route path="/admin" component={AsyncAdmin} />
     <Route path="/test" component={AsyncTestBench} />
     <Route component={NotFoundPage} />

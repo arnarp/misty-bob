@@ -22,8 +22,8 @@ export class Discussions extends React.PureComponent<
     return (
       <Col as="ol" className="Discussions">
         {this.props.posts.map(p => (
-          <Row as="li" key={p.id} spacing="Medium">
-            <Avatar photoURL={p.authorPhotoURL} />
+          <Row as="li" key={p.id} spacing="medium">
+            <Avatar photoURL={p.authorPhotoURL} size="default" />
             <Link to={`/d/${p.id}`}>
               <h3>{p.title}</h3>
             </Link>

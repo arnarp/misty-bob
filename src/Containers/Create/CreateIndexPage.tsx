@@ -36,10 +36,10 @@ export class CreateIndexPage extends React.PureComponent<
     return (
       <main>
         <DocumentTitle title="Stofna nýjan póst" />
-        <Col spacing="Medium">
+        <Col spacing="medium">
           <h1>Stofna nýjan póst</h1>
           <form onSubmit={this.onSubmit}>
-            <Col spacing="Medium">
+            <Col spacing="medium">
               <TextInput
                 size="h1"
                 label="Titill færslu"

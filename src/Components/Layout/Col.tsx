@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import './Col.css';
 
 type ColProps = {
-  spacing?: 'Medium';
+  spacing?: 'medium' | 'large';
   justifyContent?: 'Start' | 'End' | 'SpaceBetween' | 'Center';
   className?: string;
   as?: string;

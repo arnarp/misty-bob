@@ -18,6 +18,7 @@ interface RichTextEditorProps {
   editorState: EditorState;
   onChange: (editorState: EditorState) => void;
   editorControls?: Block[];
+  placeholder?: string;
 }
 
 const initialState = {};
@@ -50,6 +51,7 @@ export class RichTextEditor extends React.PureComponent<
           />
         )}
         <Editor
+          placeholder={this.props.placeholder}
           editorState={this.props.editorState}
           onChange={this.props.onChange}
           blockStyleFn={getBlockStyle}

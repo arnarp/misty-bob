@@ -2,8 +2,11 @@
   display: flex;
   flex-direction: column;
 }
-.Col.Spacing-Medium > * + * {
+.Col.Spacing-medium > * + * {
   margin-top: 12px;
+}
+.Col.Spacing-large > * + * {
+  margin-top: 24px;
 }
 .Col.JustifyContentStart {
   justify-content: flex-start;
