@@ -1,8 +1,8 @@
 export type MainColors =
-  | 'Default'
-  | 'White'
-  | 'Primary'
-  | 'Secondary'
+  | 'default'
+  | 'white'
+  | 'primary'
+  | 'secondary'
   | 'Error'
   | 'Green';
 export type Sizes = 'Small' | 'Medium' | 'Large' | 'XLarge';

@@ -6,7 +6,7 @@
     "classnames": "^2.2.5",
     "draft-js": "^0.10.5",
     "draft-js-export-html": "^1.2.0",
-    "firebase": "^4.11.0",
+    "firebase": "4.12.1",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
     "normalize.css": "^8.0.0",
@@ -42,6 +42,9 @@
     "typescript": "^2.7.2"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": ["prettier --single-quote --write", "git add"]
+    "src/**/*.{js,jsx,json,css}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   }
 }

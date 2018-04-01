@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { convertFromRaw, EditorState } from 'draft-js';
-import { DocumentTitle } from 'src/Components/SideEffects/DocumentTitle';
-import { Col, Row } from 'src/Components/Layout';
-import { Post, UserInfo } from 'src/types';
+import * as firebase from 'firebase';
+import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
+import {
+  Post,
+  UserInfo,
+  NewCommentDocument,
+  mapDocument,
+  Comment,
+} from 'src/types';
 import { firestore } from 'src/firebase';
-import { mapDocument } from '../../types/FirestoreSchema';
-import { RichTextContent } from '../../Components/Editor/RichTextContent';
-import { Avatar } from '../../Components/Discussions/Avatar';
-import { RichTextEditor } from '../../Components/Editor';
+import { DocumentTitle } from 'src/Components/SideEffects';
+import { Col, Row } from 'src/Components/Layout';
+import { RichTextContent, RichTextEditor } from 'src/Components/Editor';
+import { Avatar } from 'src/Components/Discussions/Avatar';
+import { Section } from 'src/Components/Layout/Section';
+import { Button } from 'src/Components/Buttons';
 import './DiscussionPage.css';
 
 interface DiscussionPageProps extends RouteComponentProps<{ id: string }> {
@@ -17,6 +24,7 @@ interface DiscussionPageProps extends RouteComponentProps<{ id: string }> {
 
 const initialState = {
   post: undefined as undefined | null | Post,
+  comments: undefined as undefined | Comment[],
   editorState: EditorState.createEmpty(),
 };
 type DiscussionPageState = Readonly<typeof initialState>;
@@ -25,20 +33,31 @@ export class DiscussionPage extends React.PureComponent<
   DiscussionPageProps,
   DiscussionPageState
 > {
+  postRef: firebase.firestore.DocumentReference;
   readonly state: DiscussionPageState = initialState;
   readonly subscriptions: Array<() => void> = [];
+
   componentDidMount() {
-    const postSubscription = firestore
+    this.postRef = firestore
       .collection('posts')
-      .doc(this.props.match.params.id)
-      .onSnapshot(doc => {
-        if (doc.exists) {
-          this.setState(() => ({ post: mapDocument(doc) }));
-        } else {
-          this.setState(() => ({ post: null }));
-        }
-      });
+      .doc(this.props.match.params.id) as firebase.firestore.DocumentReference;
+    const postSubscription = this.postRef.onSnapshot(doc => {
+      if (doc.exists) {
+        this.setState(() => ({ post: mapDocument(doc) }));
+      } else {
+        this.setState(() => ({ post: null }));
+      }
+    });
     this.subscriptions.push(postSubscription);
+    const commentsSubscription = this.postRef
+      .collection('comments')
+      .orderBy('dateOfCreation', 'asc')
+      .onSnapshot(snapshot => {
+        this.setState(() => ({
+          comments: snapshot.docs.map(d => mapDocument(d)),
+        }));
+      });
+    this.subscriptions.push(commentsSubscription);
   }
   componentWillUnmount() {
     this.subscriptions.forEach(u => u());
@@ -48,8 +67,8 @@ export class DiscussionPage extends React.PureComponent<
       <main>
         {this.state.post && (
           <Col spacing="large">
-            <div>
-              <DocumentTitle title={this.state.post.title} />
+            <DocumentTitle title={this.state.post.title} />
+            <Section>
               <Row spacing="medium">
                 <Avatar
                   photoURL={this.state.post.authorPhotoURL}
@@ -68,22 +87,56 @@ export class DiscussionPage extends React.PureComponent<
               <RichTextContent
                 content={convertFromRaw(this.state.post.content)}
               />
-            </div>
-            <Col className="Discussion-Comments">
-              {this.props.userInfo && (
-                <Row spacing="medium">
-                  <Avatar
-                    photoURL={this.props.userInfo.photoURL}
-                    size="large"
-                  />
-                  <RichTextEditor
-                    placeholder="Skrifaðu athugasemd"
-                    editorState={this.state.editorState}
-                    onChange={this.onEditorChange}
-                  />
-                </Row>
-              )}
-            </Col>
+            </Section>
+            {this.state.comments && (
+              <Section className="Discussion-Comments">
+                <Col spacing="medium" as="ol" seperators>
+                  {this.state.comments.map(c => (
+                    <Row as="li" key={c.id} spacing="medium">
+                      <Avatar photoURL={c.authorPhotoURL} size="large" />
+                      <Col spacing="medium">
+                        <Col>
+                          <span>{c.authorName}</span>
+                          <time>
+                            {new Intl.DateTimeFormat('fr').format(
+                              c.dateOfCreation,
+                            )}
+                          </time>
+                        </Col>
+                        <RichTextContent content={convertFromRaw(c.content)} />
+                      </Col>
+                    </Row>
+                  ))}
+                </Col>
+              </Section>
+            )}
+            {this.props.userInfo && (
+              <Section className="Discussion-New-Comment" sideMargins={false}>
+                <form onSubmit={this.submitNewComment}>
+                  <Row spacing="medium">
+                    <Avatar
+                      photoURL={this.props.userInfo.photoURL}
+                      size="large"
+                    />
+                    <RichTextEditor
+                      placeholder="Skrifaðu athugasemd"
+                      editorState={this.state.editorState}
+                      onChange={this.onEditorChange}
+                    />
+                  </Row>
+                  <Row justifyContent="end">
+                    <Button
+                      width="fit-content"
+                      style="flat"
+                      type="submit"
+                      color="default"
+                    >
+                      Senda svar
+                    </Button>
+                  </Row>
+                </form>
+              </Section>
+            )}
           </Col>
         )}
       </main>
@@ -91,5 +144,32 @@ export class DiscussionPage extends React.PureComponent<
   }
   private onEditorChange = (editorState: EditorState) => {
     this.setState(() => ({ editorState }));
+  };
+  private submitNewComment = (event: React.FormEvent<{}>) => {
+    event.preventDefault();
+    if (this.props.userInfo) {
+      const newComment: NewCommentDocument = {
+        authorName: this.props.userInfo.displayName,
+        authorUid: this.props.userInfo.uid,
+        authorPhotoURL: this.props.userInfo.photoURL,
+        content: convertToRaw(this.state.editorState.getCurrentContent()),
+        dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),
+      };
+      this.postRef
+        .collection('comments')
+        .add(newComment)
+        .then(() => {
+          console.log('comment added');
+          this.setState(() => ({ editorState: EditorState.createEmpty() }));
+        })
+        .catch((reason: firebase.firestore.FirestoreError) => {
+          console.log(
+            'add comment rejected',
+            reason.code,
+            reason.message,
+            reason.name,
+          );
+        });
+    }
   };
 }

@@ -12,9 +12,20 @@ service cloud.firestore {
         && request.resource.data.authorPhotoURL is string
         && request.resource.data.title is string;
     }
+    function isValidNewCommentDocument() {
+      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'content'])
+        && request.resource.data.size() == 5
+        && request.resource.data.authorUid is string
+        && request.resource.data.authorName is string
+        && request.resource.data.authorPhotoURL is string
+    }
     match /posts/{id} {
       allow read;
       allow create: if isRequestResourceAuthor() && isValidNewPostDocument();
+      match /comments/{id} {
+        allow read;
+        allow create: if isRequestResourceAuthor() && isValidNewCommentDocument();
+      }
     }
   }
 }

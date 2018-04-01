@@ -24,11 +24,16 @@ export type Post = Authorable &
     dateOfLastActivity: Date;
     title: string;
     content: RawDraftContentState;
+    // comments?: Collection<DocumentId, Comment>;
+  }>;
+
+export type PostDocument = Post &
+  Readonly<{
     comments?: Collection<DocumentId, Comment>;
   }>;
 
 export type NewPostDocument = Overwrite<
-  Omit<Post, 'id' | 'dateOfLastEdit' | 'comments'>,
+  Omit<Post, 'id' | 'dateOfLastEdit'>,
   {
     dateOfCreation: firestore.FieldValue;
     dateOfLastActivity: firestore.FieldValue;
@@ -37,5 +42,12 @@ export type NewPostDocument = Overwrite<
 
 export type Comment = Authorable &
   Readonly<{
-    content: string;
+    content: RawDraftContentState;
   }>;
+
+export type NewCommentDocument = Overwrite<
+  Omit<Comment, 'id' | 'dateOfLastEdit'>,
+  {
+    dateOfCreation: firestore.FieldValue;
+  }
+>;

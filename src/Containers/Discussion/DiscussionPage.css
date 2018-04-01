@@ -1,3 +1,13 @@
 .Discussion-Comments {
-  background-color: rgb(250, 250, 250);
+  border-top: 1px solid #e7edf3;
+}
+
+.Discussion-Comments ol > * {
+  padding: 12px;
+}
+
+.Discussion-New-Comment {
+  border-top: 2px dashed #e7edf3;
+  border-bottom: 2px dashed #e7edf3;
+  padding: 12px;
 }

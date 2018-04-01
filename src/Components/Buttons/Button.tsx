@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import * as classNames from 'classnames';
 import './Button.css';
 
-type ButtonStyle = 'Raised' | 'Action' | 'Flat';
+type ButtonStyle = 'Raised' | 'Action' | 'flat';
 
 type ButtonProps = {
   onClick?: () => void;
   disabled?: boolean;
   lookLikeDisabled?: boolean;
-  color: 'Default' | 'Primary' | 'Secondary' | 'White';
+  color: 'default' | 'primary' | 'secondary' | 'white';
   style?: ButtonStyle;
   type?: 'button' | 'submit';
   to?: string;

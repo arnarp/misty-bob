@@ -10,9 +10,9 @@ export class Admin extends React.PureComponent<AdminProps, AdminState> {
       <main>
         <h1>Admin</h1>
         <Link to="/test">Admin</Link>
-        <Button color="White">Test</Button>
-        <Button color="Primary">Test</Button>
-        <Button color="Secondary">Test</Button>
+        <Button color="white">Test</Button>
+        <Button color="primary">Test</Button>
+        <Button color="secondary">Test</Button>
       </main>
     );
   }

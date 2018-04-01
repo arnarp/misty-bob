@@ -4,8 +4,8 @@ import './Row.css';
 
 type RowProps = {
   spacing?: 'medium';
-  justifyContent?: 'Start' | 'End' | 'SpaceBetween';
-  alignItems?: 'Center';
+  justifyContent?: 'start' | 'end' | 'spaceBetween';
+  alignItems?: 'center';
   growChildren?: boolean;
   wrap?: boolean;
   breakPoint?: '610';
@@ -26,10 +26,10 @@ export const Row: React.SFC<RowProps> = ({
   return (
     <As
       className={classNames('Row', spacing ? `Spacing-${spacing}` : '', {
-        JustifyContentStart: justifyContent === 'Start',
-        JustifyContentEnd: justifyContent === 'End',
-        JustifyContentSpaceBetween: justifyContent === 'SpaceBetween',
-        AlignItemsCenter: alignItems === 'Center',
+        JustifyContentStart: justifyContent === 'start',
+        JustifyContentEnd: justifyContent === 'end',
+        JustifyContentSpaceBetween: justifyContent === 'spaceBetween',
+        AlignItemsCenter: alignItems === 'center',
         GrowChildren: growChildren,
         Wrap: wrap,
         Break610: breakPoint === '610',

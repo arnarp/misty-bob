@@ -4,7 +4,8 @@ import './Col.css';
 
 type ColProps = {
   spacing?: 'medium' | 'large';
-  justifyContent?: 'Start' | 'End' | 'SpaceBetween' | 'Center';
+  seperators?: boolean;
+  justifyContent?: 'start' | 'end' | 'spaceBetween' | 'center';
   className?: string;
   as?: string;
 };
@@ -15,6 +16,7 @@ export const Col: React.SFC<ColProps> = ({
   justifyContent,
   className,
   children,
+  seperators,
 }) => {
   const As = as || 'div';
   return (
@@ -23,10 +25,11 @@ export const Col: React.SFC<ColProps> = ({
         'Col',
         spacing ? `Spacing-${spacing}` : '',
         {
-          JustifyContentStart: justifyContent === 'Start',
-          JustifyContentEnd: justifyContent === 'End',
-          JustifyContentSpaceBetween: justifyContent === 'SpaceBetween',
-          JustifyContentCenter: justifyContent === 'Center',
+          JustifyContentStart: justifyContent === 'start',
+          JustifyContentEnd: justifyContent === 'end',
+          JustifyContentSpaceBetween: justifyContent === 'spaceBetween',
+          JustifyContentCenter: justifyContent === 'center',
+          Seperators: seperators,
         },
         className,
       )}

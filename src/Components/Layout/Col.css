@@ -26,3 +26,6 @@ ol.Col {
   margin: 0;
   padding: 0;
 }
+.Col.Seperators > * + * {
+  border-top: 1px solid #e7edf3;
+}

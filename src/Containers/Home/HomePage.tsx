@@ -7,6 +7,7 @@ import { firestore } from 'src/firebase';
 import { Post } from 'src/types';
 import { mapDocument } from 'src/types/FirestoreSchema';
 import { Discussions } from '../../Components/Discussions';
+import { Section } from 'src/Components/Layout/Section';
 
 type HomePageProps = {};
 const initialState = { posts: [] as Post[] };
@@ -34,10 +35,12 @@ export class HomePage extends React.PureComponent<
     return (
       <main>
         <DocumentTitle title="Forsíða" />
-        <Discussions posts={this.state.posts} />
+        <Section>
+          <Discussions posts={this.state.posts} />
+        </Section>
         <FixedActionPanel>
-          <Button color="Primary" style="Action" to="/create">
-            <AddIcon color="White" size="Large" />
+          <Button color="primary" style="Action" to="/create">
+            <AddIcon color="white" size="Large" />
           </Button>
         </FixedActionPanel>
       </main>

@@ -38,9 +38,9 @@ export const EditorControls: React.SFC<EditorControlsProps> = ({
       {blocks.map(block => (
         <Button
           color={
-            BLOCK_STYLES[block].style === blockType ? 'Primary' : 'Default'
+            BLOCK_STYLES[block].style === blockType ? 'primary' : 'default'
           }
-          style="Flat"
+          style="flat"
           key={BLOCK_STYLES[block].label}
           onClick={() => {
             onChange(

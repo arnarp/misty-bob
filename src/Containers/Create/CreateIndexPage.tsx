@@ -53,7 +53,7 @@ export class CreateIndexPage extends React.PureComponent<
                 onChange={this.onEditorChange}
                 editorControls={['H2', 'H3']}
               />
-              <Button width="fit-content" type="submit" color="Default">
+              <Button width="fit-content" type="submit" color="default">
                 Senda
               </Button>
             </Col>

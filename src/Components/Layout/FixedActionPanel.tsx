@@ -6,7 +6,7 @@ type FixedActionPanelProps = {};
 
 export const FixedActionPanel: React.SFC<FixedActionPanelProps> = props => (
   <div className="FixedActionPanel">
-    <Row spacing="medium" justifyContent="End">
+    <Row spacing="medium" justifyContent="end">
       {props.children}
     </Row>
   </div>

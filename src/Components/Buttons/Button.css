@@ -23,7 +23,7 @@
 .Button:focus {
   outline: 1px solid white;
 }
-.Button.White:focus {
+.Button.white:focus {
   outline: 1px solid var(--primary-color);
 }
 
@@ -63,90 +63,90 @@
     inset 1px 1px 0px 2px white;
 }
 
-.Button.Style-Flat {
+.Button.Style-flat {
   height: 36px;
   padding: 6px 12px;
   outline: 1px solid transparent;
 }
-.Button.Style-Flat:active {
+.Button.Style-flat:active {
   transform: scale(0.9);
 }
 
-.Button.Default {
+.Button.default {
   color: var(--black);
   background-color: transparent;
   border: 1px solid var(--default-color);
 }
-.Button.Default:hover {
+.Button.default:hover {
   /* background-color: var(--default-color); */
 }
-.Button.Default.Disabled {
+.Button.default.Disabled {
   color: hsla(0, 0%, 0%, 0.5);
   background-color: var(--default-color-alpha07);
 }
-.Button.Style-Flat.Default {
+.Button.Style-flat.default {
   color: var(--black);
   background-color: transparent;
 }
-.Button.Style-Flat.Default.Disabled {
+.Button.Style-flat.default.Disabled {
   color: var(--black-alpha025);
 }
-.Button.Style-Flat.Default:focus {
+.Button.Style-flat.default:focus {
   outline: 1px solid var(--default-color-alpha07);
 }
 
-.Button.Primary {
+.Button.primary {
   color: white;
   background-color: var(--primary-color);
 }
-.Button.Primary:hover {
+.Button.primary:hover {
   background-color: var(--primary-color);
 }
-.Button.Primary.Disabled {
+.Button.primary.Disabled {
   color: rgba(0, 0, 0, 0.5);
   background-color: var(--primary-color-alpha07);
 }
-.Button.Style-Flat.Primary {
+.Button.Style-flat.primary {
   color: var(--primary-color);
   background-color: transparent;
 }
-.Button.Style-Flat.Primary.Disabled {
+.Button.Style-flat.primary.Disabled {
   color: var(--primary-color-alpha02);
 }
-.Button.Style-Flat.Primary:focus {
+.Button.Style-flat.primary:focus {
   outline: 1px solid var(--primary-color-alpha02);
 }
 
-.Button.Secondary {
+.Button.secondary {
   color: white;
   background-color: var(--secondary-color);
 }
-.Button.Secondary:hover {
+.Button.secondary:hover {
   background-color: var(--secondary-color);
 }
-.Button.Secondary.Disabled {
+.Button.secondary.Disabled {
   color: rgba(0, 0, 0, 0.5);
   background-color: var(--secondary-color-alpha07);
 }
-.Button.Style-Flat.Secondary {
+.Button.Style-flat.secondary {
   color: var(--secondary-color);
   background-color: transparent;
 }
-.Button.Style-Flat.Secondary.Disabled {
+.Button.Style-flat.secondary.Disabled {
   color: var(--secondary-color-alpha02);
 }
-.Button.Style-Flat.Secondary:focus {
+.Button.Style-flat.secondary:focus {
   outline: 1px solid var(--secondary-color-alpha02);
 }
 
-.Button.Style-Flat.White {
+.Button.Style-flat.white {
   color: white;
   background-color: transparent;
 }
-.Button.Style-Flat.White.Disabled {
+.Button.Style-flat.white.Disabled {
   color: hsla(100, 100%, 100%, 0.2);
 }
-.Button.Style-Flat.White:focus {
+.Button.Style-flat.white:focus {
   outline: 1px solid hsla(100, 100%, 100%, 0.2);
 }
 

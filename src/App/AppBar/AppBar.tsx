@@ -45,8 +45,8 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
               </div>
               <div className="ActionFooter">
                 <Button
-                  color="Primary"
-                  style="Flat"
+                  color="primary"
+                  style="flat"
                   onClick={() => {
                     if (this.popover) {
                       this.popover.closePopover();
@@ -65,8 +65,8 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
         )}
         {!this.props.userInfo && (
           <Button
-            color="Primary"
-            style="Flat"
+            color="primary"
+            style="flat"
             onClick={() => {
               const provider = new auth.GoogleAuthProvider();
               auth()
