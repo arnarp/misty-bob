@@ -16,5 +16,12 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "functions": {
+    "predeploy": [
+      "tsc --project tsconfig.functions.json",
+      "cp src/functions/package.json build_functions/"
+    ],
+    "source": "build_functions"
   }
 }
