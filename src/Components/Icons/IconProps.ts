@@ -3,9 +3,9 @@ export type MainColors =
   | 'white'
   | 'primary'
   | 'secondary'
-  | 'Error'
-  | 'Green';
-export type Sizes = 'Small' | 'Medium' | 'Large' | 'XLarge';
+  | 'error'
+  | 'green';
+export type Sizes = 'small' | 'medium' | 'large' | 'xLarge';
 
 export type IconProps = {
   color?: MainColors;

@@ -83,6 +83,7 @@ export class CreateIndexPage extends React.PureComponent<
       dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),
       dateOfLastActivity: firebase.firestore.FieldValue.serverTimestamp(),
       content: convertToRaw(this.state.editorState.getCurrentContent()),
+      numberOfComments: 0,
     };
     firestore
       .collection('posts')

@@ -40,7 +40,7 @@ export class HomePage extends React.PureComponent<
         </Section>
         <FixedActionPanel>
           <Button color="primary" style="Action" to="/create">
-            <AddIcon color="white" size="Large" />
+            <AddIcon color="white" size="large" />
           </Button>
         </FixedActionPanel>
       </main>

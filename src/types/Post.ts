@@ -24,10 +24,10 @@ export type Post = Authorable &
     dateOfLastActivity: Date;
     title: string;
     content: RawDraftContentState;
-    // comments?: Collection<DocumentId, Comment>;
+    numberOfComments: number;
   }>;
 
-export type PostDocument = Post &
+export type PostDocument = Omit<Post, 'id'> &
   Readonly<{
     comments?: Collection<DocumentId, Comment>;
   }>;
@@ -44,6 +44,8 @@ export type Comment = Authorable &
   Readonly<{
     content: RawDraftContentState;
   }>;
+
+export type CommentDocument = Omit<Comment, 'id'>;
 
 export type NewCommentDocument = Overwrite<
   Omit<Comment, 'id' | 'dateOfLastEdit'>,

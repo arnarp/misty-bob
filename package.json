@@ -28,7 +28,8 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "deploy:firestore:rules": "firebase deploy --only firestore:rules",
-    "deploy:storage:rules": "firebase deploy --only storage"
+    "deploy:storage:rules": "firebase deploy --only storage",
+    "deploy:functions": "firebase deploy --only functions"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.3",
@@ -44,9 +45,6 @@
     "typescript": "^2.7.2"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": [
-      "prettier --single-quote --write",
-      "git add"
-    ]
+    "src/**/*.{js,jsx,json,css}": ["prettier --single-quote --write", "git add"]
   }
 }

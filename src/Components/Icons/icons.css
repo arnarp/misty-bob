@@ -1,31 +1,31 @@
-.Svg.Fill-Default {
+.Svg.Fill-default {
   fill: var(--default-color);
 }
-.Svg.Fill-White {
+.Svg.Fill-white {
   fill: white;
 }
-.Svg.Fill-Primary {
+.Svg.Fill-primary {
   fill: var(--primary-color);
 }
-.Svg.Fill-Secondary {
+.Svg.Fill-secondary {
   fill: var(--secondary-color);
 }
-.Svg.Fill-Error {
+.Svg.Fill-error {
   fill: var(--error-color);
 }
-.Svg.Size-Small {
+.Svg.Size-small {
   height: 18px;
   width: 18px;
 }
-.Svg.Size-Medium {
+.Svg.Size-medium {
   height: 24px;
   width: 24px;
 }
-.Svg.Size-Large {
+.Svg.Size-large {
   height: 36px;
   width: 36px;
 }
-.Svg.Size-XLarge {
+.Svg.Size-xLarge {
   height: 48px;
   width: 48px;
 }

@@ -19,6 +19,7 @@
   },
   "functions": {
     "predeploy": [
+      "rm -rf build_functions",
       "tsc --project tsconfig.functions.json",
       "cp src/functions/package.json build_functions/"
     ],

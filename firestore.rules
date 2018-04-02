@@ -5,12 +5,13 @@ service cloud.firestore {
   }
   match /databases/{database}/documents {
     function isValidNewPostDocument() {
-      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'dateOfLastActivity', 'title', 'content'])
-        && request.resource.data.size() == 7
+      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'dateOfLastActivity', 'title', 'content', 'numberOfComments'])
+        && request.resource.data.size() == 8
         && request.resource.data.authorUid is string
         && request.resource.data.authorName is string
         && request.resource.data.authorPhotoURL is string
-        && request.resource.data.title is string;
+        && request.resource.data.title is string
+        && request.resource.data.numberOfComments == 0;
     }
     function isValidNewCommentDocument() {
       return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'content'])
