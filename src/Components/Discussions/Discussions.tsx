@@ -4,6 +4,7 @@ import { Col, Row } from 'src/Components/Layout';
 import { Avatar } from './Avatar';
 import { Link } from 'react-router-dom';
 import './Discussions.css';
+import { CommentIcon } from '../Icons/CommentIcon';
 
 type DiscussionsProps = {
   posts: Post[];
@@ -24,9 +25,17 @@ export class Discussions extends React.PureComponent<
         {this.props.posts.map(p => (
           <Row as="li" key={p.id} spacing="medium">
             <Avatar photoURL={p.authorPhotoURL} size="default" />
-            <Link to={`/d/${p.id}`}>
-              <h3>{p.title}</h3>
-            </Link>
+            <Row justifyContent="spaceBetween" grow>
+              <Link to={`/d/${p.id}`}>
+                <h3>{p.title}</h3>
+              </Link>
+              <Col justifyContent="center">
+                <Row spacing="small" alignItems="center">
+                  <span>{p.numberOfComments}</span>
+                  <CommentIcon size="small" color="primary" />
+                </Row>
+              </Col>
+            </Row>
           </Row>
         ))}
       </Col>

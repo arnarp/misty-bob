@@ -13,6 +13,12 @@
 .Svg.Fill-error {
   fill: var(--error-color);
 }
+.Svg.Stroke-default {
+  stroke: var(--default-color);
+}
+.Svg.Stroke-primary {
+  stroke: var(--primary-color);
+}
 .Svg.Size-small {
   height: 18px;
   width: 18px;

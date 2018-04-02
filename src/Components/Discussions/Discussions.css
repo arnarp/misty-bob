@@ -2,3 +2,9 @@
   color: var(--default-text-color);
   text-decoration: none;
 }
+.Discussions h3 {
+  margin: 0;
+}
+.Discussions * {
+  line-height: 36px;
+}

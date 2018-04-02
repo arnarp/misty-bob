@@ -5,6 +5,9 @@
 .Row.Spacing-medium > * + * {
   margin-left: 12px;
 }
+.Row.Spacing-small > * + * {
+  margin-left: 6px;
+}
 .Row.JustifyContentStart {
   justify-content: flex-start;
 }
@@ -23,6 +26,7 @@
 .Row.Wrap {
   flex-wrap: wrap;
 }
+.Row.Grow,
 .Row.GrowChildren > * {
   flex-grow: 1;
 }
