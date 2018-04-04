@@ -4,16 +4,16 @@ import { CommentDocument, PostDocument } from 'src/types/Post';
 
 export const onCommentCreate = firestore
   .document('posts/{postId}/comments/{commentId}')
-  .onCreate(event => {
-    const newComment = event.data.data() as CommentDocument;
+  .onCreate((snapshot, context) => {
+    const newComment = snapshot.data() as CommentDocument;
     console.log('onCommentCreated', newComment);
-    if (event.params === undefined) {
+    if (context === undefined || context.params.postId === undefined) {
       return Promise.resolve();
     }
     const postRef = admin
       .firestore()
       .collection('posts')
-      .doc(event.params.postId);
+      .doc(context.params.postId);
     if (postRef === null) {
       return Promise.resolve();
     }

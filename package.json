@@ -8,7 +8,7 @@
     "draft-js-export-html": "^1.2.0",
     "firebase": "4.12.1",
     "firebase-admin": "^5.11.0",
-    "firebase-functions": "^0.9.1",
+    "firebase-functions": "^1.0.0",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
     "normalize.css": "^8.0.0",
@@ -29,7 +29,9 @@
     "eject": "react-scripts-ts eject",
     "deploy:firestore:rules": "firebase deploy --only firestore:rules",
     "deploy:storage:rules": "firebase deploy --only storage",
-    "deploy:functions": "firebase deploy --only functions"
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy": "firebase deploy"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.3",
@@ -45,6 +47,9 @@
     "typescript": "^2.7.2"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": ["prettier --single-quote --write", "git add"]
+    "src/**/*.{js,jsx,json,css}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   }
 }
