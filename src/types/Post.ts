@@ -30,7 +30,10 @@ export type Post = Authorable &
 export type PostDocument = Omit<Post, 'id'> &
   Readonly<{
     comments?: Collection<DocumentId, Comment>;
+    subscribers?: Collection<UID, Subscriber>;
   }>;
+
+export type Subscriber = {};
 
 export type NewPostDocument = Overwrite<
   Omit<Post, 'id' | 'dateOfLastEdit'>,
