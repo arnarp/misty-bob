@@ -1,4 +1,4 @@
-import { Collection, DocumentId } from './FirestoreSchema';
+import { Collection, DocumentId, UID } from './FirestoreSchema';
 import { firestore } from 'firebase';
 import { RawDraftContentState } from 'draft-js';
 import { Overwrite, Omit } from './Utils';
@@ -11,7 +11,7 @@ import { Overwrite, Omit } from './Utils';
  */
 export type Authorable = Readonly<{
   id: string;
-  authorUid: string;
+  authorUid: UID;
   authorName: string;
   authorPhotoURL: string;
   dateOfCreation: Date;

@@ -6,8 +6,18 @@ import { App } from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 declare global {
+  const enum Env {
+    Prod = 'production',
+    Test = 'test',
+    Dev = 'development',
+  }
   interface HTMLElement {
-    inert: boolean
+    inert: boolean;
+  }
+  namespace NodeJS {
+    interface ProcessEnv {
+      NODE_ENV: Env;
+    }
   }
 }
 

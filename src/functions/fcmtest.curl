@@ -1,9 +1,0 @@
-curl -X POST -H "Authorization: Bearer AIzaSyA6nYFzdDsyffXCla8qNkGQNNSm-FEe5C0" -H "Content-Type: application/json" -d '{
-"message":{
-  "notification": {
-    "title": "Misty Bob",
-    "body": "Bob says hello",
-  },
-  "token": "dF6XbwAkVW4:APA91bH9yKCbL4YcIqe8jEz8KljK5OMYOm-3fakPwJ5gQHKU9EFGp8x9SgspVsQMVpIxy1dnvroiupK1mW9ySmdjobVMOCGG0sHVfH32skwoevUQB8UMBu3DPKJaUDsW-e8sPn2YIvou"
-  }
-}' "https://fcm.googleapis.com/v1/projects/misty-bob /messages:send"

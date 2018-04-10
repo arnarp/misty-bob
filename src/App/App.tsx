@@ -1,11 +1,21 @@
 import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import * as firebase from 'firebase/app';
 import { Routes } from './Routes';
 import './App.css';
-import { auth } from '../firebase';
+import { auth, messaging, functions, refreshFCMToken } from '../firebase';
 import { b64DecodeUnicode } from '../Utils/converters';
 import { UserClaims, UserInfo } from 'src/types';
 import { AppBar } from './AppBar';
+
+async function getClaims(user: firebase.User | null) {
+  if (user === null) {
+    return undefined;
+  }
+  return user.getIdToken().then(token => {
+    return JSON.parse(b64DecodeUnicode(token.split('.')[1])) as UserClaims;
+  });
+}
 
 const initialState = {
   userInfo: undefined as UserInfo | null | undefined,
@@ -19,17 +29,42 @@ export class App extends React.Component<{}, AppState> {
   readonly state: AppState = initialState;
 
   componentDidMount() {
-    this.removeAuthStateChangeListener = auth().onAuthStateChanged(user => {
-      if (user) {
-        user.getIdToken().then(idToken => {
-          const userClaims = JSON.parse(
-            b64DecodeUnicode(idToken.split('.')[1]),
-          );
-          this.setState(() => ({ userClaims }));
-        });
-      }
-      this.setState(() => ({ userInfo: user as UserInfo }));
-    });
+    this.removeAuthStateChangeListener = auth().onAuthStateChanged(
+      async user => {
+        const userClaims = await getClaims(user);
+        this.setState(() => ({ userInfo: user as UserInfo, userClaims }));
+        if (user === null) {
+          return;
+        }
+        if (process.env.NODE_ENV === 'production') {
+          const messagingRequestPermisson = messaging.requestPermission();
+          if (messagingRequestPermisson === null) {
+            return;
+          }
+          messagingRequestPermisson
+            .then(() => {
+              console.log('Notification permission granted.');
+              const getTokenPromise = messaging.getToken();
+              if (getTokenPromise === null) {
+                return;
+              }
+              getTokenPromise
+                .then((refreshedToken: string) => {
+                  console.log('Token refreshed.', refreshedToken);
+                  refreshFCMToken().catch(result => {
+                    console.log('httpsCallableResult error', result);
+                  });
+                })
+                .catch((err: any) => {
+                  console.log('Unable to retrieve refreshed token ', err);
+                });
+            })
+            .catch((err: any) => {
+              console.log('Unable to get permission to notify.', err);
+            });
+        }
+      },
+    );
   }
   componentWillUnmount() {
     this.removeAuthStateChangeListener();
