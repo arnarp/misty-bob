@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { auth } from 'src/firebase';
-import { Popover, PopoverControl } from 'src/Components/Popover';
-import { Col } from 'src/Components/Layout/Col';
-import { Button } from 'src/Components/Buttons/Button';
+import { auth } from '../../firebase';
+import { Popover, PopoverControl } from '../../Components/Popover';
+import { Col } from '../../Components/Layout/Col';
+import { Button } from '../../Components/Buttons/Button';
 import './AppBar.css';
-import { UserInfo } from 'src/types';
+import { UserInfo } from '../../types';
 
 interface AppBarProps {
   userInfo?: UserInfo | null;

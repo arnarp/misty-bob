@@ -1,8 +1,13 @@
 import { firestore } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { CommentDocument, PostDocument, Post } from 'src/types/Post';
 import { DocumentReference } from '@google-cloud/firestore';
-import { mapDocument, UserMeta } from 'src/types';
+import {
+  mapDocument,
+  UserMeta,
+  CommentDocument,
+  PostDocument,
+  Post,
+} from '../../types';
 
 export const onCommentCreate = firestore
   .document('posts/{postId}/comments/{commentId}')
@@ -42,7 +47,6 @@ const updateNumberOfComments = (
           ? post.dateOfLastActivity
           : newComment.dateOfCreation,
     };
-    console.log('onCommentCreated', 'update', post.title, postUpdate);
     return transaction.update(postRef, postUpdate);
   });
 
@@ -60,7 +64,7 @@ const sendNotifications = async (
       title: `${newComment.authorName} skrifaði ummæli við innlegg ${
         post.title
       }`,
-      body: '',
+      body: newComment.content.blocks.map(i => i.text).join(' '),
       clickAction: `https://misty-bob.firebaseapp.com/d/${post.id}`,
     },
   };

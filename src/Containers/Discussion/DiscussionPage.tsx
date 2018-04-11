@@ -8,14 +8,14 @@ import {
   NewCommentDocument,
   mapDocument,
   Comment,
-} from 'src/types';
-import { firestore } from 'src/firebase';
-import { DocumentTitle } from 'src/Components/SideEffects';
-import { Col, Row } from 'src/Components/Layout';
-import { RichTextContent, RichTextEditor } from 'src/Components/Editor';
-import { Avatar } from 'src/Components/Discussions/Avatar';
-import { Section } from 'src/Components/Layout/Section';
-import { Button } from 'src/Components/Buttons';
+} from '../../types';
+import { firestore } from '../../firebase';
+import { DocumentTitle } from '../../Components/SideEffects';
+import { Col, Row } from '../../Components/Layout';
+import { RichTextContent, RichTextEditor } from '../../Components/Editor';
+import { Avatar } from '../../Components/Discussions/Avatar';
+import { Section } from '../../Components/Layout/Section';
+import { Button } from '../../Components/Buttons';
 import './DiscussionPage.css';
 
 interface DiscussionPageProps extends RouteComponentProps<{ id: string }> {

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { createAsyncComponent } from 'src/Components/AsyncComponent';
-import { HomePage } from 'src/Containers/Home';
-import { NotFoundPage } from 'src/Containers/NotFound';
-import { CreateIndexPage } from 'src/Containers/Create';
-import { UserInfo } from 'src/types';
-import { DiscussionPage } from 'src/Containers/Discussion';
+import { createAsyncComponent } from '../Components/AsyncComponent';
+import { HomePage } from '../Containers/Home';
+import { NotFoundPage } from '../Containers/NotFound';
+import { CreateIndexPage } from '../Containers/Create';
+import { UserInfo } from '../types';
+import { DiscussionPage } from '../Containers/Discussion';
 
 // const AsyncHome = createAsyncComponent(() =>
 //   import('../Containers/Home').then(m => m.Home),

@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import * as firebase from 'firebase/app';
 import { Routes } from './Routes';
 import './App.css';
-import { auth, messaging, functions, refreshFCMToken } from '../firebase';
+import { auth, messaging, refreshFCMToken } from '../firebase';
 import { b64DecodeUnicode } from '../Utils/converters';
 import { UserClaims, UserInfo } from 'src/types';
 import { AppBar } from './AppBar';

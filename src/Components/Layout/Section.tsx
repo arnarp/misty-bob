@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { Col } from 'src/Components/Layout';
+import { Col } from '../../Components/Layout';
 import './Section.css';
 
 type SectionProps = { className?: string; sideMargins?: boolean };

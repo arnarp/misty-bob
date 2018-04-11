@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Post } from 'src/types';
-import { Col, Row } from 'src/Components/Layout';
-import { Avatar } from './Avatar';
 import { Link } from 'react-router-dom';
-import './Discussions.css';
+import { Post } from '../../types';
+import { Col, Row } from '../../Components/Layout';
 import { CommentIcon } from '../Icons/CommentIcon';
+import { Avatar } from './Avatar';
+import './Discussions.css';
 
 type DiscussionsProps = {
   posts: Post[];

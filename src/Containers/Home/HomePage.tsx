@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { DocumentTitle } from 'src/Components/SideEffects/DocumentTitle';
-import { FixedActionPanel } from 'src/Components/Layout/FixedActionPanel';
-import { Button } from 'src/Components/Buttons';
-import { AddIcon } from 'src/Components/Icons/AddIcon';
-import { firestore } from 'src/firebase';
-import { Post } from 'src/types';
-import { mapDocument } from 'src/types/FirestoreSchema';
+import { DocumentTitle } from '../../Components/SideEffects/DocumentTitle';
+import { FixedActionPanel } from '../../Components/Layout/FixedActionPanel';
+import { Button } from '../../Components/Buttons';
+import { AddIcon } from '../../Components/Icons/AddIcon';
+import { firestore } from '../../firebase';
+import { Post } from '../../types';
+import { mapDocument } from '../../types/FirestoreSchema';
 import { Discussions } from '../../Components/Discussions';
-import { Section } from 'src/Components/Layout/Section';
+import { Section } from '../../Components/Layout/Section';
 
 type HomePageProps = {};
 const initialState = { posts: [] as Post[] };
