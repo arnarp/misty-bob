@@ -2,14 +2,12 @@ import { firestore } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { CommentDocument, PostDocument, Post } from 'src/types/Post';
 import { DocumentReference } from '@google-cloud/firestore';
-import { mapDocument } from '../types';
-import { UserMeta } from '../types/UserMeta';
+import { mapDocument, UserMeta } from 'src/types';
 
 export const onCommentCreate = firestore
   .document('posts/{postId}/comments/{commentId}')
   .onCreate((snapshot, context) => {
     const newComment = snapshot.data() as CommentDocument;
-    console.log('onCommentCreated', newComment);
     if (context === undefined || context.params.postId === undefined) {
       return Promise.resolve();
     }

@@ -3,8 +3,8 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp(functions.config().firebase);
 
-export { onCommentCreate } from './onCommentCreate';
-export { refreshFCMToken } from './httpsCallable';
+export * from './firestoreEvents';
+export * from './httpsCallable';
 
 export const helloWorld = functions.https.onRequest(
   async (request, response) => {

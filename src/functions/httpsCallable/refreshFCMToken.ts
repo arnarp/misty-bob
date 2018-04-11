@@ -36,6 +36,7 @@ export const refreshFCMToken = functions.https.onCall((data, context) => {
               i => (i.token === fcmToken ? newToken : i),
             ),
     };
-    return transaction.update(userMetaDocRef, userMetaDocumentUpdate);
+    await transaction.update(userMetaDocRef, userMetaDocumentUpdate);
+    return { message: 'ok' };
   });
 });
