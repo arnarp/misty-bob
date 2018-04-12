@@ -154,6 +154,7 @@ export class DiscussionPage extends React.PureComponent<
         authorPhotoURL: this.props.userInfo.photoURL,
         content: convertToRaw(this.state.editorState.getCurrentContent()),
         dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),
+        numberOfLikes: 0,
       };
       this.postRef
         .collection('comments')

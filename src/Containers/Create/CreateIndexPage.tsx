@@ -72,7 +72,6 @@ export class CreateIndexPage extends React.PureComponent<
   };
 
   private onSubmit(event: React.FormEvent<{}>) {
-    console.log('onSubmit', this.props);
     event.preventDefault();
     this.setState(() => ({ hasClickedSubmit: true }));
     const post: NewPostDocument = {
@@ -84,6 +83,7 @@ export class CreateIndexPage extends React.PureComponent<
       dateOfLastActivity: firebase.firestore.FieldValue.serverTimestamp(),
       content: convertToRaw(this.state.editorState.getCurrentContent()),
       numberOfComments: 0,
+      numberOfLikes: 0,
     };
     firestore
       .collection('posts')

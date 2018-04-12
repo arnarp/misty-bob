@@ -10,15 +10,24 @@ import { Overwrite, Omit } from './Utils';
  * when changing this interface.
  */
 export type Authorable = Readonly<{
-  id: string;
+  id: DocumentId;
   authorUid: UID;
   authorName: string;
   authorPhotoURL: string;
   dateOfCreation: Date;
+}>;
+
+export type Editable = Readonly<{
   dateOfLastEdit?: Date;
 }>;
 
+export type Likeable = Readonly<{
+  numberOfLikes: number;
+}>;
+
 export type Post = Authorable &
+  Likeable &
+  Editable &
   Readonly<{
     /** Starts as same as dateOfCreation and then will be the date of last comment */
     dateOfLastActivity: Date;
@@ -44,6 +53,8 @@ export type NewPostDocument = Overwrite<
 >;
 
 export type Comment = Authorable &
+  Likeable &
+  Editable &
   Readonly<{
     content: RawDraftContentState;
   }>;

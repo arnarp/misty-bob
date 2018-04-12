@@ -3,30 +3,52 @@ service cloud.firestore {
     return request.auth.uid == request.resource.data.authorUid
       && request.auth.token.name == request.resource.data.authorName;
   }
+  function isResourceAuthor() {
+    return request.auth.uid === resource.data.authorUid;
+  }
+  function isValidNewAuthorableDocument() {
+      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation'])
+        && request.resource.data.authorUid is string
+        && request.resource.data.authorName is string
+        && request.resource.data.authorPhotoURL is string
+    }
   match /databases/{database}/documents {
-    function isValidNewPostDocument() {
-      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'dateOfLastActivity', 'title', 'content', 'numberOfComments'])
-        && request.resource.data.size() == 8
-        && request.resource.data.authorUid is string
-        && request.resource.data.authorName is string
-        && request.resource.data.authorPhotoURL is string
-        && request.resource.data.title is string
-        && request.resource.data.numberOfComments == 0;
-    }
-    function isValidNewCommentDocument() {
-      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'content'])
-        && request.resource.data.size() == 5
-        && request.resource.data.authorUid is string
-        && request.resource.data.authorName is string
-        && request.resource.data.authorPhotoURL is string
-    }
     match /posts/{id} {
+      function isValidNewPostDocument() {
+        return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'dateOfLastActivity', 'title', 'content', 'numberOfComments', 'numberOfLikes'])
+          && request.resource.data.size() == 9
+          && request.resource.data.authorUid is string
+          && request.resource.data.authorName is string
+          && request.resource.data.authorPhotoURL is string
+          && request.resource.data.title is string
+          && request.resource.data.numberOfComments == 0
+          && request.resource.data.numberOfLikes == 0;
+      }
+      function isValidNewCommentDocument() {
+        return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'content', 'numberOfLikes'])
+          && request.resource.data.size() == 6
+          && request.resource.data.authorUid is string
+          && request.resource.data.authorName is string
+          && request.resource.data.authorPhotoURL is string
+          && request.resource.data.numberOfLikes == 0;        
+      }
       allow read;
       allow create: if isRequestResourceAuthor() && isValidNewPostDocument();
       match /comments/{id} {
         allow read;
         allow create: if isRequestResourceAuthor() && isValidNewCommentDocument();
       }
+    }
+    match /likes/{id} {
+      function isValidNewLike() {
+        return isValidNewAuthorableDocument()
+          && request.resource.data.keys().hasAll(['entityId', 'entityType'])
+          && request.resource.data.entityId is string
+          && request.resource.data.entityType in ['Post', 'Comment']
+      }
+      allow read;
+      allow create: if isRequestResourceAuthor() && isValidNewLike();
+      allow delete: if isResourceAuthor();
     }
   }
 }
