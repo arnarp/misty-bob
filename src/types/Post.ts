@@ -1,29 +1,15 @@
-import { Collection, DocumentId, UID } from './FirestoreSchema';
+import { Collection } from './FirestoreSchema';
 import { firestore } from 'firebase';
 import { RawDraftContentState } from 'draft-js';
-import { Overwrite, Omit } from './Utils';
-
-/**
- * Base for user authored content.
- * Extended by Post, Comment.
- * Remember to edit firestore.rules for all who extend this
- * when changing this interface.
- */
-export type Authorable = Readonly<{
-  id: DocumentId;
-  authorUid: UID;
-  authorName: string;
-  authorPhotoURL: string;
-  dateOfCreation: Date;
-}>;
-
-export type Editable = Readonly<{
-  dateOfLastEdit?: Date;
-}>;
-
-export type Likeable = Readonly<{
-  numberOfLikes: number;
-}>;
+import {
+  Authorable,
+  Likeable,
+  Editable,
+  Omit,
+  DocumentId,
+  UID,
+  Overwrite,
+} from '.';
 
 export type Post = Authorable &
   Likeable &
@@ -36,7 +22,7 @@ export type Post = Authorable &
     numberOfComments: number;
   }>;
 
-export type PostDocument = Omit<Post, 'id'> &
+export type PostDocument = Omit<Post, 'id' | 'ref'> &
   Readonly<{
     comments?: Collection<DocumentId, Comment>;
     subscribers?: Collection<UID, Subscriber>;
@@ -45,7 +31,7 @@ export type PostDocument = Omit<Post, 'id'> &
 export type Subscriber = {};
 
 export type NewPostDocument = Overwrite<
-  Omit<Post, 'id' | 'dateOfLastEdit'>,
+  Omit<Post, 'id' | 'ref' | 'dateOfLastEdit'>,
   {
     dateOfCreation: firestore.FieldValue;
     dateOfLastActivity: firestore.FieldValue;
@@ -59,10 +45,10 @@ export type Comment = Authorable &
     content: RawDraftContentState;
   }>;
 
-export type CommentDocument = Omit<Comment, 'id'>;
+export type CommentDocument = Omit<Comment, 'id' | 'ref'>;
 
 export type NewCommentDocument = Overwrite<
-  Omit<Comment, 'id' | 'dateOfLastEdit'>,
+  Omit<Comment, 'id' | 'ref' | 'dateOfLastEdit'>,
   {
     dateOfCreation: firestore.FieldValue;
   }

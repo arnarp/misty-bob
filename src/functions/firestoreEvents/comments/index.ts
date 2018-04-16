@@ -1,0 +1,1 @@
+export { onCommentCreate } from './onCommentCreate';

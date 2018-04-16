@@ -1,6 +1,5 @@
-import { UID } from './FirestoreSchema';
-import { Omit, Overwrite } from './Utils';
 import { firestore } from 'firebase/app';
+import { UID, Overwrite, Omit } from '.';
 
 export type UserMeta = Readonly<{
   uid: UID;

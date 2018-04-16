@@ -4,7 +4,7 @@ service cloud.firestore {
       && request.auth.token.name == request.resource.data.authorName;
   }
   function isResourceAuthor() {
-    return request.auth.uid === resource.data.authorUid;
+    return request.auth.uid == resource.data.authorUid;
   }
   function isValidNewAuthorableDocument() {
       return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation'])
@@ -42,9 +42,9 @@ service cloud.firestore {
     match /likes/{id} {
       function isValidNewLike() {
         return isValidNewAuthorableDocument()
-          && request.resource.data.keys().hasAll(['entityId', 'entityType'])
-          && request.resource.data.entityId is string
-          && request.resource.data.entityType in ['Post', 'Comment']
+          && request.resource.data.keys().hasAll(['documentRef', 'documentType'])
+          && request.resource.data.documentRef is path
+          && request.resource.data.documentType in ['Post', 'Comment']
       }
       allow read;
       allow create: if isRequestResourceAuthor() && isValidNewLike();

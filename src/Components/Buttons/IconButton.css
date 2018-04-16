@@ -1,0 +1,61 @@
+.IconButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background: transparent;
+  height: 48px;
+  width: 48px;
+  position: relative;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.IconButton > * + * {
+  margin-left: 5px;
+}
+.IconButton:disabled {
+  cursor: default;
+}
+.IconButton:hover {
+  background: transparent;
+}
+.IconButton:before {
+  content: '';
+  position: absolute;
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+.IconButton.Color-default:focus:before {
+  box-shadow: inset 1px 1px 0px 2px var(--default-color-alpha02);
+}
+.IconButton.Color-primary:focus:before {
+  box-shadow: inset 1px 1px 0px 2px var(--primary-color-alpha02);
+}
+.IconButton.Color-error:focus:before {
+  box-shadow: inset 1px 1px 0px 2px var(--error-color-alpha02);
+}
+.IconButton:after {
+  content: '';
+  position: absolute;
+  transform: scale(0);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+}
+.IconButton:active:after {
+  transform: scale(1);
+}
+.IconButton.Color-default:after {
+  background-color: var(--default-color-alpha02);
+}
+.IconButton.Color-primary:after {
+  background-color: var(--primary-color-alpha02);
+}
+.IconButton.Color-error:after {
+  background-color: var(--error-color-alpha02);
+}

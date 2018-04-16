@@ -1,13 +1,12 @@
 import { firestore } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { DocumentReference } from '@google-cloud/firestore';
 import {
   mapDocument,
   UserMeta,
   CommentDocument,
   PostDocument,
   Post,
-} from '../../types';
+} from '../../../types';
 
 export const onCommentCreate = firestore
   .document('posts/{postId}/comments/{commentId}')
@@ -31,7 +30,7 @@ export const onCommentCreate = firestore
   });
 
 const updateNumberOfComments = (
-  postRef: DocumentReference,
+  postRef: admin.firestore.DocumentReference,
   newComment: CommentDocument,
 ) =>
   admin.firestore().runTransaction(async transaction => {
@@ -51,14 +50,14 @@ const updateNumberOfComments = (
   });
 
 const sendNotifications = async (
-  postRef: DocumentReference,
+  postRef: admin.firestore.DocumentReference,
   newComment: CommentDocument,
 ) => {
   const subscribers = await postRef
     .collection('subscribers')
     .get()
     .then(s => s.docs.map(d => d.id));
-  const post = await postRef.get().then(s => mapDocument<Post>(s));
+  const post = await postRef.get().then(s => mapDocument<Post>(s as any));
   const message: admin.messaging.MessagingPayload = {
     notification: {
       title: `${newComment.authorName} skrifaði ummæli við innlegg ${
@@ -103,7 +102,7 @@ const sendNotifications = async (
 };
 
 const addCommentAuthorToSubscribers = (
-  postRef: DocumentReference,
+  postRef: admin.firestore.DocumentReference,
   newComment: CommentDocument,
 ) => {
   return postRef

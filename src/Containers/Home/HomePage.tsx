@@ -1,3 +1,4 @@
+import * as firebase from 'firebase';
 import * as React from 'react';
 import { DocumentTitle } from '../../Components/SideEffects/DocumentTitle';
 import { FixedActionPanel } from '../../Components/Layout/FixedActionPanel';
@@ -24,7 +25,11 @@ export class HomePage extends React.PureComponent<
       .collection('posts')
       .orderBy('dateOfLastActivity', 'desc')
       .onSnapshot(s => {
-        this.setState(() => ({ posts: s.docs.map(p => mapDocument<Post>(p)) }));
+        this.setState(() => ({
+          posts: s.docs.map(p =>
+            mapDocument<Post>(p as firebase.firestore.DocumentSnapshot),
+          ),
+        }));
       });
     this.subscriptions.push(subscription);
   }

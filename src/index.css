@@ -1,7 +1,8 @@
 :root {
   --black: hsla(0, 0%, 0%, 0.8);
   --black-alpha025: hsla(0, 0%, 0%, 0.25);
-  --default-text-color: #24292e;
+  --default-text-color: hsl(210, 12%, 16%);
+  --default-text-color-alpha07: hsl(210, 12%, 16%, 0.7);
   --default-color: hsla(0, 0%, 88%, 1);
   --default-color-alpha07: hsla(0, 0%, 88%, 0.7);
   --default-color-alpha02: hsla(0, 0%, 88%, 0.2);

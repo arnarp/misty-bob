@@ -1,5 +1,5 @@
 .Svg.Fill-default {
-  fill: var(--default-color);
+  fill: var(--default-text-color-alpha07);
 }
 .Svg.Fill-white {
   fill: white;
@@ -14,7 +14,7 @@
   fill: var(--error-color);
 }
 .Svg.Stroke-default {
-  stroke: var(--default-color);
+  stroke: var(--default-text-color-alpha07);
 }
 .Svg.Stroke-primary {
   stroke: var(--primary-color);

@@ -1,1 +1,3 @@
-export { onCommentCreate } from './onCommentCreate';
+export * from './comments';
+export * from './likes';
+export * from './actions';

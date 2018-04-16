@@ -1,10 +1,14 @@
-import { DocumentId, Authorable } from '.';
-import { Omit } from './Utils';
+import { Authorable, NewAuthorableDocument } from '.';
+import { Omit, Overwrite } from './Utils';
+import { firestore } from 'firebase';
 
 export type Like = Authorable &
   Readonly<{
-    entityId: DocumentId;
-    entityType: 'Post' | 'Comment';
+    documentType: 'Post' | 'Comment';
+    documentRef: firestore.DocumentReference;
+    pageIds: { [key: string]: boolean };
   }>;
 
-export type LikeDocument = Omit<Like, 'id'>;
+export type LikeDocument = Omit<Like, 'id' | 'ref'>;
+
+export type NewLikeDocument = Overwrite<LikeDocument, NewAuthorableDocument>;

@@ -29,9 +29,3 @@ declare global {
 
 ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
 registerServiceWorker();
-
-console.log(
-  'FIREBASE_API_KEY',
-  process.env.REACT_APP_FIREBASE_API_KEY,
-  process.env,
-);
