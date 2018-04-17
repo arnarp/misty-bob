@@ -43,6 +43,7 @@ export type Comment = Authorable &
   Editable &
   Readonly<{
     content: RawDraftContentState;
+    postId: string;
   }>;
 
 export type CommentDocument = Omit<Comment, 'id' | 'ref'>;

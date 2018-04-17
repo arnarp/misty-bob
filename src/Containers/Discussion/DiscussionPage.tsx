@@ -14,6 +14,8 @@ import {
   NewLikeDocument,
   BaseDocument,
   Likeable,
+  CommentDocument,
+  propertyOf,
 } from '../../types';
 import { firestore } from '../../firebase';
 import { DocumentTitle } from '../../Components/SideEffects';
@@ -57,12 +59,17 @@ export class DiscussionPage extends React.PureComponent<
       }
     });
     this.subscriptions.push(postSubscription);
-    const commentsSubscription = this.postRef
+    const commentsSubscription = firestore
       .collection('comments')
       .orderBy('dateOfCreation', 'asc')
+      .where(
+        propertyOf<CommentDocument>('postId'),
+        '==',
+        this.props.match.params.id,
+      )
       .onSnapshot(snapshot => {
         this.setState(() => ({
-          comments: snapshot.docs.map(d => mapDocument<Comment>(d)),
+          comments: snapshot.docs.map(d => mapDocument<Comment>(d as any)),
         }));
       });
     this.subscriptions.push(commentsSubscription);
@@ -217,7 +224,7 @@ export class DiscussionPage extends React.PureComponent<
         pageIds: { [this.state.post.id]: true },
       };
       firestore
-        .collection('likes')
+        .collection('comments')
         .add(newLike)
         .catch(reason => {
           console.log('Like add reject', reason);
@@ -240,7 +247,7 @@ export class DiscussionPage extends React.PureComponent<
   };
   private submitNewComment = (event: React.FormEvent<{}>) => {
     event.preventDefault();
-    if (this.props.userInfo) {
+    if (this.props.userInfo && this.state.post) {
       const newComment: NewCommentDocument = {
         authorName: this.props.userInfo.displayName,
         authorUid: this.props.userInfo.uid,
@@ -248,6 +255,7 @@ export class DiscussionPage extends React.PureComponent<
         content: convertToRaw(this.state.editorState.getCurrentContent()),
         dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),
         numberOfLikes: 0,
+        postId: this.state.post.id,
       };
       this.postRef
         .collection('comments')
