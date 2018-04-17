@@ -224,7 +224,7 @@ export class DiscussionPage extends React.PureComponent<
         pageIds: { [this.state.post.id]: true },
       };
       firestore
-        .collection('comments')
+        .collection('likes')
         .add(newLike)
         .catch(reason => {
           console.log('Like add reject', reason);
@@ -257,7 +257,7 @@ export class DiscussionPage extends React.PureComponent<
         numberOfLikes: 0,
         postId: this.state.post.id,
       };
-      this.postRef
+      firestore
         .collection('comments')
         .add(newComment)
         .then(() => {

@@ -9,16 +9,16 @@ import {
 } from '../../../types';
 
 export const onCommentCreate = firestore
-  .document('posts/{postId}/comments/{commentId}')
+  .document('/comments/{commentId}')
   .onCreate((snapshot, context) => {
     const newComment = snapshot.data() as CommentDocument;
-    if (context === undefined || context.params.postId === undefined) {
+    if (context === undefined) {
       return Promise.resolve();
     }
     const postRef = admin
       .firestore()
       .collection('posts')
-      .doc(context.params.postId);
+      .doc(newComment.postId);
     if (postRef === null) {
       return Promise.resolve();
     }

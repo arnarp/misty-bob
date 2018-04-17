@@ -24,20 +24,17 @@ service cloud.firestore {
           && request.resource.data.numberOfComments == 0
           && request.resource.data.numberOfLikes == 0;
       }
+      allow read;
+      allow create: if isRequestResourceAuthor() && isValidNewPostDocument();
+    }
+    match /comments/{id} {
       function isValidNewCommentDocument() {
-        return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'content', 'numberOfLikes'])
-          && request.resource.data.size() == 6
-          && request.resource.data.authorUid is string
-          && request.resource.data.authorName is string
-          && request.resource.data.authorPhotoURL is string
+        return isValidNewAuthorableDocument()
+          && request.resource.data.keys().hasAll(['content', 'numberOfLikes', 'postId'])
           && request.resource.data.numberOfLikes == 0;        
       }
       allow read;
-      allow create: if isRequestResourceAuthor() && isValidNewPostDocument();
-      match /comments/{id} {
-        allow read;
-        allow create: if isRequestResourceAuthor() && isValidNewCommentDocument();
-      }
+      allow create: if isRequestResourceAuthor() && isValidNewCommentDocument();
     }
     match /likes/{id} {
       function isValidNewLike() {
