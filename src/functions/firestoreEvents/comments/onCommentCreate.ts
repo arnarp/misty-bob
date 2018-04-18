@@ -89,6 +89,9 @@ const sendNotifications = async (
     val.messagingTokens.map(t => t.token).forEach(i => acc.add(i));
     return acc;
   }, new Set<string>());
+  if (messagingTokens.size === 0) {
+    return;
+  }
   return admin
     .messaging()
     .sendToDevice(Array.from(messagingTokens.values()), message)

@@ -41,6 +41,7 @@ export class App extends React.Component<{}, AppState> {
           if (messagingRequestPermisson === null) {
             return;
           }
+          console.log('messagingRequestPermisson');
           messagingRequestPermisson
             .then(() => {
               console.log('Notification permission granted.');

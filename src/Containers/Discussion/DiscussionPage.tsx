@@ -11,21 +11,15 @@ import {
   DocumentId,
   Like,
   UID,
-  NewLikeDocument,
-  BaseDocument,
-  Likeable,
   CommentDocument,
   propertyOf,
 } from '../../types';
 import { firestore } from '../../firebase';
 import { DocumentTitle } from '../../Components/SideEffects';
-import { Col, Row } from '../../Components/Layout';
+import { Col, Row, Button, LikeButton, Section } from '../../Components';
 import { RichTextContent, RichTextEditor } from '../../Components/Editor';
 import { Avatar } from '../../Components/Discussions/Avatar';
-import { Section } from '../../Components/Layout/Section';
-import { Button, IconButton } from '../../Components/Buttons';
 import './DiscussionPage.css';
-import { LikeIcon } from '../../Components/Icons/LikeIcon';
 
 interface DiscussionPageProps extends RouteComponentProps<{ id: string }> {
   userInfo?: UserInfo | null;
@@ -123,20 +117,13 @@ export class DiscussionPage extends React.PureComponent<
                 content={convertFromRaw(this.state.post.content)}
               />
               <Row justifyContent="end">
-                <IconButton
-                  onClick={() =>
-                    this.state.post && this.onDocumentLikeClick(this.state.post)
-                  }
-                  Icon={LikeIcon}
-                  color={
-                    this.isLikedByCurrentUser(this.state.post.id)
-                      ? 'primary'
-                      : 'default'
-                  }
-                  label="Líka við þessa færslu"
-                >
-                  <span>{this.state.post.numberOfLikes}</span>
-                </IconButton>
+                <LikeButton
+                  likeableDocument={this.state.post}
+                  likeableDocumentType="Post"
+                  likes={this.state.likes.get(this.state.post.id)}
+                  pageId={this.state.post.id}
+                  userInfo={this.props.userInfo}
+                />
               </Row>
             </Section>
             {this.state.comments && (
@@ -196,55 +183,7 @@ export class DiscussionPage extends React.PureComponent<
   private onEditorChange = (editorState: EditorState) => {
     this.setState(() => ({ editorState }));
   };
-  private onDocumentLikeClick = (document: BaseDocument & Likeable) => {
-    console.log('click');
-    if (!this.props.userInfo || !this.state.post) {
-      return;
-    }
-    const currentUserDocumentLike = this.getCurrentUserLikeForDocument(
-      document.ref.id,
-    );
-    if (currentUserDocumentLike) {
-      firestore
-        .collection('likes')
-        .doc(currentUserDocumentLike.id)
-        .delete()
-        .catch(reason => {
-          console.log('Like delete reject', reason);
-        });
-    } else {
-      const newLike: NewLikeDocument = {
-        authorName: this.props.userInfo.displayName,
-        authorUid: this.props.userInfo.uid,
-        authorPhotoURL: this.props.userInfo.photoURL,
-        dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),
-        documentRef: document.ref,
-        documentType:
-          document.ref.id === this.state.post.id ? 'Post' : 'Comment',
-        pageIds: { [this.state.post.id]: true },
-      };
-      firestore
-        .collection('likes')
-        .add(newLike)
-        .catch(reason => {
-          console.log('Like add reject', reason);
-        });
-    }
-  };
-  private isLikedByCurrentUser = (documentId: DocumentId) => {
-    return this.getCurrentUserLikeForDocument(documentId) !== undefined;
-  };
-  private getCurrentUserLikeForDocument = (documentId: DocumentId) => {
-    const documentLikes = this.state.likes.get(documentId);
-    if (
-      documentLikes === undefined ||
-      this.props.userInfo === undefined ||
-      this.props.userInfo === null
-    ) {
-      return undefined;
-    }
-    return documentLikes.get(this.props.userInfo.uid);
-  };
+
   private submitNewComment = (event: React.FormEvent<{}>) => {
     event.preventDefault();
     if (this.props.userInfo && this.state.post) {
