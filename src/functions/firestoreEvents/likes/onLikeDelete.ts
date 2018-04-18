@@ -1,19 +1,13 @@
 import { firestore } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { Like, NewUpdateNumberOfLikesActionDocument } from '../../../types';
+import { updateNumberOfLikes } from './updateNumberOfLikes';
+// import { addUpdateNumberOfLikesAction } from './addUpdateNumberOfLikesAction';
 
 export const onLikeDelete = firestore
   .document('likes/{likeId}')
   .onDelete(snapshot => {
-    const like = snapshot.data() as Like;
-    const action: NewUpdateNumberOfLikesActionDocument = {
-      type: 'UpdateNumberOfLikes',
-      processed: false,
-      value: -1,
-      likeableRef: like.documentRef,
-    };
-    return admin
-      .firestore()
-      .collection('actions')
-      .add(action);
+    // Later if number of likes load get's high
+    // return addUpdateNumberOfLikesAction(snapshot.data() as Like, -1);
+    return updateNumberOfLikes(snapshot.data() as Like, -1);
   });
