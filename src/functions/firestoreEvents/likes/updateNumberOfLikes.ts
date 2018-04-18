@@ -1,11 +1,10 @@
-import { firestore } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { Like, Likeable } from '../../../types';
+import { Likeable, LikeDocument } from '../../../types';
 
-export function updateNumberOfLikes(like: Like, value: -1 | 1) {
+export function updateNumberOfLikes(like: LikeDocument, value: -1 | 1) {
   return admin.firestore().runTransaction(async transaction => {
     const likeableSnapshot = await transaction.get(
-      admin.firestore().doc(like.ref.path),
+      admin.firestore().doc(like.documentRef.path),
     );
     const likeableUpdate: Likeable = {
       numberOfLikes:

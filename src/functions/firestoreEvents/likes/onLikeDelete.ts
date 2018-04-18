@@ -1,6 +1,5 @@
 import { firestore } from 'firebase-functions';
-import * as admin from 'firebase-admin';
-import { Like, NewUpdateNumberOfLikesActionDocument } from '../../../types';
+import { Like } from '../../../types';
 import { updateNumberOfLikes } from './updateNumberOfLikes';
 // import { addUpdateNumberOfLikesAction } from './addUpdateNumberOfLikesAction';
 
