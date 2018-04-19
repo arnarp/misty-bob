@@ -6,6 +6,10 @@
   padding: 12px;
 }
 
+.Discussion-Comments .Comment-Author {
+  font-weight: 400;
+}
+
 .Discussion-New-Comment {
   border-top: 2px dashed #e7edf3;
   border-bottom: 2px dashed #e7edf3;

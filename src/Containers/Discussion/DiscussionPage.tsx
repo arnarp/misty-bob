@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import * as firebase from 'firebase';
 import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
+import { FormattedDate, FormattedRelative, FormattedMessage } from 'react-intl';
 import {
   Post,
   UserInfo,
@@ -105,11 +106,14 @@ export class DiscussionPage extends React.PureComponent<
                 />
                 <Col>
                   <span>{this.state.post.authorName}</span>
-                  <time>
-                    {new Intl.DateTimeFormat('fr').format(
-                      this.state.post.dateOfCreation,
-                    )}
-                  </time>
+                  {this.state.post.dateOfCreation !== null && (
+                    <FormattedDate
+                      value={this.state.post.dateOfCreation}
+                      day="numeric"
+                      month="long"
+                      year="numeric"
+                    />
+                  )}
                 </Col>
               </Row>
               <h1>{this.state.post.title}</h1>
@@ -130,20 +134,16 @@ export class DiscussionPage extends React.PureComponent<
               <Section className="Discussion-Comments">
                 <Col spacing="medium" as="ol" seperators>
                   {this.state.comments.map(c => (
-                    <Row as="li" key={c.id} spacing="medium">
-                      <Avatar photoURL={c.authorPhotoURL} size="large" />
-                      <Col spacing="medium">
-                        <Col>
-                          <span>{c.authorName}</span>
-                          <time>
-                            {new Intl.DateTimeFormat('fr').format(
-                              c.dateOfCreation,
-                            )}
-                          </time>
-                        </Col>
-                        <RichTextContent content={convertFromRaw(c.content)} />
-                      </Col>
-                    </Row>
+                    <Col as="li" key={c.id} spacing="medium">
+                      <Row spacing="medium" alignItems="center">
+                        <Avatar photoURL={c.authorPhotoURL} size="default" />
+                        <span className="Comment-Author">{c.authorName}</span>
+                        {c.dateOfCreation !== null && (
+                          <FormattedRelative value={c.dateOfCreation} />
+                        )}
+                      </Row>
+                      <RichTextContent content={convertFromRaw(c.content)} />
+                    </Col>
                   ))}
                 </Col>
               </Section>
@@ -156,11 +156,15 @@ export class DiscussionPage extends React.PureComponent<
                       photoURL={this.props.userInfo.photoURL}
                       size="large"
                     />
-                    <RichTextEditor
-                      placeholder="Skrifaðu athugasemd"
-                      editorState={this.state.editorState}
-                      onChange={this.onEditorChange}
-                    />
+                    <FormattedMessage id="writeAReplyPlaceholder">
+                      {placeholder => (
+                        <RichTextEditor
+                          placeholder={placeholder}
+                          editorState={this.state.editorState}
+                          onChange={this.onEditorChange}
+                        />
+                      )}
+                    </FormattedMessage>
                   </Row>
                   <Row justifyContent="end">
                     <Button
@@ -169,7 +173,7 @@ export class DiscussionPage extends React.PureComponent<
                       type="submit"
                       color="default"
                     >
-                      Senda svar
+                      <FormattedMessage id="sendReply" />
                     </Button>
                   </Row>
                 </form>

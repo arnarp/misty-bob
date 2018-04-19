@@ -4,6 +4,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { App } from './App';
 import registerServiceWorker from './registerServiceWorker';
+import { addLocaleData, IntlProvider } from 'react-intl';
+import * as isLocaleData from 'react-intl/locale-data/is';
+import * as enLocaleData from 'react-intl/locale-data/en';
+
+addLocaleData([...isLocaleData, ...enLocaleData]);
 
 declare global {
   const enum Env {
@@ -28,8 +33,21 @@ declare global {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
-registerServiceWorker();
+const locale = navigator.language === 'is' ? 'is' : 'en';
+const messagesIS = {
+  sendReply: 'Senda svar',
+  writeAReplyPlaceholder: 'Skrifaðu athugasemd',
+};
+const messagesEN = {
+  sendReply: 'Reply',
+  writeAReplyPlaceholder: 'Write a reply',
+};
+const messages = locale === 'is' ? messagesIS : messagesEN;
 
-const foo = 'bar';
-console.log(foo);
+ReactDOM.render(
+  <IntlProvider locale={locale} messages={messages}>
+    <App />
+  </IntlProvider>,
+  document.getElementById('root') as HTMLElement,
+);
+registerServiceWorker();

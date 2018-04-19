@@ -20,7 +20,11 @@ export type Authorable = BaseDocument &
     authorUid: UID;
     authorName: string;
     authorPhotoURL: string;
-    dateOfCreation: Date;
+    /**
+     * Can be null for a brief moment after creation, before it has
+     * been synced to the firestore and gotten the firestore.FieldValue.
+     */
+    dateOfCreation: Date | null;
   }>;
 
 export type NewAuthorableDocument = Overwrite<
