@@ -17,7 +17,7 @@ import {
 } from '../../types';
 import { firestore } from '../../firebase';
 import { DocumentTitle } from '../../Components/SideEffects';
-import { Col, Row, Button, LikeButton, Section } from '../../Components';
+import { Col, Row, Button, LikeButton, Section, Text } from '../../Components';
 import { RichTextContent, RichTextEditor } from '../../Components/Editor';
 import { Avatar } from '../../Components/Discussions/Avatar';
 import './DiscussionPage.css';
@@ -110,7 +110,7 @@ export class DiscussionPage extends React.PureComponent<
                   size="large"
                 />
                 <Col>
-                  <span>{this.state.post.authorName}</span>
+                  <Text.Secondary>{this.state.post.authorName}</Text.Secondary>
                   {this.state.post.dateOfCreation !== null && (
                     <FormattedDate
                       value={this.state.post.dateOfCreation}
@@ -125,7 +125,15 @@ export class DiscussionPage extends React.PureComponent<
               <RichTextContent
                 content={convertFromRaw(this.state.post.content)}
               />
-              <Row justifyContent="end">
+              <Row justifyContent="spaceBetween" alignItems="center">
+                <FormattedMessage
+                  id="numberOfComments"
+                  values={{
+                    numberOfComments: this.state.post.numberOfComments,
+                  }}
+                >
+                  {message => <Text.Secondary>{message}</Text.Secondary>}
+                </FormattedMessage>
                 <LikeButton
                   likeableDocument={this.state.post}
                   likeableDocumentType="Post"

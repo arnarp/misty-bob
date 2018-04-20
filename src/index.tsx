@@ -37,10 +37,12 @@ const locale = navigator.language === 'is' ? 'is' : 'en';
 const messagesIS = {
   sendReply: 'Senda svar',
   writeAReplyPlaceholder: 'Skrifaðu athugasemd',
+  numberOfComments: '{numberOfComments} ummæli',
 };
 const messagesEN = {
   sendReply: 'Reply',
   writeAReplyPlaceholder: 'Write a reply',
+  numberOfComments: '{numberOfComments} comments',
 };
 const messages = locale === 'is' ? messagesIS : messagesEN;
 
