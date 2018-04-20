@@ -94,9 +94,14 @@ export class DiscussionPage extends React.PureComponent<
   }
   render() {
     return (
-      <main>
+      <Col
+        as="main"
+        spacing="large"
+        alignItems="center"
+        className="DiscussionPage-Main"
+      >
         {this.state.post && (
-          <Col spacing="large">
+          <>
             <DocumentTitle title={this.state.post.title} />
             <Section>
               <Row spacing="medium">
@@ -179,9 +184,9 @@ export class DiscussionPage extends React.PureComponent<
                 </form>
               </Section>
             )}
-          </Col>
+          </>
         )}
-      </main>
+      </Col>
     );
   }
   private onEditorChange = (editorState: EditorState) => {

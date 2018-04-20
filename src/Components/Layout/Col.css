@@ -20,6 +20,9 @@
 .Col.JustifyContentCenter {
   justify-content: center;
 }
+.Col.AlignItemsCenter {
+  align-items: center;
+}
 ul.Col,
 ol.Col {
   list-style: none;

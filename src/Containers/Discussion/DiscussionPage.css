@@ -1,3 +1,8 @@
+.DiscussionPage-Main > * {
+  max-width: 600px;
+  width: 100%;
+}
+
 .Discussion-Comments {
   border-top: 1px solid #e7edf3;
 }
