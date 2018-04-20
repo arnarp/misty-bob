@@ -1,11 +1,11 @@
-.Section.SideMargins {
-  margin-left: 24px;
-  margin-right: 24px;
+.Section.SidePaddings {
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 @media only screen and (max-width: 610px) {
-  .Section.SideMargins {
-    margin-left: 12px;
-    margin-right: 12px;
+  .Section.SidePaddings {
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }

@@ -103,7 +103,7 @@ export class DiscussionPage extends React.PureComponent<
         {this.state.post && (
           <>
             <DocumentTitle title={this.state.post.title} />
-            <Section>
+            <Section sidePaddings>
               <Row spacing="medium">
                 <Avatar
                   photoURL={this.state.post.authorPhotoURL}
@@ -162,7 +162,7 @@ export class DiscussionPage extends React.PureComponent<
               </Section>
             )}
             {this.props.userInfo && (
-              <Section className="Discussion-New-Comment" sideMargins={false}>
+              <Section className="Discussion-New-Comment">
                 <form onSubmit={this.submitNewComment}>
                   <Row spacing="medium">
                     <Avatar
