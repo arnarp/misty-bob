@@ -1,43 +1,9 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import './Col.css';
+import { Omit } from '../../types';
+import { FlexProps, Flex } from '.';
 
-type ColProps = {
-  spacing?: 'medium' | 'large';
-  seperators?: boolean;
-  justifyContent?: 'start' | 'end' | 'spaceBetween' | 'center';
-  alignItems?: 'center';
-  className?: string;
-  as?: string;
-};
+type RowProps = Omit<FlexProps, 'direction'>;
 
-export const Col: React.SFC<ColProps> = ({
-  as,
-  spacing,
-  justifyContent,
-  alignItems,
-  className,
-  children,
-  seperators,
-}) => {
-  const As = as || 'div';
-  return (
-    <As
-      className={classNames(
-        'Col',
-        spacing ? `Spacing-${spacing}` : '',
-        {
-          JustifyContentStart: justifyContent === 'start',
-          JustifyContentEnd: justifyContent === 'end',
-          JustifyContentSpaceBetween: justifyContent === 'spaceBetween',
-          JustifyContentCenter: justifyContent === 'center',
-          AlignItemsCenter: alignItems === 'center',
-          Seperators: seperators,
-        },
-        className,
-      )}
-    >
-      {children}
-    </As>
-  );
+export const Col: React.SFC<RowProps> = props => {
+  return <Flex direction="column" {...props} />;
 };

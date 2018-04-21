@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import { Row } from '../../Components';
 import { RichTextEditor } from '../../Components/Editor';
 import { RichTextContent } from '../../Components/Editor/RichTextContent';
 
@@ -17,7 +18,7 @@ export class RichTextEditorTestBench extends React.PureComponent<
 
   render() {
     return (
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <Row as="main">
         <div style={{ width: '50%' }}>
           <RichTextEditor
             editorState={this.state.editorState}
@@ -29,7 +30,7 @@ export class RichTextEditorTestBench extends React.PureComponent<
             content={this.state.editorState.getCurrentContent()}
           />
         </div>
-      </div>
+      </Row>
     );
   }
   private onChange = (editorState: EditorState) => {
