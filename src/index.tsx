@@ -38,14 +38,14 @@ const messagesIS = {
   sendReply: 'Senda svar',
   writeAReplyPlaceholder: 'Skrifaðu athugasemd',
   numberOfComments: '{numberOfComments} ummæli',
-  settingsLink: 'Stillingar',
+  settings: 'Stillingar',
   logoutBtn: 'Útskráning',
 };
 const messagesEN = {
   sendReply: 'Reply',
   writeAReplyPlaceholder: 'Write a reply',
   numberOfComments: '{numberOfComments} comments',
-  settingsLink: 'Settings',
+  settings: 'Settings',
   logoutBtn: 'Log out',
 };
 const messages = locale === 'is' ? messagesIS : messagesEN;

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import { auth } from '../../firebase';
 import { Popover, PopoverControl } from '../../Components/Popover';
 import { Col, Row, Button } from '../../Components';
 import './AppBar.css';
 import { UserInfo } from '../../types';
-import { FormattedMessage } from 'react-intl';
 
 interface AppBarProps {
   userInfo?: UserInfo | null;
@@ -50,7 +50,7 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
                 sidePaddings="medium"
               >
                 <Button to="/settings" color="primary" style="flat">
-                  <FormattedMessage id="settingsLink" />
+                  <FormattedMessage id="settings" />
                 </Button>
                 <Button
                   color="primary"

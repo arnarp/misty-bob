@@ -17,6 +17,9 @@ const AsyncAdmin = createAsyncComponent(
 const AsyncTestBench = createAsyncComponent(() =>
   import('../Containers/TestBench').then(m => m.TestBench),
 );
+const AsyncSettingsPage = createAsyncComponent(() =>
+  import('../Containers/Settings').then(m => m.SettingsPage),
+);
 
 type RoutesProps = {
   userInfo?: UserInfo | null;
@@ -38,6 +41,7 @@ export const Routes: React.SFC<RoutesProps> = props => (
       path="/d/:id"
       render={p => <DiscussionPage {...p} userInfo={props.userInfo} />}
     />
+    <Route path="/settings" component={AsyncSettingsPage} />
     <Route path="/admin" component={AsyncAdmin} />
     <Route path="/test" component={AsyncTestBench} />
     <Route component={NotFoundPage} />
