@@ -156,6 +156,17 @@ export class DiscussionPage extends React.PureComponent<
                         )}
                       </Row>
                       <RichTextContent content={convertFromRaw(c.content)} />
+                      <Row justifyContent="end" alignItems="center">
+                        {this.state.post && (
+                          <LikeButton
+                            likeableDocument={c}
+                            likeableDocumentType="Comment"
+                            likes={this.state.likes.get(c.id)}
+                            pageId={this.state.post.id}
+                            userInfo={this.props.userInfo}
+                          />
+                        )}
+                      </Row>
                     </Col>
                   ))}
                 </Col>
