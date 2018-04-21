@@ -11,11 +11,12 @@ import {
   Like,
   NewLikeDocument,
   UID,
+  Authorable,
 } from '../../types';
 import { firestore } from '../../firebase';
 
 type LikeButtonProps = {
-  likeableDocument: Likeable & BaseDocument;
+  likeableDocument: Likeable & BaseDocument & Authorable;
   likeableDocumentType: 'Post' | 'Comment';
   likes?: Map<UID, Like>;
   pageId: DocumentId;
@@ -48,6 +49,11 @@ export class LikeButton extends React.PureComponent<
             : 'default'
         }
         label="Líka við þessa færslu"
+        disabled={
+          this.props.userInfo
+            ? this.props.likeableDocument.authorUid === this.props.userInfo.uid
+            : false
+        }
       >
         <span>
           {this.props.likeableDocument.numberOfLikes + this.state.modifier}
