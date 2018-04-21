@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { auth } from '../../firebase';
 import { Popover, PopoverControl } from '../../Components/Popover';
-import { Col } from '../../Components/Layout/Col';
-import { Button } from '../../Components/Buttons/Button';
+import { Col, Row, Button } from '../../Components';
 import './AppBar.css';
 import { UserInfo } from '../../types';
+import { FormattedMessage } from 'react-intl';
 
 interface AppBarProps {
   userInfo?: UserInfo | null;
@@ -43,7 +43,15 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
                   <span>{this.props.userInfo.email}</span>
                 </Col>
               </div>
-              <div className="ActionFooter">
+              <Row
+                justifyContent="spaceBetween"
+                alignItems="center"
+                className="ActionFooter"
+                sidePaddings="medium"
+              >
+                <Button to="/settings" color="primary" style="flat">
+                  <FormattedMessage id="settingsLink" />
+                </Button>
                 <Button
                   color="primary"
                   style="flat"
@@ -57,9 +65,9 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
                     }, 300);
                   }}
                 >
-                  Útskráning
+                  <FormattedMessage id="logoutBtn" />
                 </Button>
-              </div>
+              </Row>
             </div>
           </Popover>
         )}

@@ -30,6 +30,10 @@
 .Row.GrowChildren > * {
   flex-grow: 1;
 }
+.Row.SidePaddings-medium {
+  padding-left: 12px;
+  padding-right: 12px;
+}
 @media only screen and (max-width: 610px) {
   .Row.Break610 {
     flex-direction: column;

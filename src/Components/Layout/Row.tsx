@@ -11,6 +11,8 @@ type RowProps = {
   breakPoint?: '610';
   as?: string;
   grow?: boolean;
+  className?: string;
+  sidePaddings?: 'medium';
 };
 
 export const Row: React.SFC<RowProps> = ({
@@ -23,20 +25,28 @@ export const Row: React.SFC<RowProps> = ({
   children,
   as,
   grow,
+  className,
+  sidePaddings,
 }) => {
   const As = as || 'div';
   return (
     <As
-      className={classNames('Row', spacing ? `Spacing-${spacing}` : '', {
-        JustifyContentStart: justifyContent === 'start',
-        JustifyContentEnd: justifyContent === 'end',
-        JustifyContentSpaceBetween: justifyContent === 'spaceBetween',
-        AlignItemsCenter: alignItems === 'center',
-        GrowChildren: growChildren,
-        Wrap: wrap,
-        Break610: breakPoint === '610',
-        Grow: grow,
-      })}
+      className={classNames(
+        'Row',
+        spacing ? `Spacing-${spacing}` : '',
+        sidePaddings ? `SidePaddings-${sidePaddings}` : '',
+        {
+          JustifyContentStart: justifyContent === 'start',
+          JustifyContentEnd: justifyContent === 'end',
+          JustifyContentSpaceBetween: justifyContent === 'spaceBetween',
+          AlignItemsCenter: alignItems === 'center',
+          GrowChildren: growChildren,
+          Wrap: wrap,
+          Break610: breakPoint === '610',
+          Grow: grow,
+        },
+        className,
+      )}
     >
       {children}
     </As>

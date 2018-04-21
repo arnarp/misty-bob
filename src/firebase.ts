@@ -59,4 +59,6 @@ messaging.onMessage(function(payload: any) {
 });
 
 export const refreshFCMToken = () =>
-  functions.httpsCallable('refreshFCMToken')({});
+  functions.httpsCallable('refreshFCMToken')({
+    userAgent: navigator.userAgent,
+  });

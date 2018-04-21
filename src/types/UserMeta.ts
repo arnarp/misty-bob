@@ -9,6 +9,7 @@ export type UserMeta = Readonly<{
 export type MessagingToken = Readonly<{
   token: string;
   refreshed: Date;
+  userAgent: string;
 }>;
 
 export type NewMessagingToken = Overwrite<
