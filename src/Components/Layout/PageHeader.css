@@ -1,0 +1,6 @@
+.PageHeader {
+  position: absolute;
+  top: 0px;
+  z-index: 2;
+  margin: 0 12px;
+}

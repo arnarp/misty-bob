@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Col } from '../../Components';
+import { Col, PageHeader, Section } from '../../Components';
 import { FormattedDocumentTitle } from '../../Components/SideEffects';
 
 type SettingsPageProps = {};
@@ -18,9 +18,14 @@ export class SettingsPage extends React.PureComponent<
     return (
       <Col as="main">
         <FormattedDocumentTitle id="settings" />
-        <h1>
+        <PageHeader>
           <FormattedMessage id="settings" />
-        </h1>
+        </PageHeader>
+        <Section sidePaddings>
+          <h2>
+            <FormattedMessage id="settingsPageNotificationsH2" />
+          </h2>
+        </Section>
       </Col>
     );
   }

@@ -40,6 +40,7 @@ const messagesIS = {
   numberOfComments: '{numberOfComments} ummæli',
   settings: 'Stillingar',
   logoutBtn: 'Útskráning',
+  settingsPageNotificationsH2: 'Tilkynningar',
 };
 const messagesEN = {
   sendReply: 'Reply',
@@ -47,6 +48,7 @@ const messagesEN = {
   numberOfComments: '{numberOfComments} comments',
   settings: 'Settings',
   logoutBtn: 'Log out',
+  settingsPageNotificationsH2: 'Push notifications',
 };
 const messages = locale === 'is' ? messagesIS : messagesEN;
 
