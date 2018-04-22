@@ -14,6 +14,7 @@ export type FlexProps = {
   as?: string;
   grow?: boolean;
   className?: string;
+  role?: 'banner';
 };
 
 export const Flex: React.SFC<FlexProps> = ({
@@ -28,11 +29,13 @@ export const Flex: React.SFC<FlexProps> = ({
   as,
   grow,
   className,
+  role,
   children,
 }) => {
   const As = as || 'div';
   return (
     <As
+      role={role}
       className={classNames(
         'Flex',
         spacing ? `Spacing-${spacing}` : '',

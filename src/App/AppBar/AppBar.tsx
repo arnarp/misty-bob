@@ -16,10 +16,16 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
   popover: PopoverControl | null;
   render() {
     return (
-      <div role="banner" className="AppBar">
-        <nav className="AppBarNav">
+      <Row
+        alignItems="center"
+        role="banner"
+        justifyContent="spaceBetween"
+        className="AppBar"
+        sidePaddings="mediumResponsive"
+      >
+        <Row as="nav" justifyContent="end" grow className="AppBarNav">
           <Link to="/">Heim </Link>
-        </nav>
+        </Row>
         {this.props.userInfo && (
           <Popover
             deltaY={-2}
@@ -87,7 +93,7 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
             Innskráning
           </Button>
         )}
-      </div>
+      </Row>
     );
   }
 }

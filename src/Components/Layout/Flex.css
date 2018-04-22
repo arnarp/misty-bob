@@ -38,17 +38,18 @@
 .Flex.GrowChildren > * {
   flex-grow: 1;
 }
-.Flex.SidePaddings-mediumResponsive .Flex.SidePaddings-medium {
+.Flex.SidePaddings-mediumResponsive,
+.Flex.SidePaddings-medium {
   padding-left: 12px;
   padding-right: 12px;
 }
-ul.Flex.col,
-ol.Flex.col {
+ul.Flex.column,
+ol.Flex.column {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.Flex.col.Seperators > * + * {
+.Flex.column.Seperators > * + * {
   border-top: 1px solid #e7edf3;
 }
 @media only screen and (min-width: 611px) {
