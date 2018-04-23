@@ -14,6 +14,7 @@ export const refreshFCMToken = functions.https.onCall((data, context) => {
     token: fcmToken,
     refreshed: new Date(),
     userAgent: data.userAgent,
+    language: data.language,
   };
   const userMetaDocRef = admin
     .firestore()
