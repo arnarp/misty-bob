@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { Row, Center } from '..';
+import { Input } from './Input';
 
 interface RadioProps<T> {
   label: string;
@@ -35,7 +36,8 @@ export class Radio<T extends string> extends React.PureComponent<
             Focus: this.state.focus,
           })}
         >
-          <input
+          <Input
+            absoluteHidden
             type="radio"
             value={this.props.value}
             checked={this.props.checked}

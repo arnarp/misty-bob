@@ -1,0 +1,31 @@
+.Toggle {
+  line-height: 36px;
+}
+.Toggle .InputContainer {
+  --input-width: 48px;
+  --input-height: 18px;
+  --circle-radius: 24px;
+  position: relative;
+}
+.Toggle .InputContainer .InputBackground {
+  border-radius: 10px;
+  width: var(--input-width);
+  height: var(--input-height);
+  background: var(--default-text-color-alpha07);
+}
+.Toggle.Checked .InputContainer .InputBackground {
+  background: var(--primary-color-alpha02);
+}
+.Toggle .InputContainer .InputCircle {
+  border-radius: 50%;
+  height: var(--circle-radius);
+  width: var(--circle-radius);
+  background: var(--default-color);
+  position: absolute;
+  left: 0;
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+.Toggle.Checked .InputContainer .InputCircle {
+  transform: translateX(calc(var(--input-width) - var(--circle-radius)));
+  background: var(--primary-color);
+}
