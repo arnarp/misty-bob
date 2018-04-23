@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Col } from '../../Components';
 import './RadioGroup.css';
 import { Radio } from './Radio';
 
@@ -19,13 +20,9 @@ export class RadioGroup<T extends string> extends React.PureComponent<
   render() {
     const RadioOfT = Radio as { new (): Radio<T> };
     return (
-      <fieldset className="RadioGroupFieldSet">
+      <Col as="fieldset" className="RadioGroupFieldSet" spacing="small">
         <legend>{this.props.legend}</legend>
-        <div
-          className="RadioGroup"
-          role="radiogroup"
-          aria-label={this.props.legend}
-        >
+        <Col role="radiogroup" aria-label={this.props.legend}>
           {this.props.options.map(o => (
             <RadioOfT
               key={o.value}
@@ -35,8 +32,8 @@ export class RadioGroup<T extends string> extends React.PureComponent<
               onChange={this.props.onChange}
             />
           ))}
-        </div>
-      </fieldset>
+        </Col>
+      </Col>
     );
   }
 }

@@ -14,8 +14,8 @@ const AsyncAdmin = createAsyncComponent(
   () => import('../Containers/Admin').then(m => m.Admin),
   () => <div>Loading...</div>,
 );
-const AsyncTestBench = createAsyncComponent(() =>
-  import('../Containers/TestBench').then(m => m.TestBench),
+const AsyncDev = createAsyncComponent(() =>
+  import('../Containers/Dev').then(m => m.DevRoutes),
 );
 const AsyncSettingsPage = createAsyncComponent(() =>
   import('../Containers/Settings').then(m => m.SettingsPage),
@@ -43,7 +43,7 @@ export const Routes: React.SFC<RoutesProps> = props => (
     />
     <Route path="/settings" component={AsyncSettingsPage} />
     <Route path="/admin" component={AsyncAdmin} />
-    <Route path="/test" component={AsyncTestBench} />
+    <Route path="/dev" component={AsyncDev} />
     <Route component={NotFoundPage} />
   </Switch>
 );

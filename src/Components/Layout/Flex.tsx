@@ -14,7 +14,7 @@ export type FlexProps = {
   as?: string;
   grow?: boolean;
   className?: string;
-  role?: 'banner';
+  role?: 'banner' | 'radiogroup';
 };
 
 export const Flex: React.SFC<FlexProps> = ({

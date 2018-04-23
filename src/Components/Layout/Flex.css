@@ -1,5 +1,7 @@
 .Flex {
   display: flex;
+  margin: 0;
+  padding: 0;
 }
 .Flex.row {
   flex-direction: row;
@@ -7,14 +9,23 @@
 .Flex.column {
   flex-direction: column;
 }
-.Flex.Spacing-medium > * + * {
+.Flex.row.Spacing-small > * + * {
+  margin-left: 6px;
+}
+.Flex.row.Spacing-medium > * + * {
   margin-left: 12px;
 }
-.Flex.Spacing-large > * + * {
-  margin-top: 24px;
+.Flex.row.Spacing-large > * + * {
+  margin-left: 24px;
 }
-.Flex.Spacing-small > * + * {
-  margin-left: 6px;
+.Flex.column.Spacing-small > * + * {
+  margin-top: 6px;
+}
+.Flex.column.Spacing-medium > * + * {
+  margin-top: 12px;
+}
+.Flex.column.Spacing-large > * + * {
+  margin-top: 24px;
 }
 .Flex.JustifyContent-start {
   justify-content: flex-start;
@@ -46,8 +57,6 @@
 ul.Flex.column,
 ol.Flex.column {
   list-style: none;
-  margin: 0;
-  padding: 0;
 }
 .Flex.column.Seperators > * + * {
   border-top: 1px solid #e7edf3;

@@ -10,7 +10,7 @@ interface RichTextEditorTestBenchProps {}
 const initialState = { editorState: EditorState.createEmpty() };
 type RichTextEditorTestBenchState = Readonly<typeof initialState>;
 
-export class RichTextEditorTestBench extends React.PureComponent<
+export class EditorDevPage extends React.PureComponent<
   RichTextEditorTestBenchProps,
   RichTextEditorTestBenchState
 > {
@@ -18,7 +18,7 @@ export class RichTextEditorTestBench extends React.PureComponent<
 
   render() {
     return (
-      <Row as="main">
+      <Row as="main" sidePaddings="mediumResponsive">
         <div style={{ width: '50%' }}>
           <RichTextEditor
             editorState={this.state.editorState}
