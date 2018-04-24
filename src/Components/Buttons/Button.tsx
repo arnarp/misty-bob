@@ -31,7 +31,11 @@ export class Button extends React.PureComponent<ButtonProps> {
     );
     if (this.props.to) {
       return (
-        <Link className={className} to={this.props.to}>
+        <Link
+          className={className}
+          to={this.props.to}
+          onClick={this.props.onClick}
+        >
           {this.props.children}
         </Link>
       );

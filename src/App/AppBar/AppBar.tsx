@@ -55,7 +55,12 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
                 className="ActionFooter"
                 sidePaddings="medium"
               >
-                <Button to="/settings" color="primary" style="flat">
+                <Button
+                  to="/settings"
+                  color="primary"
+                  style="flat"
+                  onClick={() => this.popover && this.popover.closePopover()}
+                >
                   <FormattedMessage id="settings" />
                 </Button>
                 <Button
