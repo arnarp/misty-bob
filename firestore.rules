@@ -47,5 +47,9 @@ service cloud.firestore {
       allow create: if isRequestResourceAuthor() && isValidNewLike();
       allow delete: if isResourceAuthor();
     }
+    match /userMetas/{id} {
+      allow read: if (id == request.auth.uid)
+      allow update: if (request.writeFields.size() == 1) && ('notificationsEnabled' in request.writeFields)
+    }
   }
 }

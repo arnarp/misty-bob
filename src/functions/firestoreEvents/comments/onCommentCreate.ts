@@ -35,7 +35,7 @@ const updateNumberOfComments = (
 ) =>
   admin.firestore().runTransaction(async transaction => {
     const postSnapshot = await transaction.get(postRef);
-    if (!postSnapshot.exists) {
+    if (!postSnapshot.exists || newComment.dateOfCreation === null) {
       return Promise.resolve();
     }
     const post = postSnapshot.data() as PostDocument;
@@ -78,12 +78,12 @@ const sendNotifications = async (
           if (!val.exists) {
             return undefined;
           }
-          return { ...val.data(), uid: val.id } as UserMeta;
+          return { ...val.data(), id: val.id } as UserMeta;
         }),
     ),
   );
   const messagingTokens = userMetaDocuments.reduce((acc, val) => {
-    if (val === undefined || val.uid === newComment.authorUid) {
+    if (val === undefined || val.id === newComment.authorUid) {
       return acc;
     }
     val.messagingTokens.map(t => t.token).forEach(i => acc.add(i));

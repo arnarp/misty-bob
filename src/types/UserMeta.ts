@@ -1,10 +1,11 @@
 import { firestore } from 'firebase/app';
-import { UID, Overwrite, Omit } from '.';
+import { Overwrite, Omit, BaseDocument } from '.';
 
-export type UserMeta = Readonly<{
-  uid: UID;
-  messagingTokens: Array<MessagingToken>;
-}>;
+export type UserMeta = BaseDocument &
+  Readonly<{
+    messagingTokens: Array<MessagingToken>;
+    notificationsEnabled: boolean;
+  }>;
 
 export type MessagingToken = Readonly<{
   token: string;
@@ -26,7 +27,7 @@ export type NewMessagingToken = Overwrite<
   }
 >;
 
-export type UserMetaDocument = Omit<UserMeta, 'uid'>;
+export type UserMetaDocument = Omit<UserMeta, 'id' | 'ref'>;
 export type NewUserMetaDocument = Overwrite<
   UserMetaDocument,
   {

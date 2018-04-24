@@ -25,6 +25,7 @@ export const refreshFCMToken = functions.https.onCall((data, context) => {
     if (!userMetaSnapshot.exists) {
       const newUserMetaDocument: NewUserMetaDocument = {
         messagingTokens: [newToken],
+        notificationsEnabled: true,
       };
       return transaction.create(userMetaDocRef, newUserMetaDocument);
     }
