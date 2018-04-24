@@ -34,6 +34,17 @@ export class InputsDevPage extends React.PureComponent<
             value={this.state.radioValue}
             onChange={value => this.setState(() => ({ radioValue: value }))}
           />
+          <RadioGroup
+            legend="Disabled"
+            options={[
+              { label: 'Val blah 1', value: '1' },
+              { label: 'Val 2', value: '2' },
+              { label: 'Val 3', value: '3' },
+            ]}
+            disabled
+            value={this.state.radioValue}
+            onChange={value => this.setState(() => ({ radioValue: value }))}
+          />
         </Col>
         <Col>
           <h2>Toggle</h2>

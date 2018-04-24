@@ -49,12 +49,16 @@ export class SettingsPage extends React.PureComponent<
           </h2>
           {this.state.userMeta && (
             <>
-              <Toggle
-                label="Notifications"
-                checked={this.state.userMeta.notificationsEnabled}
-                onChange={this.onNotificationsEnabledChange}
-                debounce
-              />
+              <FormattedMessage id="settingsPageTurnOnNotificationsLabel">
+                {label => (
+                  <Toggle
+                    label={label}
+                    checked={this.state.userMeta!.notificationsEnabled}
+                    onChange={this.onNotificationsEnabledChange}
+                    debounce
+                  />
+                )}
+              </FormattedMessage>
             </>
           )}
         </Section>

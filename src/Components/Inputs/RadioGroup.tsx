@@ -7,6 +7,7 @@ interface RadioGroupProps<T> {
   legend: string;
   options: Array<{ label: string; value: T }>;
   value: T;
+  disabled?: boolean;
   onChange: (value: T) => void;
 }
 interface RadioGroupState {}
@@ -25,6 +26,7 @@ export class RadioGroup<T extends string> extends React.PureComponent<
         <Col role="radiogroup" aria-label={this.props.legend}>
           {this.props.options.map(o => (
             <RadioOfT
+              disabled={this.props.disabled}
               key={o.value}
               label={o.label}
               value={o.value}

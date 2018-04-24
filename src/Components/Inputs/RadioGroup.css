@@ -6,6 +6,9 @@
 .Radio {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+.Radio.Disabled {
+  color: var(--default-text-color-alpha07);
+}
 .Radio .RadioSpan {
   position: relative;
   transition: none;
@@ -24,8 +27,14 @@
   user-select: none;
   flex-shrink: 0;
 }
+.Radio.Disabled .RadioSpan svg {
+  fill: var(--default-text-color-alpha04);
+}
 .Radio .RadioSpan.Checked svg {
   fill: var(--primary-color);
+}
+.Radio.Disabled .RadioSpan.Checked svg {
+  fill: var(--primary-color-alpha07);
 }
 .Radio .RadioSpan.Focus {
   box-shadow: inset 1px 1px 0px 2px var(--primary-color-alpha02);

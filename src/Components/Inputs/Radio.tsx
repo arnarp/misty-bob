@@ -7,6 +7,7 @@ interface RadioProps<T> {
   label: string;
   value: T;
   checked: boolean;
+  disabled?: boolean;
   onChange: (value: T) => void;
 }
 interface RadioState {
@@ -24,7 +25,9 @@ export class Radio<T extends string> extends React.PureComponent<
     return (
       <Row
         as="label"
-        className="Radio"
+        className={classNames('Radio', {
+          Disabled: this.props.disabled,
+        })}
         alignItems="center"
         justifyContent="spaceBetween"
       >
@@ -37,6 +40,7 @@ export class Radio<T extends string> extends React.PureComponent<
           })}
         >
           <Input
+            disabled={this.props.disabled}
             absoluteHidden
             type="radio"
             value={this.props.value}

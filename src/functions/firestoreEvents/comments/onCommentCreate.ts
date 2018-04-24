@@ -6,30 +6,7 @@ import {
   CommentDocument,
   PostDocument,
   Post,
-  propertyOf,
-  UserMetaDocument,
 } from '../../../types';
-
-export const onCommentCreate = firestore
-  .document('/comments/{commentId}')
-  .onCreate((snapshot, context) => {
-    const newComment = snapshot.data() as CommentDocument;
-    if (context === undefined) {
-      return Promise.resolve();
-    }
-    const postRef = admin
-      .firestore()
-      .collection('posts')
-      .doc(newComment.postId);
-    if (postRef === null) {
-      return Promise.resolve();
-    }
-    return Promise.all([
-      updateNumberOfComments(postRef, newComment),
-      addCommentAuthorToSubscribers(postRef, newComment),
-      sendNotifications(postRef, newComment),
-    ]);
-  });
 
 const updateNumberOfComments = (
   postRef: admin.firestore.DocumentReference,
@@ -119,3 +96,24 @@ const addCommentAuthorToSubscribers = (
     .doc(newComment.authorUid)
     .set({});
 };
+
+export const onCommentCreate = firestore
+  .document('/comments/{commentId}')
+  .onCreate((snapshot, context) => {
+    const newComment = snapshot.data() as CommentDocument;
+    if (context === undefined) {
+      return Promise.resolve();
+    }
+    const postRef = admin
+      .firestore()
+      .collection('posts')
+      .doc(newComment.postId);
+    if (postRef === null) {
+      return Promise.resolve();
+    }
+    return Promise.all([
+      updateNumberOfComments(postRef, newComment),
+      addCommentAuthorToSubscribers(postRef, newComment),
+      sendNotifications(postRef, newComment),
+    ]);
+  });

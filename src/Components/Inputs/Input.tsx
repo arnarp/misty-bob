@@ -11,6 +11,7 @@ type InputProps = {
   tabIndex?: 0 | -1;
   value?: string;
   absoluteHidden?: boolean;
+  disabled?: boolean;
 };
 
 export const Input: React.SFC<InputProps> = props => {

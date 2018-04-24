@@ -7,6 +7,7 @@ import registerServiceWorker from './registerServiceWorker';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import * as isLocaleData from 'react-intl/locale-data/is';
 import * as enLocaleData from 'react-intl/locale-data/en';
+import { localeStrToLocale } from './Utils/localeStrToLocale';
 
 addLocaleData([...isLocaleData, ...enLocaleData]);
 
@@ -33,7 +34,7 @@ declare global {
   }
 }
 
-const locale = navigator.language === 'is' ? 'is' : 'en';
+const locale = localeStrToLocale(navigator.language);
 const messagesIS = {
   sendReply: 'Senda svar',
   writeAReplyPlaceholder: 'Skrifaðu athugasemd',
@@ -41,6 +42,7 @@ const messagesIS = {
   settings: 'Stillingar',
   logoutBtn: 'Útskráning',
   settingsPageNotificationsH2: 'Tilkynningar',
+  settingsPageTurnOnNotificationsLabel: 'Tilkynningar',
 };
 const messagesEN = {
   sendReply: 'Reply',
@@ -49,6 +51,7 @@ const messagesEN = {
   settings: 'Settings',
   logoutBtn: 'Log out',
   settingsPageNotificationsH2: 'Push notifications',
+  settingsPageTurnOnNotificationsLabel: 'Push notifications',
 };
 const messages = locale === 'is' ? messagesIS : messagesEN;
 
