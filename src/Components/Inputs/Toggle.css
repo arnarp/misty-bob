@@ -29,3 +29,9 @@
   transform: translateX(calc(var(--input-width) - var(--circle-radius)));
   background: var(--primary-color);
 }
+.Toggle.Focus .InputContainer .InputCircle {
+  box-shadow: 0px 0px 0px 6px var(--default-color-alpha02);
+}
+.Toggle.Focus.Checked .InputContainer .InputCircle {
+  box-shadow: 0px 0px 0px 6px var(--primary-color-alpha02);
+}

@@ -29,7 +29,10 @@ export class Toggle extends React.PureComponent<ToggleProps, ToggleState> {
   render() {
     return (
       <Row
-        className={classNames('Toggle', { Checked: this.props.checked })}
+        className={classNames('Toggle', {
+          Checked: this.props.checked,
+          Focus: this.state.focus,
+        })}
         as="label"
         alignItems="center"
         justifyContent="spaceBetween"
