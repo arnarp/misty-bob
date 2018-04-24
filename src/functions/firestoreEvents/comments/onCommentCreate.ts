@@ -6,6 +6,8 @@ import {
   CommentDocument,
   PostDocument,
   Post,
+  propertyOf,
+  UserMetaDocument,
 } from '../../../types';
 
 export const onCommentCreate = firestore
@@ -78,7 +80,11 @@ const sendNotifications = async (
           if (!val.exists) {
             return undefined;
           }
-          return { ...val.data(), id: val.id } as UserMeta;
+          const userMeta = mapDocument<UserMeta>(val as any);
+          if (!userMeta.notificationsEnabled) {
+            return undefined;
+          }
+          return userMeta;
         }),
     ),
   );
