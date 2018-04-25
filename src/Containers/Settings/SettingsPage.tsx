@@ -43,7 +43,7 @@ export class SettingsPage extends React.PureComponent<
         <PageHeader>
           <FormattedMessage id="settings" />
         </PageHeader>
-        <Section sidePaddings>
+        <Section sidePaddings="mediumResponsive">
           <h2>
             <FormattedMessage id="settingsPageNotificationsH2" />
           </h2>
@@ -53,7 +53,7 @@ export class SettingsPage extends React.PureComponent<
                 {label => (
                   <Toggle
                     label={label}
-                    checked={this.state.userMeta!.notificationsEnabled}
+                    checked={this.state.userMeta!.pushNotifications.enabled}
                     onChange={this.onNotificationsEnabledChange}
                     debounce
                   />
@@ -85,7 +85,10 @@ export class SettingsPage extends React.PureComponent<
   private onNotificationsEnabledChange = (value: boolean) => {
     if (this.state.userMeta) {
       const update: Partial<UserMetaDocument> = {
-        notificationsEnabled: value,
+        pushNotifications: {
+          ...this.state.userMeta.pushNotifications,
+          enabled: value,
+        },
       };
       this.state.userMeta.ref
         .update(update)

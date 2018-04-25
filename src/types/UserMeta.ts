@@ -4,7 +4,11 @@ import { Overwrite, Omit, BaseDocument } from '.';
 export type UserMeta = BaseDocument &
   Readonly<{
     messagingTokens: Array<MessagingToken>;
-    notificationsEnabled: boolean;
+    pushNotifications: {
+      enabled: boolean;
+      comments: 'all' | 'off';
+      likes: 'all' | 'off';
+    };
   }>;
 
 export type MessagingToken = Readonly<{
@@ -34,3 +38,12 @@ export type NewUserMetaDocument = Overwrite<
     messagingTokens: Array<MessagingToken | NewMessagingToken>;
   }
 >;
+
+export const DefaultUserMetaDocument: UserMetaDocument = {
+  messagingTokens: [],
+  pushNotifications: {
+    enabled: true,
+    comments: 'all',
+    likes: 'all',
+  },
+};

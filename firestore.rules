@@ -49,7 +49,7 @@ service cloud.firestore {
     }
     match /userMetas/{id} {
       allow read: if (id == request.auth.uid)
-      allow update: if (request.writeFields.size() == 1) && ('notificationsEnabled' in request.writeFields)
+      allow update: if (request.writeFields.size() == 1) && ('pushNotifications' in request.writeFields)
     }
   }
 }

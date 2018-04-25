@@ -58,7 +58,10 @@ const sendNotifications = async (
             return undefined;
           }
           const userMeta = mapDocument<UserMeta>(val as any);
-          if (!userMeta.notificationsEnabled) {
+          if (
+            userMeta.pushNotifications.enabled === false ||
+            userMeta.pushNotifications.comments === 'off'
+          ) {
             return undefined;
           }
           return userMeta;

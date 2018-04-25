@@ -1,3 +1,12 @@
 {
-  "prettier.semi": true
+  "prettier.semi": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "build*": true,
+    "node_modules": true
+  }
 }

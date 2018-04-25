@@ -103,7 +103,7 @@ export class DiscussionPage extends React.PureComponent<
         {this.state.post && (
           <>
             <DocumentTitle title={this.state.post.title} />
-            <Section sidePaddings>
+            <Section sidePaddings="mediumResponsive">
               <Row spacing="medium">
                 <Avatar
                   photoURL={this.state.post.authorPhotoURL}

@@ -40,7 +40,7 @@ export class HomePage extends React.PureComponent<
     return (
       <main>
         <DocumentTitle title="Forsíða" />
-        <Section sidePaddings>
+        <Section sidePaddings="mediumResponsive">
           <Discussions posts={this.state.posts} />
         </Section>
         <FixedActionPanel>

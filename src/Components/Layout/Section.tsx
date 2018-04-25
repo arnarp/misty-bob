@@ -1,17 +1,16 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import { Col } from '../../Components/Layout';
-import './Section.css';
+import { Flex, FlexProps } from '../../Components/Layout';
+import { Omit } from '../../types';
 
-type SectionProps = { className?: string; sidePaddings?: boolean };
+type SectionProps = Omit<FlexProps, 'as' | 'direction'> & {
+  direction?: 'row' | 'column';
+};
 
-export const Section: React.SFC<SectionProps> = props => (
-  <Col
-    className={classNames('Section', props.className, {
-      SidePaddings: props.sidePaddings,
-    })}
-    as="section"
-  >
-    {props.children}
-  </Col>
-);
+export const Section: React.SFC<SectionProps> = props => {
+  const { direction, ...rest } = props;
+  return (
+    <Flex as="section" direction={direction || 'column'} {...rest}>
+      {props.children}
+    </Flex>
+  );
+};
