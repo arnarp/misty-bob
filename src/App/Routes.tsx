@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { injectIntl } from 'react-intl';
 import { createAsyncComponent } from '../Components/AsyncComponent';
 import { HomePage } from '../Containers/Home';
 import { NotFoundPage } from '../Containers/NotFound';
@@ -17,8 +18,10 @@ const AsyncAdmin = createAsyncComponent(
 const AsyncDev = createAsyncComponent(() =>
   import('../Containers/Dev').then(m => m.DevRoutes),
 );
-const AsyncSettingsPage = createAsyncComponent(() =>
-  import('../Containers/Settings').then(m => m.SettingsPage),
+const AsyncSettingsPage = injectIntl(
+  createAsyncComponent(() =>
+    import('../Containers/Settings').then(m => m.SettingsPage),
+  ),
 );
 
 type RoutesProps = {

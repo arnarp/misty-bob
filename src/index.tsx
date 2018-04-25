@@ -43,6 +43,10 @@ const messagesIS = {
   logoutBtn: 'Útskráning',
   settingsPageNotificationsH2: 'Tilkynningar',
   settingsPageTurnOnNotificationsLabel: 'Tilkynningar',
+  settingsPageCommentsRadioLegend: 'Athugasemdir',
+  settingsPageLikesRadioLegend: 'Likes',
+  settingsPageRadioOptionAll: 'Allar',
+  settingsPageRadioOptionOff: 'Engar',
 };
 const messagesEN = {
   sendReply: 'Reply',
@@ -52,6 +56,10 @@ const messagesEN = {
   logoutBtn: 'Log out',
   settingsPageNotificationsH2: 'Push notifications',
   settingsPageTurnOnNotificationsLabel: 'Push notifications',
+  settingsPageCommentsRadioLegend: 'Comments',
+  settingsPageLikesRadioLegend: 'Likes',
+  settingsPageRadioOptionAll: 'All',
+  settingsPageRadioOptionOff: 'None',
 };
 const messages = locale === 'is' ? messagesIS : messagesEN;
 

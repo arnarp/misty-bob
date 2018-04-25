@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { firestore } from '../../firebase';
 import { Col, PageHeader, Section } from '../../Components';
 import { FormattedDocumentTitle } from '../../Components/SideEffects';
 import { UserInfo, UserMeta, mapDocument, UserMetaDocument } from '../../types';
 import { Toggle } from '../../Components/Inputs/Toggle';
+import { RadioGroup } from '../../Components/Inputs/RadioGroup';
 
-type SettingsPageProps = {
+type SettingsPageProps = InjectedIntlProps & {
   userInfo?: UserInfo | null;
 };
 
@@ -48,25 +49,70 @@ export class SettingsPage extends React.PureComponent<
             <FormattedMessage id="settingsPageNotificationsH2" />
           </h2>
           {this.state.userMeta && (
-            <>
-              <FormattedMessage id="settingsPageTurnOnNotificationsLabel">
-                {label => (
-                  <Toggle
-                    label={label}
-                    checked={this.state.userMeta!.pushNotifications.enabled}
-                    onChange={this.onNotificationsEnabledChange}
-                    debounce
-                  />
-                )}
-              </FormattedMessage>
-            </>
+            <Col spacing="medium">
+              <Toggle
+                label={this.props.intl.formatMessage({
+                  id: 'settingsPageTurnOnNotificationsLabel',
+                })}
+                checked={this.state.userMeta.pushNotifications.enabled}
+                onChange={this.onNotificationsEnabledChange}
+                debounce
+              />
+              <RadioGroup
+                legend={this.props.intl.formatMessage({
+                  id: 'settingsPageCommentsRadioLegend',
+                })}
+                options={[
+                  {
+                    label: this.props.intl.formatMessage({
+                      id: 'settingsPageRadioOptionAll',
+                    }),
+                    value: 'all',
+                  },
+                  {
+                    label: this.props.intl.formatMessage({
+                      id: 'settingsPageRadioOptionOff',
+                    }),
+                    value: 'off',
+                  },
+                ]}
+                disabled={
+                  this.state.userMeta.pushNotifications.enabled === false
+                }
+                value={this.state.userMeta.pushNotifications.comments}
+                onChange={this.onPushNotificationsCommentsChange}
+              />
+              <RadioGroup
+                legend={this.props.intl.formatMessage({
+                  id: 'settingsPageLikesRadioLegend',
+                })}
+                options={[
+                  {
+                    label: this.props.intl.formatMessage({
+                      id: 'settingsPageRadioOptionAll',
+                    }),
+                    value: 'all',
+                  },
+                  {
+                    label: this.props.intl.formatMessage({
+                      id: 'settingsPageRadioOptionOff',
+                    }),
+                    value: 'off',
+                  },
+                ]}
+                disabled={
+                  this.state.userMeta.pushNotifications.enabled === false
+                }
+                value={this.state.userMeta.pushNotifications.likes}
+                onChange={this.onPushNotificationsLikesChange}
+              />
+            </Col>
           )}
         </Section>
       </Col>
     );
   }
   private subscribeToUserMeta() {
-    console.log('subscribeToUserMeta');
     if (!this.props.userInfo) {
       return;
     }
@@ -83,21 +129,52 @@ export class SettingsPage extends React.PureComponent<
     this.subscriptions.push(userMetaSubscription);
   }
   private onNotificationsEnabledChange = (value: boolean) => {
-    if (this.state.userMeta) {
-      const update: Partial<UserMetaDocument> = {
-        pushNotifications: {
-          ...this.state.userMeta.pushNotifications,
-          enabled: value,
-        },
-      };
-      this.state.userMeta.ref
-        .update(update)
-        .then(() => {
-          console.log('UserMeta updated');
-        })
-        .catch((reason: any) => {
-          console.log('UserMeta update rejected', reason);
-        });
+    if (this.state.userMeta === undefined) {
+      return;
     }
+    const update: Partial<UserMetaDocument> = {
+      pushNotifications: {
+        ...this.state.userMeta.pushNotifications,
+        enabled: value,
+      },
+    };
+    this.updateUserMeta(update);
   };
+  private onPushNotificationsCommentsChange = (value: 'all' | 'off') => {
+    if (this.state.userMeta === undefined) {
+      return;
+    }
+    const update: Partial<UserMetaDocument> = {
+      pushNotifications: {
+        ...this.state.userMeta.pushNotifications,
+        comments: value,
+      },
+    };
+    this.updateUserMeta(update);
+  };
+  private onPushNotificationsLikesChange = (value: 'all' | 'off') => {
+    if (this.state.userMeta === undefined) {
+      return;
+    }
+    const update: Partial<UserMetaDocument> = {
+      pushNotifications: {
+        ...this.state.userMeta.pushNotifications,
+        likes: value,
+      },
+    };
+    this.updateUserMeta(update);
+  };
+  private updateUserMeta(update: Partial<UserMetaDocument>) {
+    if (this.state.userMeta === undefined) {
+      return;
+    }
+    this.state.userMeta.ref
+      .update(update)
+      .then(() => {
+        console.log('UserMeta updated');
+      })
+      .catch((reason: any) => {
+        console.log('UserMeta update rejected', reason);
+      });
+  }
 }
