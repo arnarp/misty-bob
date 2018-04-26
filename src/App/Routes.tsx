@@ -25,7 +25,7 @@ const AsyncSettingsPage = injectIntl(
 );
 
 type RoutesProps = {
-  userInfo?: UserInfo | null;
+  userInfo: UserInfo | null;
 };
 
 export const Routes: React.SFC<RoutesProps> = props => (

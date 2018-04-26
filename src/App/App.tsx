@@ -74,10 +74,12 @@ export class App extends React.Component<{}, AppState> {
   render() {
     return (
       <BrowserRouter>
-        <>
-          <AppBar userInfo={this.state.userInfo} onLogout={this.onLogout} />
-          <Routes userInfo={this.state.userInfo} />
-        </>
+        {this.state.userInfo !== undefined && (
+          <>
+            <AppBar userInfo={this.state.userInfo} onLogout={this.onLogout} />
+            <Routes userInfo={this.state.userInfo} />
+          </>
+        )}
       </BrowserRouter>
     );
   }

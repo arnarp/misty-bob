@@ -8,13 +8,14 @@ import './AppBar.css';
 import { UserInfo } from '../../types';
 
 interface AppBarProps {
-  userInfo?: UserInfo | null;
+  userInfo: UserInfo | null;
   onLogout: () => void;
 }
 
 export class AppBar extends React.PureComponent<AppBarProps, {}> {
   popover: PopoverControl | null;
   render() {
+    console.log('AppBar render', this.props);
     return (
       <Row
         alignItems="center"

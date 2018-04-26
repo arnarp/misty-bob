@@ -8,7 +8,7 @@ import { Toggle } from '../../Components/Inputs/Toggle';
 import { RadioGroup } from '../../Components/Inputs/RadioGroup';
 
 type SettingsPageProps = InjectedIntlProps & {
-  userInfo?: UserInfo | null;
+  userInfo: UserInfo | null;
 };
 
 const initialState = {

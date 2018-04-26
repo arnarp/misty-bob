@@ -2,11 +2,11 @@ import { firestore } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import {
   mapDocument,
-  UserMeta,
   CommentDocument,
   PostDocument,
   Post,
 } from '../../../types';
+import { sendNotifications } from '../../utils/sendNotifications';
 
 const updateNumberOfComments = (
   postRef: admin.firestore.DocumentReference,
@@ -28,7 +28,7 @@ const updateNumberOfComments = (
     return transaction.update(postRef, postUpdate);
   });
 
-const sendNotifications = async (
+const sendNewCommentNotifications = async (
   postRef: admin.firestore.DocumentReference,
   newComment: CommentDocument,
 ) => {
@@ -46,51 +46,14 @@ const sendNotifications = async (
       clickAction: `https://misty-bob.firebaseapp.com/d/${post.id}`,
     },
   };
-  const userMetaDocuments = await Promise.all(
-    subscribers.map(s =>
-      admin
-        .firestore()
-        .collection('userMetas')
-        .doc(s)
-        .get()
-        .then(val => {
-          if (!val.exists) {
-            return undefined;
-          }
-          const userMeta = mapDocument<UserMeta>(val as any);
-          if (
-            userMeta.pushNotifications.enabled === false ||
-            userMeta.pushNotifications.comments === 'off'
-          ) {
-            return undefined;
-          }
-          return userMeta;
-        }),
-    ),
+  return sendNotifications(
+    subscribers,
+    message,
+    meta => meta.pushNotifications.comments === 'all',
+    newComment,
   );
-  const messagingTokens = userMetaDocuments.reduce((acc, val) => {
-    if (val === undefined || val.id === newComment.authorUid) {
-      return acc;
-    }
-    val.messagingTokens.map(t => t.token).forEach(i => acc.add(i));
-    return acc;
-  }, new Set<string>());
-  if (messagingTokens.size === 0) {
-    return;
-  }
-  return admin
-    .messaging()
-    .sendToDevice(Array.from(messagingTokens.values()), message)
-    .then(r => {
-      // Response is a message ID string.
-      console.log('Successfully sent message:', r);
-    })
-    .catch(error => {
-      console.log('Error sending message:', error);
-    });
 };
-
-const addCommentAuthorToSubscribers = (
+const addCommentAuthorToPostSubscribers = (
   postRef: admin.firestore.DocumentReference,
   newComment: CommentDocument,
 ) => {
@@ -116,7 +79,7 @@ export const onCommentCreate = firestore
     }
     return Promise.all([
       updateNumberOfComments(postRef, newComment),
-      addCommentAuthorToSubscribers(postRef, newComment),
-      sendNotifications(postRef, newComment),
+      addCommentAuthorToPostSubscribers(postRef, newComment),
+      sendNewCommentNotifications(postRef, newComment),
     ]);
   });

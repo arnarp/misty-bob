@@ -20,7 +20,7 @@ type LikeButtonProps = {
   likeableDocumentType: 'Post' | 'Comment';
   likes?: Map<UID, Like>;
   pageId: DocumentId;
-  userInfo?: UserInfo | null;
+  userInfo: UserInfo | null;
 };
 
 const initialState = { modifier: 0 };

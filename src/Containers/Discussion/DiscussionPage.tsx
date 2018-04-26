@@ -23,7 +23,7 @@ import { Avatar } from '../../Components/Discussions/Avatar';
 import './DiscussionPage.css';
 
 interface DiscussionPageProps extends RouteComponentProps<{ id: string }> {
-  userInfo?: UserInfo | null;
+  userInfo: UserInfo | null;
 }
 
 const initialState = {

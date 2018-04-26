@@ -27,6 +27,8 @@ export type Authorable = BaseDocument &
     dateOfCreation: Date | null;
   }>;
 
+export type AuthorableDocument = Omit<Authorable, 'id' | 'ref'>;
+
 export type NewAuthorableDocument = Overwrite<
   Omit<Authorable, 'id' | 'ref'>,
   {
