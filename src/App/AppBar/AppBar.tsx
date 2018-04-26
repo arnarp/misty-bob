@@ -15,7 +15,6 @@ interface AppBarProps {
 export class AppBar extends React.PureComponent<AppBarProps, {}> {
   popover: PopoverControl | null;
   render() {
-    console.log('AppBar render', this.props);
     return (
       <Row
         alignItems="center"
@@ -89,11 +88,8 @@ export class AppBar extends React.PureComponent<AppBarProps, {}> {
             style="flat"
             onClick={() => {
               const provider = new auth.GoogleAuthProvider();
-              auth()
-                .signInWithPopup(provider)
-                // .signInWithRedirect(provider)
-                .then(result => {})
-                .catch(function() {});
+              provider.setCustomParameters({ prompt: 'select_account' });
+              auth().signInWithRedirect(provider);
             }}
           >
             Innskráning

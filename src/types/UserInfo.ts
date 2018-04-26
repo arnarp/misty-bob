@@ -1,7 +1,16 @@
-import { UserInfo as FirebaseUserInfo } from 'firebase/app';
+import { User } from 'firebase/app';
 import { Overwrite } from './Utils';
+import { UID } from '.';
 
 export type UserInfo = Overwrite<
-  FirebaseUserInfo,
+  User,
   { displayName: string; photoURL: string }
 >;
+
+export type PublicUserInfo = {
+  displayName: string;
+  uName: string;
+  photoURL: string;
+  uid: UID;
+  registrationDate: Date;
+};

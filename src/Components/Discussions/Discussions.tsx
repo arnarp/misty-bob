@@ -21,7 +21,7 @@ export class Discussions extends React.PureComponent<
 
   render() {
     return (
-      <Col as="ol" className="Discussions">
+      <Col as="ol" className="Discussions" spacing="medium">
         {this.props.posts.map(p => (
           <Row as="li" key={p.id} spacing="medium">
             <Avatar photoURL={p.authorPhotoURL} size="default" />

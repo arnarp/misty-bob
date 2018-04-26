@@ -5,7 +5,7 @@ import { createAsyncComponent } from '../Components/AsyncComponent';
 import { HomePage } from '../Containers/Home';
 import { NotFoundPage } from '../Containers/NotFound';
 import { CreateIndexPage } from '../Containers/Create';
-import { UserInfo } from '../types';
+import { UserInfo, UserMeta } from '../types';
 import { DiscussionPage } from '../Containers/Discussion';
 
 // const AsyncHome = createAsyncComponent(() =>
@@ -26,6 +26,7 @@ const AsyncSettingsPage = injectIntl(
 
 type RoutesProps = {
   userInfo: UserInfo | null;
+  userMeta: UserMeta;
 };
 
 export const Routes: React.SFC<RoutesProps> = props => (
@@ -46,7 +47,12 @@ export const Routes: React.SFC<RoutesProps> = props => (
     />
     <Route
       path="/settings"
-      render={() => <AsyncSettingsPage userInfo={props.userInfo} />}
+      render={() => (
+        <AsyncSettingsPage
+          userInfo={props.userInfo}
+          userMeta={props.userMeta}
+        />
+      )}
     />
     <Route path="/admin" component={AsyncAdmin} />
     <Route path="/dev" component={AsyncDev} />

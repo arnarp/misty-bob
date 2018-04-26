@@ -1,5 +1,5 @@
 import { firestore } from 'firebase/app';
-import { Overwrite, Omit, BaseDocument } from '.';
+import { Overwrite, Omit, BaseDocument, UserClaims } from '.';
 
 export type UserMeta = BaseDocument &
   Readonly<{
@@ -9,6 +9,8 @@ export type UserMeta = BaseDocument &
       comments: 'all' | 'off';
       likes: 'all' | 'off';
     };
+    claimsRefreshTime?: Date;
+    claims: UserClaims;
   }>;
 
 export type MessagingToken = Readonly<{
@@ -41,8 +43,10 @@ export type NewUserMetaDocument = Overwrite<
 
 export const DefaultUserMetaDocument: UserMetaDocument = {
   messagingTokens: [],
+  claims: {},
+  claimsRefreshTime: undefined,
   pushNotifications: {
-    enabled: true,
+    enabled: false,
     comments: 'all',
     likes: 'all',
   },

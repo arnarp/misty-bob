@@ -51,5 +51,8 @@ service cloud.firestore {
       allow read: if (id == request.auth.uid)
       allow update: if (request.writeFields.size() == 1) && ('pushNotifications' in request.writeFields)
     }
+    match /publicUserInfo/{id} {
+      allow read;
+    }
   }
 }
