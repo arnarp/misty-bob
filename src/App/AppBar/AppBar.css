@@ -1,3 +1,7 @@
+.AppBarContainer {
+  height: 60px;
+  width: 100%;
+}
 .AppBar {
   height: 48px;
   width: 100vw;

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import * as firebase from 'firebase/app';
 import { Routes } from './Routes';
-import './App.css';
 import { auth, messaging, refreshFCMToken, firestore } from '../firebase';
 import { b64DecodeUnicode } from '../Utils/converters';
 import { UserClaims, UserInfo, UserMeta, mapDocument } from 'src/types';
@@ -59,14 +58,17 @@ export class App extends React.Component<{}, AppState> {
     return (
       <BrowserRouter>
         <>
-          {this.showAppBar(this.state.userInfo) && (
+          {this.renderAppBar(this.state.userInfo, this.state.userMeta) && (
             <AppBar userInfo={this.state.userInfo} onLogout={this.onLogout} />
           )}
-          {this.showRoutes(this.state.userInfo, this.state.userMeta) && (
+          {this.renderRoutes(this.state.userInfo, this.state.userMeta) && (
             <Routes
               userInfo={this.state.userInfo}
               userMeta={this.state.userMeta}
             />
+          )}
+          {this.renderOnboarding(this.state.userInfo, this.state.userMeta) && (
+            <h1>Onboarding</h1>
           )}
         </>
       </BrowserRouter>
@@ -130,18 +132,37 @@ export class App extends React.Component<{}, AppState> {
       });
     this.subscriptions.push(this.unsubscribeToUserMeta);
   }
-  private showAppBar(
+  private renderAppBar(
     userInfo: UserInfo | null | undefined,
+    userMeta: undefined | UserMeta,
   ): userInfo is UserInfo | null {
+    if (this.renderOnboarding(userInfo, userMeta)) {
+      return false;
+    }
     return userInfo !== undefined;
   }
-  private showRoutes(
+  private renderRoutes(
     userInfo: UserInfo | null | undefined,
     userMeta: undefined | UserMeta,
   ): userInfo is UserInfo | null {
     if (this.state.userInfo === undefined) {
       return false;
     }
+    if (this.renderOnboarding(userInfo, userMeta)) {
+      return false;
+    }
     return userInfo === null || this.state.userMeta !== undefined;
+  }
+  private renderOnboarding(
+    userInfo: UserInfo | null | undefined,
+    userMeta: undefined | UserMeta,
+  ): userInfo is UserInfo {
+    if (!userInfo) {
+      return false;
+    }
+    return (
+      userInfo.metadata.creationTime === userInfo.metadata.lastSignInTime ||
+      (userMeta !== undefined && userMeta.claims.uName === undefined)
+    );
   }
 }
