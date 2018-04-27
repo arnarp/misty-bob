@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import * as firebase from 'firebase/app';
-import { Routes } from './Routes';
 import { auth, messaging, refreshFCMToken, firestore } from '../firebase';
+import { Routes } from './Routes';
+import { OnboardingPage } from '../Containers/Onboarding';
 import { b64DecodeUnicode } from '../Utils/converters';
 import { UserClaims, UserInfo, UserMeta, mapDocument } from 'src/types';
 import { AppBar } from './AppBar';
@@ -68,7 +69,7 @@ export class App extends React.Component<{}, AppState> {
             />
           )}
           {this.renderOnboarding(this.state.userInfo, this.state.userMeta) && (
-            <h1>Onboarding</h1>
+            <OnboardingPage userMeta={this.state.userMeta} />
           )}
         </>
       </BrowserRouter>
@@ -139,7 +140,7 @@ export class App extends React.Component<{}, AppState> {
     if (this.renderOnboarding(userInfo, userMeta)) {
       return false;
     }
-    return userInfo !== undefined;
+    return userInfo !== undefined && userMeta !== undefined;
   }
   private renderRoutes(
     userInfo: UserInfo | null | undefined,

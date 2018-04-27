@@ -47,6 +47,8 @@ const messagesIS = {
   settingsPageLikesRadioLegend: 'Likes',
   settingsPageRadioOptionAll: 'Allar',
   settingsPageRadioOptionOff: 'Engar',
+  onboardingHeader: 'Velkomin',
+  onboardingCreatingUserMeta: 'Augnablik. Verið er að setja upp notanda.',
 };
 const messagesEN = {
   sendReply: 'Reply',
@@ -60,6 +62,8 @@ const messagesEN = {
   settingsPageLikesRadioLegend: 'Likes',
   settingsPageRadioOptionAll: 'All',
   settingsPageRadioOptionOff: 'None',
+  onboardingHeader: 'Welcome',
+  onboardingCreatingUserMeta: 'User account is being set up',
 };
 const messages = locale === 'is' ? messagesIS : messagesEN;
 
