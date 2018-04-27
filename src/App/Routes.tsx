@@ -26,7 +26,7 @@ const AsyncSettingsPage = injectIntl(
 
 type RoutesProps = {
   userInfo: UserInfo | null;
-  userMeta: UserMeta;
+  userMeta?: UserMeta;
 };
 
 export const Routes: React.SFC<RoutesProps> = props => (
@@ -47,12 +47,17 @@ export const Routes: React.SFC<RoutesProps> = props => (
     />
     <Route
       path="/settings"
-      render={() => (
-        <AsyncSettingsPage
-          userInfo={props.userInfo}
-          userMeta={props.userMeta}
-        />
-      )}
+      render={() => {
+        if (props.userMeta === undefined) {
+          return null;
+        }
+        return (
+          <AsyncSettingsPage
+            userInfo={props.userInfo}
+            userMeta={props.userMeta}
+          />
+        );
+      }}
     />
     <Route path="/admin" component={AsyncAdmin} />
     <Route path="/dev" component={AsyncDev} />

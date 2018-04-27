@@ -40,14 +40,3 @@ export type NewUserMetaDocument = Overwrite<
     messagingTokens: Array<MessagingToken | NewMessagingToken>;
   }
 >;
-
-export const DefaultUserMetaDocument: UserMetaDocument = {
-  messagingTokens: [],
-  claims: {},
-  claimsRefreshTime: undefined,
-  pushNotifications: {
-    enabled: false,
-    comments: 'all',
-    likes: 'all',
-  },
-};

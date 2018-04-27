@@ -37,6 +37,7 @@ export class HomePage extends React.PureComponent<
     this.subscriptions.forEach(u => u());
   }
   render() {
+    console.log('HomePage render');
     return (
       <main>
         <DocumentTitle title="Forsíða" />

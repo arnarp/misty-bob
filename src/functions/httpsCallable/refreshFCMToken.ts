@@ -1,10 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import {
-  UserMetaDocument,
-  NewUserMetaDocument,
-  DefaultUserMetaDocument,
-} from '../../types/UserMeta';
+import { UserMetaDocument, NewUserMetaDocument } from '../../types/UserMeta';
 
 export const refreshFCMToken = functions.https.onCall((data, context) => {
   if (!context.auth) {
@@ -27,12 +23,7 @@ export const refreshFCMToken = functions.https.onCall((data, context) => {
   return admin.firestore().runTransaction(async transaction => {
     const userMetaSnapshot = await transaction.get(userMetaDocRef);
     if (!userMetaSnapshot.exists) {
-      const newUserMetaDocument: NewUserMetaDocument = {
-        ...DefaultUserMetaDocument,
-        claimsRefreshTime: undefined,
-        messagingTokens: [newToken],
-      };
-      return transaction.create(userMetaDocRef, newUserMetaDocument);
+      return;
     }
     const currentMessagingTokens = (userMetaSnapshot.data() as UserMetaDocument)
       .messagingTokens;

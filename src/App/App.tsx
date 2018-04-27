@@ -59,16 +59,15 @@ export class App extends React.Component<{}, AppState> {
     return (
       <BrowserRouter>
         <>
-          {this.state.userInfo !== undefined && (
+          {this.showAppBar(this.state.userInfo) && (
             <AppBar userInfo={this.state.userInfo} onLogout={this.onLogout} />
           )}
-          {this.state.userInfo !== undefined &&
-            this.state.userMeta !== undefined && (
-              <Routes
-                userInfo={this.state.userInfo}
-                userMeta={this.state.userMeta}
-              />
-            )}
+          {this.showRoutes(this.state.userInfo, this.state.userMeta) && (
+            <Routes
+              userInfo={this.state.userInfo}
+              userMeta={this.state.userMeta}
+            />
+          )}
         </>
       </BrowserRouter>
     );
@@ -130,5 +129,19 @@ export class App extends React.Component<{}, AppState> {
         }
       });
     this.subscriptions.push(this.unsubscribeToUserMeta);
+  }
+  private showAppBar(
+    userInfo: UserInfo | null | undefined,
+  ): userInfo is UserInfo | null {
+    return userInfo !== undefined;
+  }
+  private showRoutes(
+    userInfo: UserInfo | null | undefined,
+    userMeta: undefined | UserMeta,
+  ): userInfo is UserInfo | null {
+    if (this.state.userInfo === undefined) {
+      return false;
+    }
+    return userInfo === null || this.state.userMeta !== undefined;
   }
 }

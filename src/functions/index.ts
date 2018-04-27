@@ -1,10 +1,11 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
 export * from './firestoreEvents';
 export * from './httpsCallable';
+export * from './auth';
 
 export const helloWorld = functions.https.onRequest(
   async (request, response) => {
