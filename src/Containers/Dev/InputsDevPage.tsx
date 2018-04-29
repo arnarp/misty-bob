@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Col } from '../../Components';
 import { RadioGroup } from '../../Components/Inputs/RadioGroup';
 import { Toggle } from '../../Components/Inputs/Toggle';
-import { TextInput } from '../../Components/Inputs/TextInput';
+import { TextInput, reduceValidators } from '../../Components/Inputs';
 import {
   RequiredTextInputValidator,
   MinLengthTextInputValidator,
@@ -23,8 +23,15 @@ export class InputsDevPage extends React.PureComponent<
   InputsDevPageState
 > {
   readonly state: InputsDevPageState = initialState;
-
+  readonly textInputValidator = [
+    RequiredTextInputValidator,
+    MinLengthTextInputValidator(2),
+  ];
   render() {
+    const textInputError = reduceValidators(
+      this.textInputValidator,
+      this.state.textInputValue,
+    );
     return (
       <Col as="main" sidePaddings="mediumResponsive" spacing="large">
         <h1>Inputs</h1>
@@ -74,10 +81,7 @@ export class InputsDevPage extends React.PureComponent<
             label="Text input label"
             value={this.state.textInputValue}
             onChange={value => this.setState(() => ({ textInputValue: value }))}
-            validators={[
-              RequiredTextInputValidator,
-              MinLengthTextInputValidator(2),
-            ]}
+            errorMessage={textInputError}
           />
         </Col>
       </Col>

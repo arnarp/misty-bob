@@ -79,42 +79,47 @@ export class App extends React.Component<{}, AppState> {
     this.setState(() => ({ userClaims: undefined }));
   };
   private subscribeToAuthStateChanged() {
-    const authStateSubscription = auth().onAuthStateChanged(async user => {
-      console.log('onAuthStateChanged', user);
-      const userClaims = await getClaims(user);
-      this.setState(() => ({ userInfo: user as UserInfo, userClaims }));
-      if (user === null) {
-        return;
-      }
-      if (process.env.NODE_ENV === 'production') {
-        const messagingRequestPermisson = messaging.requestPermission();
-        if (messagingRequestPermisson === null) {
+    const authStateSubscription = auth().onAuthStateChanged(
+      async user => {
+        console.log('onAuthStateChanged', user);
+        const userClaims = await getClaims(user);
+        this.setState(() => ({ userInfo: user as UserInfo, userClaims }));
+        if (user === null) {
           return;
         }
-        console.log('messagingRequestPermisson');
-        messagingRequestPermisson
-          .then(() => {
-            console.log('Notification permission granted.');
-            const getTokenPromise = messaging.getToken();
-            if (getTokenPromise === null) {
-              return;
-            }
-            getTokenPromise
-              .then((refreshedToken: string) => {
-                console.log('Token refreshed.', refreshedToken);
-                refreshFCMToken().catch(result => {
-                  console.log('httpsCallableResult error', result);
+        if (process.env.NODE_ENV === 'production') {
+          const messagingRequestPermisson = messaging.requestPermission();
+          if (messagingRequestPermisson === null) {
+            return;
+          }
+          console.log('messagingRequestPermisson');
+          messagingRequestPermisson
+            .then(() => {
+              console.log('Notification permission granted.');
+              const getTokenPromise = messaging.getToken();
+              if (getTokenPromise === null) {
+                return;
+              }
+              getTokenPromise
+                .then((refreshedToken: string) => {
+                  console.log('Token refreshed.', refreshedToken);
+                  refreshFCMToken().catch(result => {
+                    console.log('httpsCallableResult error', result);
+                  });
+                })
+                .catch((err: any) => {
+                  console.log('Unable to retrieve refreshed token ', err);
                 });
-              })
-              .catch((err: any) => {
-                console.log('Unable to retrieve refreshed token ', err);
-              });
-          })
-          .catch((err: any) => {
-            console.log('Unable to get permission to notify.', err);
-          });
-      }
-    });
+            })
+            .catch((err: any) => {
+              console.log('Unable to get permission to notify.', err);
+            });
+        }
+      },
+      error => {
+        console.log('App onAuthStateChanged error', error);
+      },
+    );
     this.subscriptions.push(authStateSubscription);
   }
   private subscribeToUserMeta() {
@@ -161,10 +166,9 @@ export class App extends React.Component<{}, AppState> {
     if (!userInfo) {
       return false;
     }
-    return false;
-    // return (
-    //   userInfo.metadata.creationTime === userInfo.metadata.lastSignInTime ||
-    //   (userMeta !== undefined && userMeta.claims.uName === undefined)
-    // );
+    return (
+      userInfo.metadata.creationTime === userInfo.metadata.lastSignInTime ||
+      (userMeta !== undefined && userMeta.claims.uName === undefined)
+    );
   }
 }

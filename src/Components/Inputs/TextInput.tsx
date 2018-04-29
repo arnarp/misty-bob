@@ -4,11 +4,23 @@ import './TextInput.css';
 import * as classNames from 'classnames';
 import { TextInputValidator } from './TextInputValidators';
 
+export const reduceValidators = (
+  validators: TextInputValidator[],
+  textInput: string,
+) =>
+  validators.reduce((res: React.ReactNode, validator) => {
+    if (res === null) {
+      return validator(textInput);
+    }
+    return res;
+  }, null);
+
 type TextInputProps = {
-  label: string;
+  label: React.ReactNode;
   value: string;
   onChange: (name: string) => void;
-  validators: TextInputValidator[];
+  // validators: TextInputValidator[];
+  errorMessage?: React.ReactNode;
   hasClickedSubmit?: boolean;
   type?: 'text' | 'email';
   size?: 'h1';
@@ -26,17 +38,9 @@ export class TextInput extends React.PureComponent<
   id: string = uuid();
   readonly state: TextInputState = initialState;
   render() {
-    const errorMsg = this.props.validators.reduce(
-      (res: React.ReactNode, validator) => {
-        if (res === null) {
-          return validator(this.props.value);
-        }
-        return res;
-      },
-      null,
-    );
+    // const errorMsg = reduceValidators(this.props.validators, this.props.value);
     const showErrorMessage: boolean | null | undefined =
-      errorMsg !== null &&
+      this.props.errorMessage !== null &&
       (this.props.hasClickedSubmit ||
         (!this.state.hasFocus &&
           this.state.hasReceivedFocus &&
@@ -67,7 +71,9 @@ export class TextInput extends React.PureComponent<
           />
         </div>
         {showErrorMessage &&
-          errorMsg && <p className="ErrorMessage">{errorMsg}</p>}
+          this.props.errorMessage && (
+            <p className="ErrorMessage">{this.props.errorMessage}</p>
+          )}
       </div>
     );
   }

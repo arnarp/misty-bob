@@ -47,10 +47,13 @@ const messagesIS = {
   settingsPageLikesRadioLegend: 'Likes',
   settingsPageRadioOptionAll: 'Allar',
   settingsPageRadioOptionOff: 'Engar',
-  onboardingHeader: 'Velkomin',
-  onboardingCreatingUserMeta: 'Augnablik. Verið er að setja upp notanda.',
+  // obp - Onboarding page
+  obpHeader: 'Velkomin',
+  obpCreatingUserMeta: 'Augnablik. Verið er að setja upp notanda.',
+  obpUserNameInputLabel: 'Veljið notendanafn',
+  obpMinLenght: 'Notendanafn þarf að vera a.m.k. {minLength} stafir',
   // tiv - Text input validators
-  tivMinLenght: 'Inntak þarf að vera a.m.k. {minLength} stafir.',
+  tivMinLenght: 'Inntak þarf að vera a.m.k. {minLength} stafir',
 };
 const messagesEN = {
   sendReply: 'Reply',
@@ -64,10 +67,13 @@ const messagesEN = {
   settingsPageLikesRadioLegend: 'Likes',
   settingsPageRadioOptionAll: 'All',
   settingsPageRadioOptionOff: 'None',
-  onboardingHeader: 'Welcome',
-  onboardingCreatingUserMeta: 'User account is being set up',
+  // obp - Onboarding page
+  obpHeader: 'Welcome',
+  obpCreatingUserMeta: 'User account is being set up',
+  obpUserNameInputLabel: 'Choose username',
+  obpMinLenght: 'Username needs to be at least {minLength} characters',
   // tiv - Text input validators
-  tivMinLenght: 'Input needs to be at least {minLenght} characters',
+  tivMinLenght: 'Input needs to be at least {minLength} characters',
 };
 const messages = locale === 'is' ? messagesIS : messagesEN;
 

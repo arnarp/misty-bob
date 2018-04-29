@@ -3,7 +3,7 @@ import { EditorState, convertToRaw } from 'draft-js';
 import * as firebase from 'firebase';
 import { DocumentTitle } from '../../Components/SideEffects/DocumentTitle';
 import { Col } from '../../Components/Layout/Col';
-import { TextInput } from '../../Components/Inputs/TextInput';
+import { TextInput, reduceValidators } from '../../Components/Inputs/TextInput';
 import { RequiredTextInputValidator } from '../../Components/Inputs/TextInputValidators';
 import { RichTextEditor } from '../../Components/Editor';
 import { Button } from '../../Components/Buttons';
@@ -26,6 +26,7 @@ export class CreateIndexPage extends React.PureComponent<
   CreateIndexPageState
 > {
   readonly state: CreateIndexPageState = initialState;
+  readonly titleInputValidator = [RequiredTextInputValidator];
   constructor(props: CreateIndexPageProps) {
     super(props);
     this.onTitleChange = this.onTitleChange.bind(this);
@@ -33,6 +34,10 @@ export class CreateIndexPage extends React.PureComponent<
   }
 
   render() {
+    const titleInputError = reduceValidators(
+      this.titleInputValidator,
+      this.state.title,
+    );
     return (
       <main>
         <DocumentTitle title="Stofna nýjan póst" />
@@ -45,7 +50,7 @@ export class CreateIndexPage extends React.PureComponent<
                 label="Titill færslu"
                 value={this.state.title}
                 onChange={this.onTitleChange}
-                validators={[RequiredTextInputValidator]}
+                errorMessage={titleInputError}
                 hasClickedSubmit={this.state.hasClickedSubmit}
               />
               <RichTextEditor
@@ -53,7 +58,12 @@ export class CreateIndexPage extends React.PureComponent<
                 onChange={this.onEditorChange}
                 editorControls={['H2', 'H3']}
               />
-              <Button width="fit-content" type="submit" color="default">
+              <Button
+                disabled={titleInputError !== null}
+                width="fit-content"
+                type="submit"
+                color="default"
+              >
                 Senda
               </Button>
             </Col>

@@ -27,6 +27,9 @@
 .Flex.column.Spacing-large > * + * {
   margin-top: 24px;
 }
+.Flex.MaxWidth-medium {
+  max-width: 600px;
+}
 .Flex.JustifyContent-start {
   justify-content: flex-start;
 }
