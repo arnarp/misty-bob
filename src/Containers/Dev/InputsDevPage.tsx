@@ -1,7 +1,12 @@
 import * as React from 'react';
-import { Col, PageHeader } from '../../Components';
+import { Col } from '../../Components';
 import { RadioGroup } from '../../Components/Inputs/RadioGroup';
 import { Toggle } from '../../Components/Inputs/Toggle';
+import { TextInput } from '../../Components/Inputs/TextInput';
+import {
+  RequiredTextInputValidator,
+  MinLengthTextInputValidator,
+} from '../../Components/Inputs/TextInputValidators';
 
 type InputsDevPageProps = {};
 
@@ -9,6 +14,7 @@ const initialState = {
   radioValue: '1',
   toggleChecked: false,
   toggleCheckedDb: false,
+  textInputValue: '',
 };
 type InputsDevPageState = Readonly<typeof initialState>;
 
@@ -21,7 +27,7 @@ export class InputsDevPage extends React.PureComponent<
   render() {
     return (
       <Col as="main" sidePaddings="mediumResponsive" spacing="large">
-        <PageHeader>Inputs</PageHeader>
+        <h1>Inputs</h1>
         <Col>
           <h2>Radio group</h2>
           <RadioGroup
@@ -60,6 +66,18 @@ export class InputsDevPage extends React.PureComponent<
             onChange={value =>
               this.setState(() => ({ toggleCheckedDb: value }))
             }
+          />
+        </Col>
+        <Col>
+          <h2>Text</h2>
+          <TextInput
+            label="Text input label"
+            value={this.state.textInputValue}
+            onChange={value => this.setState(() => ({ textInputValue: value }))}
+            validators={[
+              RequiredTextInputValidator,
+              MinLengthTextInputValidator(2),
+            ]}
           />
         </Col>
       </Col>

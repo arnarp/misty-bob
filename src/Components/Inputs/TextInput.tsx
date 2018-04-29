@@ -27,7 +27,7 @@ export class TextInput extends React.PureComponent<
   readonly state: TextInputState = initialState;
   render() {
     const errorMsg = this.props.validators.reduce(
-      (res: null | string, validator) => {
+      (res: React.ReactNode, validator) => {
         if (res === null) {
           return validator(this.props.value);
         }
@@ -66,7 +66,8 @@ export class TextInput extends React.PureComponent<
             }}
           />
         </div>
-        {showErrorMessage && <p className="ErrorMessage">{errorMsg}</p>}
+        {showErrorMessage &&
+          errorMsg && <p className="ErrorMessage">{errorMsg}</p>}
       </div>
     );
   }

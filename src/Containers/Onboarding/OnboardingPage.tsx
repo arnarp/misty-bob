@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Col } from '../../Components';
 import { UserMeta } from '../../types';
 
 type OnboardingProps = {
@@ -17,7 +18,7 @@ export class OnboardingPage extends React.PureComponent<
 
   render() {
     return (
-      <main>
+      <Col as="main" sidePaddings="mediumResponsive">
         <h1>
           <FormattedMessage id="onboardingHeader" />
         </h1>
@@ -27,7 +28,7 @@ export class OnboardingPage extends React.PureComponent<
           </p>
         )}
         {this.props.userMeta !== undefined && <p>Velja notendanafn</p>}
-      </main>
+      </Col>
     );
   }
 }

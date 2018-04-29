@@ -161,9 +161,10 @@ export class App extends React.Component<{}, AppState> {
     if (!userInfo) {
       return false;
     }
-    return (
-      userInfo.metadata.creationTime === userInfo.metadata.lastSignInTime ||
-      (userMeta !== undefined && userMeta.claims.uName === undefined)
-    );
+    return false;
+    // return (
+    //   userInfo.metadata.creationTime === userInfo.metadata.lastSignInTime ||
+    //   (userMeta !== undefined && userMeta.claims.uName === undefined)
+    // );
   }
 }
