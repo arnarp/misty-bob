@@ -20,6 +20,7 @@ type TextInputProps = {
   value: string;
   onChange: (name: string) => void;
   // validators: TextInputValidator[];
+  loading?: boolean;
   errorMessage?: React.ReactNode;
   successMessage?: React.ReactNode;
   hasClickedSubmit?: boolean;
@@ -39,8 +40,8 @@ export class TextInput extends React.PureComponent<
   id: string = uuid();
   readonly state: TextInputState = initialState;
   render() {
-    // const errorMsg = reduceValidators(this.props.validators, this.props.value);
-    const showErrorMessage: boolean | null | undefined =
+    const showErrorMessage =
+      !this.props.loading &&
       this.props.errorMessage !== null &&
       (this.props.hasClickedSubmit ||
         (!this.state.hasFocus &&
@@ -48,6 +49,7 @@ export class TextInput extends React.PureComponent<
           this.state.hasChangedInput));
     const showSuccessMessage =
       !showErrorMessage &&
+      !this.props.loading &&
       this.props.successMessage !== null &&
       this.props.successMessage !== undefined;
     return (
@@ -55,6 +57,7 @@ export class TextInput extends React.PureComponent<
         className={classNames('TextInput', {
           Focus: this.state.hasFocus,
           NotEmpty: this.props.value !== '',
+          Loading: this.props.loading,
           Error: showErrorMessage,
           Success: showSuccessMessage,
           'Size-H1': this.props.size === 'h1',

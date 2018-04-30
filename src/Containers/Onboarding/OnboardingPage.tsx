@@ -21,6 +21,7 @@ const initialState = {
   userNameInput: '',
   userNameInputError: null as React.ReactNode,
   userNameIsAvailable: undefined as undefined | boolean,
+  userNameIsAvailableLoading: false,
 };
 type OnboardingState = Readonly<typeof initialState>;
 
@@ -49,7 +50,10 @@ export class OnboardingPage extends React.PureComponent<
       this.state.userNameInputError === null &&
       prevState.userNameInput !== this.state.userNameInput
     ) {
-      this.setState(() => ({ userNameIsAvailable: undefined }));
+      this.setState(() => ({
+        userNameIsAvailable: undefined,
+        userNameIsAvailableLoading: true,
+      }));
       this.debouncedCheckIfUserNameIsAvailable();
     }
   }
@@ -90,6 +94,7 @@ export class OnboardingPage extends React.PureComponent<
                     ),
                   }))
                 }
+                loading={this.state.userNameIsAvailableLoading}
                 errorMessage={this.state.userNameInputError}
                 successMessage={
                   this.state.userNameIsAvailable ? (
@@ -121,7 +126,13 @@ export class OnboardingPage extends React.PureComponent<
       .doc(this.state.userNameInput)
       .get()
       .then(snapshot => {
-        this.setState(() => ({ userNameIsAvailable: !snapshot.exists }));
+        this.setState(() => ({
+          userNameIsAvailable: !snapshot.exists,
+          userNameIsAvailableLoading: false,
+        }));
+      })
+      .catch(() => {
+        this.setState(() => ({ userNameIsAvailableLoading: false }));
       });
   };
   private onUserNameFormSubmit = () => {};

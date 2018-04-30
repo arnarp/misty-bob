@@ -43,7 +43,6 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.3",
-    "@types/deep-equal": "^1.0.1",
     "@types/draft-js": "^0.10.20",
     "@types/jest": "^22.2.0",
     "@types/node": "^9.4.6",

@@ -17,6 +17,7 @@ const initialState = {
   textInputValue: '',
   textInputWithErr: '',
   textInputWithSuccess: '',
+  textInputLoading: '',
 };
 type InputsDevPageState = Readonly<typeof initialState>;
 
@@ -99,6 +100,15 @@ export class InputsDevPage extends React.PureComponent<
             value={this.state.textInputWithSuccess}
             onChange={value =>
               this.setState(() => ({ textInputWithSuccess: value }))
+            }
+            successMessage="Success message"
+          />
+          <TextInput
+            label="Loading text input"
+            value={this.state.textInputLoading}
+            loading
+            onChange={value =>
+              this.setState(() => ({ textInputLoading: value }))
             }
             successMessage="Success message"
           />

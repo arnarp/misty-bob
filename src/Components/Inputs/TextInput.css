@@ -71,15 +71,26 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 1px;
+  height: 2px;
   content: '';
   position: absolute;
   transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.42);
 }
-.TextInput > div:hover::before {
-  height: 2px;
+.TextInput.Loading > div::before {
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: Shimmer;
+  animation-timing-function: linear;
+  background: linear-gradient(
+    to right,
+    var(--default-color) 8%,
+    var(--primary-color) 18%,
+    var(--default-color) 33%
+  );
+  background-size: 800px 104px;
 }
 .TextInput > div::after {
   left: 0;
@@ -98,6 +109,9 @@
 }
 .TextInput.Focus > div::after {
   transform: scaleX(1);
+}
+.TextInput.Loading > div::after {
+  transform: scale(0);
 }
 .TextInput p {
   margin: 0;
