@@ -38,5 +38,6 @@ export type NewUserMetaDocument = Overwrite<
   UserMetaDocument,
   {
     messagingTokens: Array<MessagingToken | NewMessagingToken>;
+    claimsRefreshTime?: firestore.FieldValue;
   }
 >;

@@ -50,8 +50,9 @@ const messagesIS = {
   // obp - Onboarding page
   obpHeader: 'Velkomin',
   obpCreatingUserMeta: 'Augnablik. Verið er að setja upp notanda.',
-  obpUserNameInputLabel: 'Veljið notendanafn',
-  obpMinLenght: 'Notendanafn þarf að vera a.m.k. {minLength} stafir',
+  obpUserNameInputLabel: 'Veljið notandanafn',
+  obpMinLenght: 'Notandanafn þarf að vera a.m.k. {minLength} stafir',
+  obpUserNameAvailable: 'Notandanafn er laust',
   // tiv - Text input validators
   tivMinLenght: 'Inntak þarf að vera a.m.k. {minLength} stafir',
 };
@@ -72,6 +73,7 @@ const messagesEN = {
   obpCreatingUserMeta: 'User account is being set up',
   obpUserNameInputLabel: 'Choose username',
   obpMinLenght: 'Username needs to be at least {minLength} characters',
+  obpUserNameAvailable: 'Username is available',
   // tiv - Text input validators
   tivMinLenght: 'Input needs to be at least {minLength} characters',
 };

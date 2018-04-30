@@ -8,8 +8,9 @@ export type FlexProps = {
   alignItems?: 'center';
   wrap?: boolean;
   sidePaddings?: 'medium' | 'mediumResponsive';
+  sideMargins?: 'auto';
   spacing?: 'large' | 'medium' | 'small';
-  maxWidth?: 'medium';
+  maxWidth?: 'small' | 'medium';
   seperators?: boolean;
   growChildren?: boolean;
   as?: string;
@@ -24,6 +25,7 @@ export const Flex: React.SFC<FlexProps> = ({
   alignItems,
   wrap,
   sidePaddings,
+  sideMargins,
   spacing,
   maxWidth,
   seperators,
@@ -42,6 +44,7 @@ export const Flex: React.SFC<FlexProps> = ({
         'Flex',
         spacing ? `Spacing-${spacing}` : '',
         sidePaddings ? `SidePaddings-${sidePaddings}` : '',
+        sideMargins ? `SideMargins-${sideMargins}` : '',
         justifyContent ? `JustifyContent-${justifyContent}` : '',
         alignItems ? `AlignItems-${alignItems}` : '',
         maxWidth ? `MaxWidth-${maxWidth}` : '',

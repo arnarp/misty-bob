@@ -24,7 +24,7 @@
   transform: translate(0, 32px) scale(1);
 }
 .TextInput.Error > label {
-  color: var(--error-color);
+  color: var(--secondary-color);
 }
 .TextInput.NotEmpty > label,
 .TextInput.Focus > label {
@@ -43,6 +43,7 @@
   align-items: baseline;
   margin-bottom: 20px;
 }
+.TextInput.Success > div,
 .TextInput.Error > div {
   margin-bottom: 0;
 }
@@ -93,7 +94,7 @@
   background-color: var(--primary-color);
 }
 .TextInput.Error > div::after {
-  background-color: var(--error-color);
+  background-color: var(--secondary-color);
 }
 .TextInput.Focus > div::after {
   transform: scaleX(1);
@@ -106,5 +107,8 @@
   min-height: 12px;
 }
 .TextInput.Error p.ErrorMessage {
-  color: var(--error-color);
+  color: var(--secondary-color);
+}
+.TextInput p.SuccessMessage {
+  color: var(--primary-color);
 }

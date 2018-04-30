@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-type AvatarSize = 'default' | 'large';
+type AvatarSize = 'default' | 'large' | 'xLarge';
 
 type AvatarProps = {
   photoURL: string;
@@ -10,6 +10,7 @@ type AvatarProps = {
 const sizes = new Map<AvatarSize, string>([
   ['default', '36px'],
   ['large', '60px'],
+  ['xLarge', '96px'],
 ]);
 
 export const Avatar: React.SFC<AvatarProps> = props => (

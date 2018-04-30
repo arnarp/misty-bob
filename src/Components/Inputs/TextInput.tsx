@@ -21,6 +21,7 @@ type TextInputProps = {
   onChange: (name: string) => void;
   // validators: TextInputValidator[];
   errorMessage?: React.ReactNode;
+  successMessage?: React.ReactNode;
   hasClickedSubmit?: boolean;
   type?: 'text' | 'email';
   size?: 'h1';
@@ -45,13 +46,17 @@ export class TextInput extends React.PureComponent<
         (!this.state.hasFocus &&
           this.state.hasReceivedFocus &&
           this.state.hasChangedInput));
-
+    const showSuccessMessage =
+      !showErrorMessage &&
+      this.props.successMessage !== null &&
+      this.props.successMessage !== undefined;
     return (
       <div
         className={classNames('TextInput', {
           Focus: this.state.hasFocus,
           NotEmpty: this.props.value !== '',
           Error: showErrorMessage,
+          Success: showSuccessMessage,
           'Size-H1': this.props.size === 'h1',
         })}
       >
@@ -74,6 +79,9 @@ export class TextInput extends React.PureComponent<
           this.props.errorMessage && (
             <p className="ErrorMessage">{this.props.errorMessage}</p>
           )}
+        {showSuccessMessage && (
+          <p className="SuccessMessage">{this.props.successMessage}</p>
+        )}
       </div>
     );
   }

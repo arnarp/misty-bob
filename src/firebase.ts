@@ -63,3 +63,6 @@ export const refreshFCMToken = () =>
     userAgent: navigator.userAgent,
     language: navigator.language,
   });
+
+export const registerUsername = (username: string) =>
+  functions.httpsCallable('registerUsername')(username);

@@ -15,6 +15,8 @@ const initialState = {
   toggleChecked: false,
   toggleCheckedDb: false,
   textInputValue: '',
+  textInputWithErr: '',
+  textInputWithSuccess: '',
 };
 type InputsDevPageState = Readonly<typeof initialState>;
 
@@ -82,6 +84,23 @@ export class InputsDevPage extends React.PureComponent<
             value={this.state.textInputValue}
             onChange={value => this.setState(() => ({ textInputValue: value }))}
             errorMessage={textInputError}
+          />
+          <TextInput
+            label="Input með error"
+            value={this.state.textInputWithErr}
+            onChange={value =>
+              this.setState(() => ({ textInputWithErr: value }))
+            }
+            hasClickedSubmit={true}
+            errorMessage="Villuskilaboð forcað til að sýna villuboð strax"
+          />
+          <TextInput
+            label="Text input with success msg"
+            value={this.state.textInputWithSuccess}
+            onChange={value =>
+              this.setState(() => ({ textInputWithSuccess: value }))
+            }
+            successMessage="Success message"
           />
         </Col>
       </Col>

@@ -30,6 +30,9 @@
 .Flex.MaxWidth-medium {
   max-width: 600px;
 }
+.Flex.MaxWidth-small {
+  max-width: 320px;
+}
 .Flex.JustifyContent-start {
   justify-content: flex-start;
 }
@@ -56,6 +59,10 @@
 .Flex.SidePaddings-medium {
   padding-left: 12px;
   padding-right: 12px;
+}
+.Flex.SideMargins-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 ul.Flex.column,
 ol.Flex.column {

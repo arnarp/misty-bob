@@ -1,5 +1,5 @@
 export type UserClaims = {
   role?: UserRole[];
-  uName?: string;
+  username?: string;
 };
 export type UserRole = 'admin' | 'test';

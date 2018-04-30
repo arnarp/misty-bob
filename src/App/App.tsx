@@ -69,7 +69,10 @@ export class App extends React.Component<{}, AppState> {
             />
           )}
           {this.renderOnboarding(this.state.userInfo, this.state.userMeta) && (
-            <OnboardingPage userMeta={this.state.userMeta} />
+            <OnboardingPage
+              userMeta={this.state.userMeta}
+              userInfo={this.state.userInfo}
+            />
           )}
         </>
       </BrowserRouter>
@@ -166,9 +169,10 @@ export class App extends React.Component<{}, AppState> {
     if (!userInfo) {
       return false;
     }
-    return (
-      userInfo.metadata.creationTime === userInfo.metadata.lastSignInTime ||
-      (userMeta !== undefined && userMeta.claims.uName === undefined)
-    );
+    return false;
+    // return (
+    //   userInfo.metadata.creationTime === userInfo.metadata.lastSignInTime ||
+    //   (userMeta !== undefined && userMeta.claims.uName === undefined)
+    // );
   }
 }
