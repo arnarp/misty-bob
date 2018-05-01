@@ -80,41 +80,46 @@ export class OnboardingPage extends React.PureComponent<
           </p>
         )}
         {this.props.userMeta !== undefined && (
-          <form noValidate onSubmit={this.onUserNameFormSubmit}>
-            <Col spacing="medium" alignItems="center">
-              <TextInput
-                label={<FormattedMessage id="obpUserNameInputLabel" />}
-                value={this.state.userNameInput}
-                onChange={value =>
-                  this.setState(() => ({
-                    userNameInput: value,
-                    userNameInputError: reduceValidators(
-                      this.unValidators,
-                      value,
-                    ),
-                  }))
-                }
-                loading={this.state.userNameIsAvailableLoading}
-                errorMessage={this.state.userNameInputError}
-                successMessage={
-                  this.state.userNameIsAvailable ? (
-                    <FormattedMessage id="obpUserNameAvailable" />
-                  ) : null
-                }
-              />
-              <Button
-                disabled={
-                  this.state.userNameInputError !== null ||
-                  !this.state.userNameIsAvailable
-                }
-                width="fit-content"
-                type="submit"
-                color="default"
-              >
-                Halda áfram
-              </Button>
-            </Col>
-          </form>
+          <>
+            <p>
+              <FormattedMessage id="obpDescription" />
+            </p>
+            <form noValidate onSubmit={this.onUserNameFormSubmit}>
+              <Col spacing="medium" alignItems="center">
+                <TextInput
+                  label={<FormattedMessage id="obpUserNameInputLabel" />}
+                  value={this.state.userNameInput}
+                  onChange={value =>
+                    this.setState(() => ({
+                      userNameInput: value,
+                      userNameInputError: reduceValidators(
+                        this.unValidators,
+                        value,
+                      ),
+                    }))
+                  }
+                  loading={this.state.userNameIsAvailableLoading}
+                  errorMessage={this.state.userNameInputError}
+                  successMessage={
+                    this.state.userNameIsAvailable ? (
+                      <FormattedMessage id="obpUserNameAvailable" />
+                    ) : null
+                  }
+                />
+                <Button
+                  disabled={
+                    this.state.userNameInputError !== null ||
+                    !this.state.userNameIsAvailable
+                  }
+                  width="fit-content"
+                  type="submit"
+                  color="default"
+                >
+                  Halda áfram
+                </Button>
+              </Col>
+            </form>
+          </>
         )}
       </Col>
     );

@@ -50,6 +50,8 @@ const messagesIS = {
   // obp - Onboarding page
   obpHeader: 'Velkomin',
   obpCreatingUserMeta: 'Augnablik. Verið er að setja upp notanda.',
+  obpDescription:
+    'Til að ljúka skráningu þarf að velja notendanafn. Það er notað þegar annar notandi vill hafa orð á þér (@mention) og í slóð prófíl síðu.',
   obpUserNameInputLabel: 'Veljið notandanafn',
   obpMinLenght: 'Notandanafn þarf að vera a.m.k. {minLength} stafir',
   obpUserNameAvailable: 'Notandanafn er laust',
@@ -71,6 +73,8 @@ const messagesEN = {
   // obp - Onboarding page
   obpHeader: 'Welcome',
   obpCreatingUserMeta: 'User account is being set up',
+  obpDescription:
+    'To finish registration a username needs to be chosen. It is used both in mentions and in profile page url.',
   obpUserNameInputLabel: 'Choose username',
   obpMinLenght: 'Username needs to be at least {minLength} characters',
   obpUserNameAvailable: 'Username is available',
