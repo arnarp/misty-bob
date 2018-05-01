@@ -58,8 +58,9 @@ const initialState = {
   state: 'mounted' as State,
   userNameInput: '',
   userNameInputError: null as React.ReactNode,
-  userNameIsAvailable: undefined as undefined | boolean,
-  userNameIsAvailableLoading: false,
+  userNameIsAvailable: {} as {
+    [username: string]: 'available' | 'unavailable' | 'loading' | 'error';
+  },
 };
 type OnboardingState = Readonly<typeof initialState>;
 
@@ -96,10 +97,16 @@ export class OnboardingPage extends React.PureComponent<
       this.state.userNameInputError === null &&
       prevState.userNameInput !== this.state.userNameInput
     ) {
-      this.setState(() => ({
-        userNameIsAvailable: undefined,
-        userNameIsAvailableLoading: true,
-      }));
+      if (
+        this.state.userNameIsAvailable[this.state.userNameInput] === undefined
+      ) {
+        this.setState(p => ({
+          userNameIsAvailable: {
+            ...p.userNameIsAvailable,
+            [this.state.userNameInput]: 'loading',
+          },
+        }));
+      }
       this.debouncedCheckIfUserNameIsAvailable();
     }
   }
@@ -147,12 +154,24 @@ export class OnboardingPage extends React.PureComponent<
                     }))
                   }
                   loading={
-                    this.state.userNameIsAvailableLoading ||
-                    this.state.state === 'registeringUsername'
+                    this.state.userNameIsAvailable[this.state.userNameInput] ===
+                      'loading' || this.state.state === 'registeringUsername'
                   }
-                  errorMessage={this.state.userNameInputError}
+                  hasClickedSubmit={
+                    this.state.userNameIsAvailable[this.state.userNameInput] ===
+                    'unavailable'
+                  }
+                  errorMessage={
+                    this.state.userNameIsAvailable[this.state.userNameInput] ===
+                    'unavailable' ? (
+                      <FormattedMessage id="obpUsernameTakenInputError" />
+                    ) : (
+                      this.state.userNameInputError
+                    )
+                  }
                   successMessage={
-                    this.state.userNameIsAvailable ? (
+                    this.state.userNameIsAvailable[this.state.userNameInput] ===
+                    'available' ? (
                       <FormattedMessage id="obpUserNameAvailable" />
                     ) : null
                   }
@@ -160,14 +179,15 @@ export class OnboardingPage extends React.PureComponent<
                 <Button
                   disabled={
                     this.state.userNameInputError !== null ||
-                    !this.state.userNameIsAvailable ||
+                    this.state.userNameIsAvailable[this.state.userNameInput] ===
+                      'unavailable' ||
                     this.state.state === 'registeringUsername'
                   }
                   width="fit-content"
                   type="submit"
                   color="default"
                 >
-                  Halda áfram
+                  <FormattedMessage id="obpChooseUsernameBtn" />
                 </Button>
               </Col>
             </form>
@@ -183,18 +203,39 @@ export class OnboardingPage extends React.PureComponent<
   }
   private checkIfUserNameIsAvailable = () => {
     console.log('checkIfUserNameIsAvailable');
+    const userNameToCheck = this.state.userNameInput;
+    if (
+      this.state.userNameIsAvailable[userNameToCheck] === 'unavailable' ||
+      reduceValidators(this.unValidators, userNameToCheck) !== null
+    ) {
+      return;
+    }
+    this.setState(prevState => ({
+      userNameIsAvailable: {
+        ...prevState.userNameIsAvailable,
+        [userNameToCheck]: 'loading',
+      },
+    }));
+    console.log('checkIfUserNameIsAvailable', userNameToCheck);
     firestore
       .collection('publicUserInfos')
-      .doc(this.state.userNameInput)
+      .doc(userNameToCheck)
       .get()
       .then(snapshot => {
-        this.setState(() => ({
-          userNameIsAvailable: !snapshot.exists,
-          userNameIsAvailableLoading: false,
+        this.setState(prevState => ({
+          userNameIsAvailable: {
+            ...prevState.userNameIsAvailable,
+            [userNameToCheck]: snapshot.exists ? 'unavailable' : 'available',
+          },
         }));
       })
       .catch(() => {
-        this.setState(() => ({ userNameIsAvailableLoading: false }));
+        this.setState(prevState => ({
+          userNameIsAvailable: {
+            ...prevState.userNameIsAvailable,
+            [userNameToCheck]: 'error',
+          },
+        }));
       });
   };
   private onUserNameFormSubmit = (event: React.FormEvent<{}>) => {

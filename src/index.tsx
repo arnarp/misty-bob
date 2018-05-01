@@ -53,9 +53,11 @@ const messagesIS = {
   obpDescription:
     'Til að ljúka skráningu þarf að velja notendanafn. Það er notað þegar annar notandi vill hafa orð á þér (@mention) og í slóð prófíl síðu.',
   obpUserNameInputLabel: 'Veljið notandanafn',
+  obpChooseUsernameBtn: 'Velja notandanafn',
   obpMinLenght: 'Notandanafn þarf að vera a.m.k. {minLength} stafir',
   obpUserNameAvailable: 'Notandanafn er laust',
   obpUsernameRegistered: 'Notandanafn hefur verið skráð',
+  obpUsernameTakenInputError: 'Notandanafn er ekki laust',
   // tiv - Text input validators
   tivMinLenght: 'Inntak þarf að vera a.m.k. {minLength} stafir',
 };
@@ -77,9 +79,11 @@ const messagesEN = {
   obpDescription:
     'To finish registration a username needs to be chosen. It is used both in mentions and in profile page url.',
   obpUserNameInputLabel: 'Choose username',
+  obpChooseUsernameBtn: 'Choose username',
   obpMinLenght: 'Username needs to be at least {minLength} characters',
   obpUserNameAvailable: 'Username is available',
   obpUsernameRegistered: 'Username has been registered',
+  obpUsernameTakenInputError: 'Username is not available',
   // tiv - Text input validators
   tivMinLenght: 'Input needs to be at least {minLength} characters',
 };
