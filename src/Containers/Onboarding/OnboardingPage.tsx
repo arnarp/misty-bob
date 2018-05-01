@@ -9,7 +9,7 @@ import {
 } from '../../Components/Inputs';
 import { UserMeta, UserInfo } from '../../types';
 import { Avatar } from '../../Components/Discussions/Avatar';
-import { firestore } from '../../firebase';
+import { firestore, registerUsername } from '../../firebase';
 import { debounce } from 'ts-debounce';
 
 type OnboardingProps = {
@@ -17,7 +17,45 @@ type OnboardingProps = {
   userInfo: UserInfo;
 };
 
+type State =
+  | 'mounted'
+  | 'creatingUserMeta'
+  | 'userNameInput'
+  | 'registeringUsername'
+  | 'registeringUsernameDone';
+type Action =
+  | 'waitForUserMetaToBeCreated'
+  | 'userMetaCreated'
+  | 'registerUsername'
+  | 'registerUsernameDone'
+  | 'registerUsernameFailed';
+
+const stateMachine: {
+  readonly [currentState in State]: { readonly [action in Action]?: State }
+} = {
+  mounted: {
+    waitForUserMetaToBeCreated: 'creatingUserMeta',
+    userMetaCreated: 'userNameInput',
+  },
+  creatingUserMeta: {
+    userMetaCreated: 'userNameInput',
+  },
+  userNameInput: {
+    registerUsername: 'registeringUsername',
+  },
+  registeringUsername: {
+    registerUsernameDone: 'registeringUsernameDone',
+    registerUsernameFailed: 'userNameInput',
+  },
+  registeringUsernameDone: {},
+};
+
+const nextState = (prevState: State, action: Action) => {
+  return stateMachine[prevState][action] || prevState;
+};
+
 const initialState = {
+  state: 'mounted' as State,
   userNameInput: '',
   userNameInputError: null as React.ReactNode,
   userNameIsAvailable: undefined as undefined | boolean,
@@ -42,6 +80,14 @@ export class OnboardingPage extends React.PureComponent<
       this.checkIfUserNameIsAvailable,
       1000,
     );
+  }
+
+  componentDidMount() {
+    const action: Action =
+      this.props.userMeta === undefined
+        ? 'waitForUserMetaToBeCreated'
+        : 'userMetaCreated';
+    this.setState(prevState => ({ state: nextState(prevState.state, action) }));
   }
 
   componentDidUpdate(prevProps: OnboardingProps, prevState: OnboardingState) {
@@ -74,12 +120,14 @@ export class OnboardingPage extends React.PureComponent<
           <Avatar photoURL={this.props.userInfo.photoURL} size="xLarge" />
           <Text.Secondary>{this.props.userInfo.displayName}</Text.Secondary>
         </Col>
-        {this.props.userMeta === undefined && (
+        {this.state.state === 'creatingUserMeta' && (
           <p>
             <FormattedMessage id="obpCreatingUserMeta" />
           </p>
         )}
-        {this.props.userMeta !== undefined && (
+        {['userNameInput', 'registeringUsername'].findIndex(
+          i => i === this.state.state,
+        ) !== -1 && (
           <>
             <p>
               <FormattedMessage id="obpDescription" />
@@ -98,7 +146,10 @@ export class OnboardingPage extends React.PureComponent<
                       ),
                     }))
                   }
-                  loading={this.state.userNameIsAvailableLoading}
+                  loading={
+                    this.state.userNameIsAvailableLoading ||
+                    this.state.state === 'registeringUsername'
+                  }
                   errorMessage={this.state.userNameInputError}
                   successMessage={
                     this.state.userNameIsAvailable ? (
@@ -109,7 +160,8 @@ export class OnboardingPage extends React.PureComponent<
                 <Button
                   disabled={
                     this.state.userNameInputError !== null ||
-                    !this.state.userNameIsAvailable
+                    !this.state.userNameIsAvailable ||
+                    this.state.state === 'registeringUsername'
                   }
                   width="fit-content"
                   type="submit"
@@ -121,13 +173,18 @@ export class OnboardingPage extends React.PureComponent<
             </form>
           </>
         )}
+        {this.state.state === 'registeringUsernameDone' && (
+          <p>
+            <FormattedMessage id="obpUsernameRegistered" />
+          </p>
+        )}
       </Col>
     );
   }
   private checkIfUserNameIsAvailable = () => {
     console.log('checkIfUserNameIsAvailable');
     firestore
-      .collection('publicUserInfo')
+      .collection('publicUserInfos')
       .doc(this.state.userNameInput)
       .get()
       .then(snapshot => {
@@ -140,5 +197,26 @@ export class OnboardingPage extends React.PureComponent<
         this.setState(() => ({ userNameIsAvailableLoading: false }));
       });
   };
-  private onUserNameFormSubmit = () => {};
+  private onUserNameFormSubmit = (event: React.FormEvent<{}>) => {
+    event.preventDefault();
+    if (this.state.userNameInputError) {
+      return;
+    }
+    this.setState(prevState => ({
+      state: nextState(prevState.state, 'registerUsername'),
+    }));
+    registerUsername(this.state.userNameInput)
+      .then(() => {
+        this.setState(prevState => ({
+          state: nextState(prevState.state, 'registerUsernameDone'),
+        }));
+      })
+      .catch(reason => {
+        console.log('Register failed', reason);
+        this.setState(prevState => ({
+          state: nextState(prevState.state, 'registerUsernameFailed'),
+          userNameInputError: 'Failed  to register',
+        }));
+      });
+  };
 }

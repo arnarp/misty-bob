@@ -19,7 +19,7 @@ export type FirestoreSchema = {
   likes: Collection<DocumentId, LikeDocument>;
   userMetas: Collection<UID, UserMetaDocument>;
   actions: Collection<DocumentId, Action>;
-  publicUserInfo: Collection<Username, PublicUserInfo>;
+  publicUserInfos: Collection<Username, PublicUserInfo>;
 };
 
 export function mapDocument<D extends BaseDocument>(

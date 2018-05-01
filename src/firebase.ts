@@ -65,4 +65,4 @@ export const refreshFCMToken = () =>
   });
 
 export const registerUsername = (username: string) =>
-  functions.httpsCallable('registerUsername')(username);
+  functions.httpsCallable<{ message: 'ok' }>('registerUsername')(username);

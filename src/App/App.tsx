@@ -8,11 +8,14 @@ import { b64DecodeUnicode } from '../Utils/converters';
 import { UserClaims, UserInfo, UserMeta, mapDocument } from 'src/types';
 import { AppBar } from './AppBar';
 
-async function getClaims(user: firebase.User | null) {
+async function getClaims(
+  user: firebase.User | null,
+  options: { forceRefresh: boolean } = { forceRefresh: false },
+) {
   if (user === null) {
     return undefined;
   }
-  return user.getIdToken().then(token => {
+  return user.getIdToken(options.forceRefresh).then(token => {
     return JSON.parse(b64DecodeUnicode(token.split('.')[1])) as UserClaims;
   });
 }
@@ -49,7 +52,9 @@ export class App extends React.Component<{}, AppState> {
       prevState.userMeta.claimsRefreshTime !==
         this.state.userMeta.claimsRefreshTime
     ) {
-      const userClaims = await getClaims(this.state.userInfo);
+      const userClaims = await getClaims(this.state.userInfo, {
+        forceRefresh: true,
+      });
       this.setState(() => ({ userClaims }));
     }
   }

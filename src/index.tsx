@@ -55,6 +55,7 @@ const messagesIS = {
   obpUserNameInputLabel: 'Veljið notandanafn',
   obpMinLenght: 'Notandanafn þarf að vera a.m.k. {minLength} stafir',
   obpUserNameAvailable: 'Notandanafn er laust',
+  obpUsernameRegistered: 'Notandanafn hefur verið skráð',
   // tiv - Text input validators
   tivMinLenght: 'Inntak þarf að vera a.m.k. {minLength} stafir',
 };
@@ -78,6 +79,7 @@ const messagesEN = {
   obpUserNameInputLabel: 'Choose username',
   obpMinLenght: 'Username needs to be at least {minLength} characters',
   obpUserNameAvailable: 'Username is available',
+  obpUsernameRegistered: 'Username has been registered',
   // tiv - Text input validators
   tivMinLenght: 'Input needs to be at least {minLength} characters',
 };

@@ -1,7 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { NewPublicUserInfoDocument } from '../../types';
-import { firestore } from 'firebase';
 
 export const registerUsername = functions.https.onCall(
   (username: string, context) => {
@@ -13,11 +12,11 @@ export const registerUsername = functions.https.onCall(
       displayName: context.auth.token.name,
       photoURL: context.auth.token.picture,
       uid: context.auth.uid,
-      registrationDate: firestore.FieldValue.serverTimestamp(),
+      registrationDate: admin.firestore.FieldValue.serverTimestamp(),
     };
     admin
       .firestore()
-      .collection('publicUserInfo')
+      .collection('publicUserInfos')
       .doc(username)
       .create(newPublicUserInfo)
       .then(value => {
