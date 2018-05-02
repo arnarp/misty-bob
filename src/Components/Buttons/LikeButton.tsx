@@ -12,6 +12,7 @@ import {
   NewLikeDocument,
   UID,
   Authorable,
+  UserClaims,
 } from '../../types';
 import { firestore } from '../../firebase';
 
@@ -21,6 +22,7 @@ type LikeButtonProps = {
   likes?: Map<UID, Like>;
   pageId: DocumentId;
   userInfo: UserInfo | null;
+  userClaims: UserClaims | undefined;
 };
 
 const initialState = { modifier: 0 };
@@ -62,7 +64,11 @@ export class LikeButton extends React.PureComponent<
     );
   }
   private onLikeClick = () => {
-    if (this.props.userInfo === undefined) {
+    if (
+      this.props.userInfo === undefined ||
+      !this.props.userClaims ||
+      !this.props.userClaims.username
+    ) {
       return;
     }
     if (this.props.userInfo === null) {
@@ -85,6 +91,7 @@ export class LikeButton extends React.PureComponent<
     } else {
       const newLike: NewLikeDocument = {
         authorName: this.props.userInfo.displayName,
+        authorUsername: this.props.userClaims.username,
         authorUid: this.props.userInfo.uid,
         authorPhotoURL: this.props.userInfo.photoURL,
         dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),

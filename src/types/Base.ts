@@ -19,6 +19,7 @@ export type Authorable = BaseDocument &
   Readonly<{
     authorUid: UID;
     authorName: string;
+    authorUsername: string;
     authorPhotoURL: string;
     /**
      * Can be null for a brief moment after creation, before it has

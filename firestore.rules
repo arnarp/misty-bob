@@ -1,25 +1,24 @@
 service cloud.firestore {
   function isRequestResourceAuthor() {
     return request.auth.uid == request.resource.data.authorUid
-      && request.auth.token.name == request.resource.data.authorName;
+      && request.auth.token.name == request.resource.data.authorName
+      && request.auth.token.username = request.resource.data.username;
   }
   function isResourceAuthor() {
     return request.auth.uid == resource.data.authorUid;
   }
   function isValidNewAuthorableDocument() {
-      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation'])
+      return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorUsername', 'authorPhotoURL', 'dateOfCreation'])
         && request.resource.data.authorUid is string
         && request.resource.data.authorName is string
+        && request.resource.data.authorUsername is string
         && request.resource.data.authorPhotoURL is string
     }
   match /databases/{database}/documents {
     match /posts/{id} {
       function isValidNewPostDocument() {
-        return request.resource.data.keys().hasAll(['authorUid', 'authorName', 'authorPhotoURL', 'dateOfCreation', 'dateOfLastActivity', 'title', 'content', 'numberOfComments', 'numberOfLikes'])
-          && request.resource.data.size() == 9
-          && request.resource.data.authorUid is string
-          && request.resource.data.authorName is string
-          && request.resource.data.authorPhotoURL is string
+        return isValidNewAuthorableDocument()
+          && request.resource.data.keys().hasAll(['dateOfLastActivity', 'title', 'content', 'numberOfComments', 'numberOfLikes'])
           && request.resource.data.title is string
           && request.resource.data.numberOfComments == 0
           && request.resource.data.numberOfLikes == 0;

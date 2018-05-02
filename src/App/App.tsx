@@ -70,6 +70,7 @@ export class App extends React.Component<{}, AppState> {
           {this.renderRoutes(this.state.userInfo, this.state.userMeta) && (
             <Routes
               userInfo={this.state.userInfo}
+              userClaims={this.state.userClaims}
               userMeta={this.state.userMeta}
             />
           )}

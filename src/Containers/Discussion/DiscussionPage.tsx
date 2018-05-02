@@ -14,6 +14,7 @@ import {
   UID,
   CommentDocument,
   propertyOf,
+  UserClaims,
 } from '../../types';
 import { firestore } from '../../firebase';
 import { DocumentTitle } from '../../Components/SideEffects';
@@ -24,6 +25,7 @@ import './DiscussionPage.css';
 
 interface DiscussionPageProps extends RouteComponentProps<{ id: string }> {
   userInfo: UserInfo | null;
+  userClaims?: UserClaims;
 }
 
 const initialState = {
@@ -140,6 +142,7 @@ export class DiscussionPage extends React.PureComponent<
                   likes={this.state.likes.get(this.state.post.id)}
                   pageId={this.state.post.id}
                   userInfo={this.props.userInfo}
+                  userClaims={this.props.userClaims}
                 />
               </Row>
             </Section>
@@ -164,6 +167,7 @@ export class DiscussionPage extends React.PureComponent<
                             likes={this.state.likes.get(c.id)}
                             pageId={this.state.post.id}
                             userInfo={this.props.userInfo}
+                            userClaims={this.props.userClaims}
                           />
                         )}
                       </Row>
@@ -214,9 +218,13 @@ export class DiscussionPage extends React.PureComponent<
 
   private submitNewComment = (event: React.FormEvent<{}>) => {
     event.preventDefault();
+    if (!this.props.userClaims || !this.props.userClaims.username) {
+      return;
+    }
     if (this.props.userInfo && this.state.post) {
       const newComment: NewCommentDocument = {
         authorName: this.props.userInfo.displayName,
+        authorUsername: this.props.userClaims.username,
         authorUid: this.props.userInfo.uid,
         authorPhotoURL: this.props.userInfo.photoURL,
         content: convertToRaw(this.state.editorState.getCurrentContent()),

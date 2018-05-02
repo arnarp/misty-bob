@@ -6,11 +6,11 @@ import { migrate } from './migrate';
 commander.version('0.0.1');
 
 commander
-  .command('migrate <m>')
+  .command('migrate')
   .alias('m')
   .description('Run firestore migration')
   .action((c, m) => {
-    return migrate(c);
+    return migrate();
   });
 
 commander.parse(process.argv);

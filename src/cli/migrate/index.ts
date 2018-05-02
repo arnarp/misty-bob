@@ -1,42 +1,55 @@
 #!/usr/bin/env node
 
-import { mapDocument, Post, CommentDocument } from '../../types';
+import { PublicUserInfo, AuthorableDocument } from '../../types';
 import { adminFirestore } from '../firebase-admin';
 import chalk from 'chalk';
 import * as ora from 'ora';
 
-export async function migrate(migration: string) {
+export async function migrate() {
   console.log(chalk.yellow('=========*** mb-cli migration ***=========='));
-  const fetchPostsPromise = adminFirestore.collection('posts').get();
-  ora.promise(fetchPostsPromise, 'Fetching posts');
-  const postsSnapshots = await fetchPostsPromise;
-  const posts = postsSnapshots.docs.map(d => mapDocument<Post>(d as any));
-  const fetchCommentsPromise = Promise.all(
-    posts.map(p =>
-      adminFirestore
-        .collection('posts')
-        .doc(p.id)
-        .collection('comments')
-        .get()
-        .then(v =>
-          v.docs.map(d => {
-            return {
-              id: d.id,
-              comment: { ...d.data(), postId: p.id } as CommentDocument,
-            };
-          }),
-        ),
-    ),
-  );
-  ora.promise(fetchCommentsPromise, 'Fetching comments');
-  const cA = await fetchCommentsPromise;
-  const batch = adminFirestore.batch();
-  cA.forEach(v => {
-    v.forEach(i =>
-      batch.set(adminFirestore.collection('comments').doc(i.id), i.comment),
-    );
+  const fetchPublicUserInfos = adminFirestore
+    .collection('publicUserInfos')
+    .get();
+  ora.promise(fetchPublicUserInfos, 'Fetching user infos');
+  const userInfosSnapshots = await fetchPublicUserInfos;
+  console.log(chalk.green(`Fetched ${userInfosSnapshots.size} user infos`));
+  const uidUsernameMap = new Map<string, string>();
+  userInfosSnapshots.docs.forEach(s => {
+    const ui = s.data() as PublicUserInfo;
+    uidUsernameMap.set(ui.uid, ui.username);
   });
-  const commitPromise = batch.commit();
-  ora.promise(commitPromise, 'Committing changes');
-  await commitPromise;
+
+  const fetchPostsPromise = adminFirestore.collection('posts').get();
+  const fetchLikesPromise = adminFirestore.collection('likes').get();
+  const fetchCommentsPromise = adminFirestore.collection('comments').get();
+  const fetchAuthorablePromise = Promise.all([
+    fetchPostsPromise,
+    fetchLikesPromise,
+    fetchCommentsPromise,
+  ]);
+  ora.promise(fetchAuthorablePromise, 'Fetching authorables');
+  const [
+    postsSnapshots,
+    likesSnapshot,
+    commentsSnapshots,
+  ] = await fetchAuthorablePromise;
+  console.log(chalk.green(`Fetched ${postsSnapshots.size} posts`));
+  console.log(chalk.green(`Fetched ${likesSnapshot.size} likes`));
+  console.log(chalk.green(`Fetched ${commentsSnapshots.size} comments`));
+  const batch = adminFirestore.batch();
+  [
+    ...postsSnapshots.docs,
+    ...likesSnapshot.docs,
+    ...commentsSnapshots.docs,
+  ].forEach(s => {
+    const authorable = s.data() as AuthorableDocument;
+    const update: Partial<AuthorableDocument> = {
+      authorUsername: uidUsernameMap.get(authorable.authorUid),
+    };
+    batch.update(s.ref, update);
+  });
+  const batchCommitPromise = batch.commit();
+  ora.promise(batchCommitPromise, 'Writing updates');
+  const batchWriteResult = await batchCommitPromise;
+  console.log(chalk.green(`Updateed ${batchWriteResult.length} documents`));
 }
