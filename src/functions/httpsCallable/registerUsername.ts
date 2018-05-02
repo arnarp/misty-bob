@@ -14,7 +14,7 @@ export const registerUsername = functions.https.onCall(
       uid: context.auth.uid,
       registrationDate: admin.firestore.FieldValue.serverTimestamp(),
     };
-    admin
+    return admin
       .firestore()
       .collection('publicUserInfos')
       .doc(username)
@@ -24,7 +24,10 @@ export const registerUsername = functions.https.onCall(
       })
       .catch(reason => {
         console.log(reason);
-        throw new functions.https.HttpsError('already-exists');
+        throw new functions.https.HttpsError(
+          'already-exists',
+          'username-already-exists',
+        );
       });
   },
 );

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import * as firebase from 'firebase';
 import { Col, Button, Text } from '../../Components';
 import {
   TextInput,
@@ -111,7 +112,6 @@ export class OnboardingPage extends React.PureComponent<
     }
   }
   render() {
-    console.log('obp render', this.props, this.state);
     return (
       <Col
         as="main"
@@ -252,11 +252,24 @@ export class OnboardingPage extends React.PureComponent<
           state: nextState(prevState.state, 'registerUsernameDone'),
         }));
       })
-      .catch(reason => {
-        console.log('Register failed', reason);
+      .catch((reason: firebase.firestore.FirestoreError) => {
+        let userNameInputError: React.ReactNode;
+        if (reason.code === 'already-exists') {
+          userNameInputError = (
+            <FormattedMessage id="obpUsernameTakenInputError" />
+          );
+        } else if (reason.code === 'internal' && !navigator.onLine) {
+          userNameInputError = (
+            <FormattedMessage id="obpUsernameSubmitOfflineError" />
+          );
+        } else {
+          userNameInputError = (
+            <FormattedMessage id="obpGenericUsernameSubmitError" />
+          );
+        }
         this.setState(prevState => ({
           state: nextState(prevState.state, 'registerUsernameFailed'),
-          userNameInputError: 'Failed  to register',
+          userNameInputError,
         }));
       });
   };

@@ -58,6 +58,9 @@ const messagesIS = {
   obpUserNameAvailable: 'Notandanafn er laust',
   obpUsernameRegistered: 'Notandanafn hefur verið skráð',
   obpUsernameTakenInputError: 'Notandanafn er ekki laust',
+  obpGenericUsernameSubmitError: 'Ekki tókst að vista notendanafn',
+  obpUsernameSubmitOfflineError:
+    'Ekki tókst að vista notendanafn, netsamband virðist ekki vera til staðar',
   // tiv - Text input validators
   tivMinLenght: 'Inntak þarf að vera a.m.k. {minLength} stafir',
 };
@@ -84,6 +87,9 @@ const messagesEN = {
   obpUserNameAvailable: 'Username is available',
   obpUsernameRegistered: 'Username has been registered',
   obpUsernameTakenInputError: 'Username is not available',
+  obpGenericUsernameSubmitError: 'An error occurred while registering username',
+  obpUsernameSubmitOfflineError:
+    'An error occurred while registering username, internet connection is not available',
   // tiv - Text input validators
   tivMinLenght: 'Input needs to be at least {minLength} characters',
 };
