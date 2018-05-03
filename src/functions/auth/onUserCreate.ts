@@ -6,7 +6,6 @@ export const onUserCreate = auth.user().onCreate((user, context) => {
   const newUserMetaDocument: UserMetaDocument = {
     messagingTokens: [],
     claims: {},
-    claimsRefreshTime: undefined,
     pushNotifications: {
       enabled: false,
       comments: 'all',

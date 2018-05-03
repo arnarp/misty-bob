@@ -7,11 +7,12 @@ import { TextInput, reduceValidators } from '../../Components/Inputs/TextInput';
 import { RequiredTextInputValidator } from '../../Components/Inputs/TextInputValidators';
 import { RichTextEditor } from '../../Components/Editor';
 import { Button } from '../../Components/Buttons';
-import { NewPostDocument, UserInfo } from 'src/types';
+import { NewPostDocument, UserInfo, UserClaims } from 'src/types';
 import { firestore } from '../../firebase';
 
 type CreateIndexPageProps = {
   userInfo: UserInfo;
+  userClaims: UserClaims | undefined;
 };
 
 const initialState = {
@@ -83,11 +84,15 @@ export class CreateIndexPage extends React.PureComponent<
 
   private onSubmit(event: React.FormEvent<{}>) {
     event.preventDefault();
+    if (!this.props.userClaims || !this.props.userClaims.username) {
+      return;
+    }
     this.setState(() => ({ hasClickedSubmit: true }));
     const post: NewPostDocument = {
       title: this.state.title,
       authorUid: this.props.userInfo.uid,
       authorName: this.props.userInfo.displayName,
+      authorUsername: this.props.userClaims.username,
       authorPhotoURL: this.props.userInfo.photoURL,
       dateOfCreation: firebase.firestore.FieldValue.serverTimestamp(),
       dateOfLastActivity: firebase.firestore.FieldValue.serverTimestamp(),

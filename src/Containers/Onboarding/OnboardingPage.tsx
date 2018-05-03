@@ -18,49 +18,59 @@ type OnboardingProps = {
   userInfo: UserInfo;
 };
 
-type State =
-  | 'mounted'
-  | 'creatingUserMeta'
-  | 'userNameInput'
-  | 'registeringUsername'
-  | 'registeringUsernameDone';
-type Action =
-  | 'waitForUserMetaToBeCreated'
-  | 'userMetaCreated'
-  | 'registerUsername'
-  | 'registerUsernameDone'
-  | 'registerUsernameFailed';
+const enum State {
+  Mounted = 'm',
+  CreatingUserMeta = 'c',
+  UserNameInput = 'u',
+  RegisteringUsername = 'r',
+  RegisteringUsernameDone = 'd',
+}
+
+const enum Action {
+  WaitForUserMetaToBeCreated = 'W',
+  UserMetaCreated = 'U',
+  RegisterUsername = 'RU',
+  RegisterUsernameDone = 'RUD',
+  RegisterUsernameFailed = 'RUF',
+}
 
 const stateMachine: {
   readonly [currentState in State]: { readonly [action in Action]?: State }
 } = {
-  mounted: {
-    waitForUserMetaToBeCreated: 'creatingUserMeta',
-    userMetaCreated: 'userNameInput',
+  [State.Mounted]: {
+    [Action.WaitForUserMetaToBeCreated]: State.CreatingUserMeta,
+    [Action.UserMetaCreated]: State.UserNameInput,
   },
-  creatingUserMeta: {
-    userMetaCreated: 'userNameInput',
+  [State.CreatingUserMeta]: {
+    [Action.UserMetaCreated]: State.UserNameInput,
   },
-  userNameInput: {
-    registerUsername: 'registeringUsername',
+  [State.UserNameInput]: {
+    [Action.RegisterUsername]: State.RegisteringUsername,
   },
-  registeringUsername: {
-    registerUsernameDone: 'registeringUsernameDone',
-    registerUsernameFailed: 'userNameInput',
+  [State.RegisteringUsername]: {
+    [Action.RegisterUsernameDone]: State.RegisteringUsernameDone,
+    [Action.RegisterUsernameFailed]: State.UserNameInput,
   },
-  registeringUsernameDone: {},
+  [State.RegisteringUsernameDone]: {},
 };
 
 const nextState = (prevState: State, action: Action) => {
   return stateMachine[prevState][action] || prevState;
 };
 
+const enum UsernameAvailability {
+  Available = 'A',
+  Unavailable = 'U',
+  Loading = 'L',
+  Error = 'E',
+}
+
 const initialState = {
-  state: 'mounted' as State,
+  state: State.Mounted,
   userNameInput: '',
   userNameInputError: null as React.ReactNode,
   userNameIsAvailable: {} as {
-    [username: string]: 'available' | 'unavailable' | 'loading' | 'error';
+    [username: string]: UsernameAvailability;
   },
 };
 type OnboardingState = Readonly<typeof initialState>;
@@ -87,8 +97,8 @@ export class OnboardingPage extends React.PureComponent<
   componentDidMount() {
     const action: Action =
       this.props.userMeta === undefined
-        ? 'waitForUserMetaToBeCreated'
-        : 'userMetaCreated';
+        ? Action.WaitForUserMetaToBeCreated
+        : Action.UserMetaCreated;
     this.setState(prevState => ({ state: nextState(prevState.state, action) }));
   }
 
@@ -104,14 +114,20 @@ export class OnboardingPage extends React.PureComponent<
         this.setState(p => ({
           userNameIsAvailable: {
             ...p.userNameIsAvailable,
-            [this.state.userNameInput]: 'loading',
+            [this.state.userNameInput]: UsernameAvailability.Loading,
           },
         }));
       }
       this.debouncedCheckIfUserNameIsAvailable();
     }
+    if (this.props.userMeta && !prevProps.userMeta) {
+      this.setState(ps => ({
+        state: nextState(ps.state, Action.UserMetaCreated),
+      }));
+    }
   }
   render() {
+    console.log('Obp render', this.state.state);
     return (
       <Col
         as="main"
@@ -127,14 +143,14 @@ export class OnboardingPage extends React.PureComponent<
           <Avatar photoURL={this.props.userInfo.photoURL} size="xLarge" />
           <Text.Secondary>{this.props.userInfo.displayName}</Text.Secondary>
         </Col>
-        {this.state.state === 'creatingUserMeta' && (
+        {this.state.state === State.CreatingUserMeta && (
           <p>
             <FormattedMessage id="obpCreatingUserMeta" />
           </p>
         )}
-        {['userNameInput', 'registeringUsername'].findIndex(
-          i => i === this.state.state,
-        ) !== -1 && (
+        {[State.UserNameInput, State.RegisteringUsername].includes(
+          this.state.state,
+        ) && (
           <>
             <p>
               <FormattedMessage id="obpDescription" />
@@ -155,15 +171,16 @@ export class OnboardingPage extends React.PureComponent<
                   }
                   loading={
                     this.state.userNameIsAvailable[this.state.userNameInput] ===
-                      'loading' || this.state.state === 'registeringUsername'
+                      UsernameAvailability.Loading ||
+                    this.state.state === State.RegisteringUsername
                   }
                   hasClickedSubmit={
                     this.state.userNameIsAvailable[this.state.userNameInput] ===
-                    'unavailable'
+                    UsernameAvailability.Unavailable
                   }
                   errorMessage={
                     this.state.userNameIsAvailable[this.state.userNameInput] ===
-                    'unavailable' ? (
+                    UsernameAvailability.Unavailable ? (
                       <FormattedMessage id="obpUsernameTakenInputError" />
                     ) : (
                       this.state.userNameInputError
@@ -171,7 +188,7 @@ export class OnboardingPage extends React.PureComponent<
                   }
                   successMessage={
                     this.state.userNameIsAvailable[this.state.userNameInput] ===
-                    'available' ? (
+                    UsernameAvailability.Available ? (
                       <FormattedMessage id="obpUserNameAvailable" />
                     ) : null
                   }
@@ -180,8 +197,8 @@ export class OnboardingPage extends React.PureComponent<
                   disabled={
                     this.state.userNameInputError !== null ||
                     this.state.userNameIsAvailable[this.state.userNameInput] ===
-                      'unavailable' ||
-                    this.state.state === 'registeringUsername'
+                      UsernameAvailability.Unavailable ||
+                    this.state.state === State.RegisteringUsername
                   }
                   width="fit-content"
                   type="submit"
@@ -193,7 +210,7 @@ export class OnboardingPage extends React.PureComponent<
             </form>
           </>
         )}
-        {this.state.state === 'registeringUsernameDone' && (
+        {this.state.state === State.RegisteringUsernameDone && (
           <p>
             <FormattedMessage id="obpUsernameRegistered" />
           </p>
@@ -205,7 +222,8 @@ export class OnboardingPage extends React.PureComponent<
     console.log('checkIfUserNameIsAvailable');
     const userNameToCheck = this.state.userNameInput;
     if (
-      this.state.userNameIsAvailable[userNameToCheck] === 'unavailable' ||
+      this.state.userNameIsAvailable[userNameToCheck] ===
+        UsernameAvailability.Unavailable ||
       reduceValidators(this.unValidators, userNameToCheck) !== null
     ) {
       return;
@@ -213,7 +231,7 @@ export class OnboardingPage extends React.PureComponent<
     this.setState(prevState => ({
       userNameIsAvailable: {
         ...prevState.userNameIsAvailable,
-        [userNameToCheck]: 'loading',
+        [userNameToCheck]: UsernameAvailability.Loading,
       },
     }));
     console.log('checkIfUserNameIsAvailable', userNameToCheck);
@@ -225,7 +243,9 @@ export class OnboardingPage extends React.PureComponent<
         this.setState(prevState => ({
           userNameIsAvailable: {
             ...prevState.userNameIsAvailable,
-            [userNameToCheck]: snapshot.exists ? 'unavailable' : 'available',
+            [userNameToCheck]: snapshot.exists
+              ? UsernameAvailability.Unavailable
+              : UsernameAvailability.Available,
           },
         }));
       })
@@ -233,7 +253,7 @@ export class OnboardingPage extends React.PureComponent<
         this.setState(prevState => ({
           userNameIsAvailable: {
             ...prevState.userNameIsAvailable,
-            [userNameToCheck]: 'error',
+            [userNameToCheck]: UsernameAvailability.Error,
           },
         }));
       });
@@ -244,12 +264,12 @@ export class OnboardingPage extends React.PureComponent<
       return;
     }
     this.setState(prevState => ({
-      state: nextState(prevState.state, 'registerUsername'),
+      state: nextState(prevState.state, Action.RegisterUsername),
     }));
     registerUsername(this.state.userNameInput)
       .then(() => {
         this.setState(prevState => ({
-          state: nextState(prevState.state, 'registerUsernameDone'),
+          state: nextState(prevState.state, Action.RegisterUsernameDone),
         }));
       })
       .catch((reason: firebase.firestore.FirestoreError) => {
@@ -268,7 +288,7 @@ export class OnboardingPage extends React.PureComponent<
           );
         }
         this.setState(prevState => ({
-          state: nextState(prevState.state, 'registerUsernameFailed'),
+          state: nextState(prevState.state, Action.RegisterUsernameFailed),
           userNameInputError,
         }));
       });

@@ -154,6 +154,9 @@ export class App extends React.Component<{}, AppState> {
     if (this.renderOnboarding(userInfo, userMeta)) {
       return false;
     }
+    if (userInfo === null) {
+      return true;
+    }
     return userInfo !== undefined && userMeta !== undefined;
   }
   private renderRoutes(
@@ -172,12 +175,6 @@ export class App extends React.Component<{}, AppState> {
     userInfo: UserInfo | null | undefined,
     userMeta: undefined | UserMeta,
   ): userInfo is UserInfo {
-    if (!userInfo) {
-      return false;
-    }
-    return (
-      userInfo.metadata.creationTime === userInfo.metadata.lastSignInTime ||
-      (userMeta !== undefined && userMeta.claims.username === undefined)
-    );
+    return Boolean(userInfo && userMeta && !userMeta.claims.username);
   }
 }

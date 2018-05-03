@@ -25,7 +25,7 @@ import './DiscussionPage.css';
 
 interface DiscussionPageProps extends RouteComponentProps<{ id: string }> {
   userInfo: UserInfo | null;
-  userClaims?: UserClaims;
+  userClaims: UserClaims | undefined;
 }
 
 const initialState = {

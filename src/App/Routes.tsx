@@ -37,7 +37,12 @@ export const Routes: React.SFC<RoutesProps> = props => (
       path="/create"
       render={() => {
         if (props.userInfo) {
-          return <CreateIndexPage userInfo={props.userInfo} />;
+          return (
+            <CreateIndexPage
+              userInfo={props.userInfo}
+              userClaims={props.userClaims}
+            />
+          );
         }
         return null;
       }}

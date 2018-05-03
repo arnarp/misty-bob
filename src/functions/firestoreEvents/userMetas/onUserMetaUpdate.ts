@@ -19,7 +19,7 @@ export const onUserMetaUpdate = firestore
     };
     return admin
       .firestore()
-      .collection('/userMetas')
+      .collection('userMetas')
       .doc(context.params.uid)
       .update(userMetaUpdate);
   });
