@@ -127,7 +127,6 @@ export class OnboardingPage extends React.PureComponent<
     }
   }
   render() {
-    console.log('Obp render', this.state.state);
     return (
       <Col
         as="main"
