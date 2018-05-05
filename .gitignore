@@ -24,5 +24,6 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log
 
+.vscode/chrome
 
 /functions

@@ -1,0 +1,8 @@
+.Editor {
+  width: 100%;
+  min-height: 100px;
+  cursor: text;
+  user-select: text;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

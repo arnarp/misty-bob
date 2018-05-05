@@ -19,7 +19,10 @@ import {
 import { firestore } from '../../firebase';
 import { DocumentTitle } from '../../Components/SideEffects';
 import { Col, Row, Button, LikeButton, Section, Text } from '../../Components';
-import { RichTextContent, RichTextEditor } from '../../Components/Editor';
+import {
+  RichTextContent,
+  RichTextEditor,
+} from '../../Components/RichTextEditor';
 import { Avatar } from '../../Components/Discussions/Avatar';
 import './DiscussionPage.css';
 

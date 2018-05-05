@@ -8,6 +8,7 @@ export const DevIndexPage: React.SFC<DevIndexPage> = props => (
   <Col as="main" sidePaddings="mediumResponsive">
     <PageHeader>Dev Index</PageHeader>
     <Link to="/dev/editor">Editor</Link>
+    <Link to="/dev/richTextEditor">RichTextEditor</Link>
     <Link to="/dev/buttons">Buttons</Link>
     <Link to="/dev/inputs">Inputs</Link>
   </Col>

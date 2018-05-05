@@ -1,2 +1,1 @@
-export { RichTextEditor } from './RichTextEditor';
-export { RichTextContent } from './RichTextContent';
+export { Editor } from './Editor';

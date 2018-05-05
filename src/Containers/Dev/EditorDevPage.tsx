@@ -1,39 +1,37 @@
 import * as React from 'react';
-import { EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { Row } from '../../Components';
-import { RichTextEditor } from '../../Components/Editor';
-import { RichTextContent } from '../../Components/Editor/RichTextContent';
+import { Editor } from '../../Components/Editor';
 
-interface RichTextEditorTestBenchProps {}
+interface EditorTestBenchProps {}
 
-const initialState = { editorState: EditorState.createEmpty() };
-type RichTextEditorTestBenchState = Readonly<typeof initialState>;
+const initialState = {};
+type EditorTestBenchState = Readonly<typeof initialState>;
 
 export class EditorDevPage extends React.PureComponent<
-  RichTextEditorTestBenchProps,
-  RichTextEditorTestBenchState
+  EditorTestBenchProps,
+  EditorTestBenchState
 > {
-  readonly state: RichTextEditorTestBenchState = initialState;
+  readonly state: EditorTestBenchState = initialState;
 
   render() {
     return (
       <Row as="main" sidePaddings="mediumResponsive">
         <div style={{ width: '50%' }}>
-          <RichTextEditor
-            editorState={this.state.editorState}
-            onChange={this.onChange}
+          <Editor
+          // value={this.state.editorValue}
+          // onChange={this.onEditorChange}
           />
         </div>
         <div style={{ width: '50%' }}>
-          <RichTextContent
+          {/* <RichTextContent
             content={this.state.editorState.getCurrentContent()}
-          />
+          /> */}
         </div>
       </Row>
     );
   }
-  private onChange = (editorState: EditorState) => {
-    this.setState(() => ({ editorState }));
-  };
+  // private onEditorChange = () => {
+  //   this.setState(() => ({ editorState }));
+  // };
 }
