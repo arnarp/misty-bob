@@ -11,7 +11,7 @@ import {
   TextNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-import { calcNewNode } from './calcNewNode';
+import { calcNewTree } from './calcNewTree';
 
 const t: TextNode = {
   id: uuid(),
@@ -101,6 +101,12 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
         );
       case NodeType.Text:
         return <span key={n.id}>{n.value}</span>;
+      case NodeType.Dead:
+        return (
+          <span key={n.id} className="Dead">
+            {n.value}
+          </span>
+        );
       default:
         assertUnreachable(n);
     }
@@ -119,11 +125,15 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       action = {
         type: ActionType.Backspace,
       };
+    } else if (event.key === 'Dead') {
+      action = {
+        type: ActionType.Dead,
+      };
     }
 
     if (action !== undefined) {
       this.setState(prevState => ({
-        root: calcNewNode(action!, prevState.root)!,
+        root: calcNewTree(action!, prevState.root, uuid)!,
       }));
     }
   };

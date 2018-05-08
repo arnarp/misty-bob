@@ -1,4 +1,3 @@
-import * as uuid from 'uuid';
 import {
   AddCharAction,
   RootNode,
@@ -9,43 +8,29 @@ import {
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 
-export function addChar(action: AddCharAction, node: RootNode): RootNode;
+export function addChar(
+  action: AddCharAction,
+  node: RootNode,
+  genNodeId: () => string,
+): RootNode;
 export function addChar(
   action: AddCharAction,
   node: ParagraphNode,
-): ParagraphNode | undefined;
+  genNodeId: () => string,
+): ParagraphNode;
 export function addChar(
   action: AddCharAction,
   node: TextNode,
-): TextNode | undefined;
+  genNodeId: () => string,
+): TextNode;
 export function addChar(
   action: AddCharAction,
   node: EditorNode,
+  genNodeId: () => string,
 ): EditorNode | undefined {
   switch (node.type) {
     case NodeType.Root: {
-      if (node.cursor === undefined) {
-        const textNode: TextNode = {
-          id: uuid(),
-          type: NodeType.Text,
-          cursor: 1,
-          value: action.char,
-        };
-        const pNode: ParagraphNode = {
-          id: uuid(),
-          type: NodeType.Paragraph,
-          cursor: textNode.id,
-          children: {
-            [textNode.id]: textNode,
-          },
-        };
-        return {
-          ...node,
-          cursor: pNode.id,
-          children: { [pNode.id]: pNode },
-        };
-      }
-      const newChild = addChar(action, node.children[node.cursor]);
+      const newChild = addChar(action, node.children[node.cursor], genNodeId);
       const newChildren = {
         ...node.children,
       };
@@ -63,7 +48,12 @@ export function addChar(
       if (node.cursor === undefined) {
         return node;
       }
-      const newChild = addChar(action, node.children[node.cursor]);
+      const cursorChild = node.children[node.cursor];
+      if (cursorChild.type === NodeType.Dead) {
+        // todo
+        return node;
+      }
+      const newChild = addChar(action, cursorChild, genNodeId);
       const newChildren = {
         ...node.children,
       };
@@ -87,28 +77,9 @@ export function addChar(
         cursor: node.cursor + 1,
       };
     }
+    case NodeType.Dead:
+      return undefined;
     default:
       return assertUnreachable(node);
   }
 }
-
-// if (node.type === NodeType.Paragraph) {
-//   node.cursor;
-// }
-// if (node.cursor === true) {
-//   return {
-//     ...node,
-//     value:
-//       node.value === undefined ? action.char : node.value + action.char,
-//   };
-// }
-// if (typeof node.cursor === 'string' && node.children) {
-//   return {
-//     ...node,
-//     children: {
-//       ...node.children,
-//       [node.cursor]: calcNewNode(action, node.children[node.cursor])!,
-//     },
-//   };
-// }
-// return node;

@@ -7,39 +7,31 @@ import {
   NodeType,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-import { isEmpty, hasOneKey } from '../../Utils/isEmpty';
-
-type DelCharOptions = { keepEmptyString: boolean };
-const defaultOpt: DelCharOptions = { keepEmptyString: false };
+import { isEmpty } from '../../Utils/isEmpty';
 
 export function delChar(
   action: BackspaceAction,
   node: RootNode,
-  opt?: DelCharOptions,
+  genNodeId: () => string,
 ): RootNode;
 export function delChar(
   action: BackspaceAction,
   node: ParagraphNode,
-  opt?: DelCharOptions,
+  genNodeId: () => string,
 ): ParagraphNode | undefined;
 export function delChar(
   action: BackspaceAction,
   node: TextNode,
-  opt?: DelCharOptions,
+  genNodeId: () => string,
 ): TextNode | undefined;
 export function delChar(
   action: BackspaceAction,
   node: EditorNode,
-  opt: DelCharOptions = defaultOpt,
+  genNodeId: () => string,
 ): EditorNode | undefined {
   switch (node.type) {
     case NodeType.Root: {
-      if (node.cursor === undefined) {
-        return node;
-      }
-      const newChild = delChar(action, node.children[node.cursor], {
-        keepEmptyString: hasOneKey(node.children),
-      });
+      const newChild = delChar(action, node.children[node.cursor], genNodeId);
       const newChildren = {
         ...node.children,
       };
@@ -49,11 +41,7 @@ export function delChar(
         newChildren[node.cursor] = newChild;
       }
       if (isEmpty(newChildren)) {
-        return {
-          ...node,
-          cursor: undefined,
-          children: newChildren,
-        };
+        return node;
       }
       return {
         ...node,
@@ -64,7 +52,11 @@ export function delChar(
       if (node.cursor === undefined) {
         return node;
       }
-      const newChild = delChar(action, node.children[node.cursor], opt);
+      const childWithCursor = node.children[node.cursor];
+      if (childWithCursor.type === NodeType.Dead) {
+        return node; // Todo
+      }
+      const newChild = delChar(action, childWithCursor, genNodeId);
       const newChildren = {
         ...node.children,
       };
@@ -86,7 +78,7 @@ export function delChar(
       if (node.cursor === undefined) {
         return node;
       }
-      if (node.value.length === 0 && !opt.keepEmptyString) {
+      if (node.value.length === 0) {
         return undefined;
       }
       return {
@@ -94,6 +86,9 @@ export function delChar(
         value: node.value.slice(0, -1),
         cursor: Math.max(node.cursor - 1, 0),
       };
+    }
+    case NodeType.Dead: {
+      return undefined;
     }
     default:
       return assertUnreachable(node);

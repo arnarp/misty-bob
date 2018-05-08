@@ -1,5 +1,6 @@
+import * as uuid from 'uuid';
 import { NodeType, ActionType, RootNode } from './model';
-import { calcNewNode } from './calcNewNode';
+import { calcNewTree } from './calcNewTree';
 
 describe('calcNewNode should', () => {
   describe('on AddCharAction', () => {
@@ -7,45 +8,28 @@ describe('calcNewNode should', () => {
       const before: RootNode = {
         id: 'root',
         type: NodeType.Root,
-        children: {},
-      };
-      const after = calcNewNode(
-        { type: ActionType.AddChar, char: 'A' },
-        before,
-      );
-      expect(after).not.toBe(before);
-    });
-    test('construct new container node if root is empty', () => {
-      const before: RootNode = {
-        id: 'root',
-        type: NodeType.Root,
-        children: {},
-      };
-      const after = calcNewNode(
-        { type: ActionType.AddChar, char: 'A' },
-        before,
-      );
-      const expected: RootNode = {
-        id: 'root',
-        type: NodeType.Root,
-        cursor: after.cursor,
+        cursor: 'p',
         children: {
-          [after.cursor!]: {
-            id: after.cursor!,
+          p: {
+            id: 'p',
             type: NodeType.Paragraph,
-            cursor: after.children[after.cursor!].cursor!,
+            cursor: 't',
             children: {
-              [after.children[after.cursor!].cursor!]: {
-                id: after.children[after.cursor!].cursor!,
+              t: {
+                id: 't',
                 type: NodeType.Text,
-                cursor: 1,
-                value: 'A',
+                value: '',
               },
             },
           },
         },
       };
-      expect(after).toEqual(expected);
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'A' },
+        before,
+        uuid,
+      );
+      expect(after).not.toBe(before);
     });
     test('return tree with char added and cursor moved', () => {
       const before: RootNode = {
@@ -68,9 +52,10 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      const after = calcNewNode(
+      const after = calcNewTree(
         { type: ActionType.AddChar, char: 'A' },
         before,
+        uuid,
       );
       const expected: RootNode = {
         id: 'root',
@@ -100,9 +85,24 @@ describe('calcNewNode should', () => {
       const before: RootNode = {
         id: 'root',
         type: NodeType.Root,
-        children: {},
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: 0,
+                value: '',
+              },
+            },
+          },
+        },
       };
-      const after = calcNewNode({ type: ActionType.Backspace }, before);
+      const after = calcNewTree({ type: ActionType.Backspace }, before, uuid);
       expect(after).toBe(before);
     });
     test('return new node when cursor is in text node', () => {
@@ -126,7 +126,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      const after = calcNewNode({ type: ActionType.Backspace }, before);
+      const after = calcNewTree({ type: ActionType.Backspace }, before, uuid);
       expect(after).not.toBe(before);
     });
     test('remove char from node with cursor', () => {
@@ -150,7 +150,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      const after = calcNewNode({ type: ActionType.Backspace }, before);
+      const after = calcNewTree({ type: ActionType.Backspace }, before, uuid);
       const expected: RootNode = {
         id: 'root',
         type: NodeType.Root,
@@ -173,7 +173,7 @@ describe('calcNewNode should', () => {
       };
       expect(after).toEqual(expected);
     });
-    test("don't remove paragraph if deleting last char", () => {
+    test(`don't remove paragraph if deleting last char`, () => {
       const before: RootNode = {
         id: 'root',
         type: NodeType.Root,
@@ -195,7 +195,62 @@ describe('calcNewNode should', () => {
         },
       };
       const expected = before;
-      const after = calcNewNode({ type: ActionType.Backspace }, before);
+      const after = calcNewTree({ type: ActionType.Backspace }, before, uuid);
+      expect(after).toEqual(expected);
+    });
+  });
+  describe('on DeadAction', () => {
+    test('add dead node', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: 1,
+                value: 'a',
+              },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'd');
+      const after = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'a',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
       expect(after).toEqual(expected);
     });
   });
