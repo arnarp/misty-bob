@@ -31,7 +31,8 @@
     "start": "react-scripts-ts start",
     "start:https": "HTTPS=true react-scripts-ts start",
     "build": "react-scripts-ts build",
-    "build:cli": "rm -rf mb-cli && tsc --project tsconfig.cli.json && echo '{\"main\": \"cli/index.js\"}' > mb-cli/package.json",
+    "build:cli":
+      "rm -rf mb-cli && tsc --project tsconfig.cli.json && echo '{\"main\": \"cli/index.js\"}' > mb-cli/package.json",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "deploy:firestore:rules": "firebase deploy --only firestore:rules",
@@ -56,9 +57,6 @@
     "typescript": "2.8.3"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": [
-      "prettier --single-quote --write",
-      "git add"
-    ]
+    "src/**/*.{js,jsx,json,css}": ["prettier --single-quote --write", "git add"]
   }
 }
