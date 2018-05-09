@@ -79,6 +79,114 @@ describe('calcNewNode should', () => {
       };
       expect(after).toEqual(expected);
     });
+    test('remove dead node', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'a',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'a' },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: 2,
+                value: 'aá',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('remove dead node 2', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: '',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'á' },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: 1,
+                value: 'á',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
   });
   describe('on BackspaceAction', () => {
     test('return same tree if empty', () => {

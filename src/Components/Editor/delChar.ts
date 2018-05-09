@@ -9,29 +9,22 @@ import {
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { isEmpty } from '../../Utils/isEmpty';
 
-export function delChar(
-  action: BackspaceAction,
-  node: RootNode,
-  genNodeId: () => string,
-): RootNode;
+export function delChar(action: BackspaceAction, node: RootNode): RootNode;
 export function delChar(
   action: BackspaceAction,
   node: ParagraphNode,
-  genNodeId: () => string,
 ): ParagraphNode | undefined;
 export function delChar(
   action: BackspaceAction,
   node: TextNode,
-  genNodeId: () => string,
 ): TextNode | undefined;
 export function delChar(
   action: BackspaceAction,
   node: EditorNode,
-  genNodeId: () => string,
 ): EditorNode | undefined {
   switch (node.type) {
     case NodeType.Root: {
-      const newChild = delChar(action, node.children[node.cursor], genNodeId);
+      const newChild = delChar(action, node.children[node.cursor]);
       const newChildren = {
         ...node.children,
       };
@@ -56,7 +49,7 @@ export function delChar(
       if (childWithCursor.type === NodeType.Dead) {
         return node; // Todo
       }
-      const newChild = delChar(action, childWithCursor, genNodeId);
+      const newChild = delChar(action, childWithCursor);
       const newChildren = {
         ...node.children,
       };

@@ -7,6 +7,7 @@ import {
   EditorNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
+import { getPreviousChildId, addQuote } from './utils';
 
 export function addChar(
   action: AddCharAction,
@@ -50,22 +51,43 @@ export function addChar(
       }
       const cursorChild = node.children[node.cursor];
       if (cursorChild.type === NodeType.Dead) {
-        // todo
-        return node;
-      }
-      const newChild = addChar(action, cursorChild, genNodeId);
-      const newChildren = {
-        ...node.children,
-      };
-      if (newChild === undefined) {
+        const newChildren = { ...node.children };
         delete newChildren[node.cursor];
+        const previousChildId = getPreviousChildId(node.children, node.cursor);
+        if (previousChildId === undefined) {
+          return node;
+        }
+        const newCursorChild = node.children[previousChildId];
+        if (newCursorChild.type === NodeType.Dead) {
+          return node;
+        }
+        console.log('addQuote', addQuote(action));
+        const newChild = addChar(
+          addQuote(action),
+          { ...newCursorChild, cursor: newCursorChild.value.length },
+          genNodeId,
+        );
+        newChildren[newChild.id] = newChild;
+        return {
+          ...node,
+          cursor: newChild.id,
+          children: newChildren,
+        };
       } else {
-        newChildren[node.cursor] = newChild;
+        const newChild = addChar(action, cursorChild, genNodeId);
+        const newChildren = {
+          ...node.children,
+        };
+        if (newChild === undefined) {
+          delete newChildren[node.cursor];
+        } else {
+          newChildren[node.cursor] = newChild;
+        }
+        return {
+          ...node,
+          children: newChildren,
+        };
       }
-      return {
-        ...node,
-        children: newChildren,
-      };
     }
     case NodeType.Text: {
       if (node.cursor === undefined) {

@@ -13,7 +13,7 @@ export function calcNewTree(
     case ActionType.AddChar:
       return addChar(action, node, genNodeId);
     case ActionType.Backspace:
-      return delChar(action, node, genNodeId);
+      return delChar(action, node);
     case ActionType.Dead:
       return addDeadChar(action, node, genNodeId);
     default:
