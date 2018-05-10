@@ -1,12 +1,12 @@
 export const enum ActionType {
-  AddChar = 'A',
-  Backspace = 'B',
-  Dead = 'D',
+  InsertText = 'InsertText',
+  Backspace = 'Backspace',
+  Dead = 'Dead',
 }
 
-export type AddCharAction = {
-  type: ActionType.AddChar;
-  char: string;
+export type InsertTextAction = {
+  type: ActionType.InsertText;
+  text: string;
   composing: boolean;
 };
 export type BackspaceAction = {
@@ -16,7 +16,7 @@ export type DeadAction = {
   type: ActionType.Dead;
 };
 
-export type EditorAction = AddCharAction | BackspaceAction | DeadAction;
+export type EditorAction = InsertTextAction | BackspaceAction | DeadAction;
 
 export const enum NodeType {
   Root = 'R',

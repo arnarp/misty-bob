@@ -3,7 +3,7 @@ import { NodeType, ActionType, RootNode } from './model';
 import { calcNewTree } from './calcNewTree';
 
 describe('calcNewNode should', () => {
-  describe('on AddCharAction', () => {
+  describe('on InsertTextAction', () => {
     test('return new root', () => {
       const before: RootNode = {
         id: 'root',
@@ -25,13 +25,13 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'A', composing: false },
+        { type: ActionType.InsertText, text: 'A', composing: false },
         before,
         uuid,
       );
       expect(after).not.toBe(before);
     });
-    test('return tree with char added and cursor moved', () => {
+    test('return tree with text added and cursor moved', () => {
       const before: RootNode = {
         id: 'root',
         type: NodeType.Root,
@@ -53,7 +53,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'A', composing: false },
+        { type: ActionType.InsertText, text: 'A', composing: false },
         before,
         uuid,
       );
@@ -72,6 +72,54 @@ describe('calcNewNode should', () => {
                 type: NodeType.Text,
                 value: 'AA',
                 cursor: 2,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('return tree with text added and cursor moved 2', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: '',
+                cursor: 0,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.InsertText, text: 'Hann', composing: false },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Hann',
+                cursor: 4,
               },
             },
           },
@@ -101,7 +149,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'Than', composing: true },
+        { type: ActionType.InsertText, text: 'Than', composing: true },
         before,
         uuid,
       );
@@ -120,6 +168,54 @@ describe('calcNewNode should', () => {
                 type: NodeType.Text,
                 value: 'Than',
                 cursor: 4,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('composing 1', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: '',
+                cursor: 0,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.InsertText, text: 'H', composing: true },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'H',
+                cursor: 1,
               },
             },
           },
@@ -149,7 +245,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'h', composing: true },
+        { type: ActionType.InsertText, text: 'h', composing: true },
         before,
         uuid,
       );
@@ -197,7 +293,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'hk', composing: true },
+        { type: ActionType.InsertText, text: 'hk', composing: true },
         before,
         uuid,
       );
@@ -245,7 +341,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'the', composing: true },
+        { type: ActionType.InsertText, text: 'the', composing: true },
         before,
         uuid,
       );
@@ -293,7 +389,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'at', composing: true },
+        { type: ActionType.InsertText, text: 'at', composing: true },
         before,
         uuid,
       );
@@ -341,7 +437,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'hk', composing: true },
+        { type: ActionType.InsertText, text: 'hk', composing: true },
         before,
         uuid,
       );
@@ -389,7 +485,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'hk', composing: true },
+        { type: ActionType.InsertText, text: 'hk', composing: true },
         before,
         uuid,
       );
@@ -443,7 +539,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'a', composing: false },
+        { type: ActionType.InsertText, text: 'a', composing: false },
         before,
         uuid,
       );
@@ -497,7 +593,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'á', composing: false },
+        { type: ActionType.InsertText, text: 'á', composing: false },
         before,
         uuid,
       );

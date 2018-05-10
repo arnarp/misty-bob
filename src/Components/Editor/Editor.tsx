@@ -191,11 +191,10 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     if (
       event.nativeEvent.inputType === 'insertText' &&
       event.nativeEvent.data
-      // event.nativeEvent.isComposing === false
     ) {
       action = {
-        type: ActionType.AddChar,
-        char: event.nativeEvent.data,
+        type: ActionType.InsertText,
+        text: event.nativeEvent.data,
         composing: false,
       };
     }
@@ -213,8 +212,8 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       event.nativeEvent.data
     ) {
       action = {
-        type: ActionType.AddChar,
-        char: event.nativeEvent.data,
+        type: ActionType.InsertText,
+        text: event.nativeEvent.data,
         composing: true,
       };
     }
@@ -232,8 +231,8 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     let action: EditorAction | undefined = undefined;
     if (event.key.length === 1 && !event.metaKey && !event.ctrlKey) {
       action = {
-        type: ActionType.AddChar,
-        char: event.key,
+        type: ActionType.InsertText,
+        text: event.key,
         composing: false,
       };
     } else if (event.key === 'Backspace') {

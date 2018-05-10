@@ -1,5 +1,5 @@
 import {
-  AddCharAction,
+  InsertTextAction,
   RootNode,
   ParagraphNode,
   TextNode,
@@ -9,29 +9,33 @@ import {
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { getPreviousChildId, addQuote } from './utils';
 
-export function addChar(
-  action: AddCharAction,
+export function insertText(
+  action: InsertTextAction,
   node: RootNode,
   genNodeId: () => string,
 ): RootNode;
-export function addChar(
-  action: AddCharAction,
+export function insertText(
+  action: InsertTextAction,
   node: ParagraphNode,
   genNodeId: () => string,
 ): ParagraphNode;
-export function addChar(
-  action: AddCharAction,
+export function insertText(
+  action: InsertTextAction,
   node: TextNode,
   genNodeId: () => string,
 ): TextNode;
-export function addChar(
-  action: AddCharAction,
+export function insertText(
+  action: InsertTextAction,
   node: EditorNode,
   genNodeId: () => string,
 ): EditorNode | undefined {
   switch (node.type) {
     case NodeType.Root: {
-      const newChild = addChar(action, node.children[node.cursor], genNodeId);
+      const newChild = insertText(
+        action,
+        node.children[node.cursor],
+        genNodeId,
+      );
       const newChildren = {
         ...node.children,
       };
@@ -61,7 +65,7 @@ export function addChar(
         if (newCursorChild.type === NodeType.Dead) {
           return node;
         }
-        const newChild = addChar(
+        const newChild = insertText(
           addQuote(action),
           { ...newCursorChild, cursor: newCursorChild.value.length },
           genNodeId,
@@ -73,7 +77,7 @@ export function addChar(
           children: newChildren,
         };
       } else {
-        const newChild = addChar(action, cursorChild, genNodeId);
+        const newChild = insertText(action, cursorChild, genNodeId);
         const newChildren = {
           ...node.children,
         };
@@ -94,38 +98,37 @@ export function addChar(
       }
       if (action.composing) {
         let cursor = node.cursor;
-        const wordMap = node.value
-          .split(' ')
-          .map((word, index, array) => {
-            const start =
-              index === 0 ? 0 : array.slice(0, index).join(' ').length + 1;
-            return {
-              start,
-              end: start + word.length,
-              word,
-            };
-          })
-          .map(value => {
-            if (
-              node.cursor &&
-              node.cursor >= value.start &&
-              node.cursor <= value.end
-            ) {
-              cursor = value.start + action.char.length;
-              return action.char;
-            }
-            return value.word;
-          });
+        const wordMap = node.value.split(' ').map((word, index, array) => {
+          const start =
+            index === 0 ? 0 : array.slice(0, index).join(' ').length + 1;
+          return {
+            start,
+            end: start + word.length,
+            word,
+          };
+        });
+        const newTextArr = wordMap.map(value => {
+          if (
+            node.cursor !== undefined &&
+            node.cursor >= value.start &&
+            node.cursor <= value.end
+          ) {
+            cursor = value.start + action.text.length;
+            return action.text;
+          }
+          return value.word;
+        });
+        console.log({ node, cursor, action, wordMap, newTextArr });
         return {
           ...node,
-          value: wordMap.join(' '),
+          value: newTextArr.join(' '),
           cursor,
         };
       }
       return {
         ...node,
-        value: node.value + action.char,
-        cursor: node.cursor + 1,
+        value: node.value + action.text,
+        cursor: node.cursor + action.text.length,
       };
     }
     case NodeType.Dead:

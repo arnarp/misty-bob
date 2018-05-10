@@ -1,4 +1,4 @@
-import { AddCharAction, EditorNode, NodeType } from './model';
+import { InsertTextAction, EditorNode, NodeType } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 
 export function getPreviousChildId(
@@ -10,12 +10,12 @@ export function getPreviousChildId(
   return currentIndex === 0 ? undefined : keys[currentIndex - 1];
 }
 
-export function addQuote(action: AddCharAction) {
-  switch (action.char.toLowerCase()) {
+export function addQuote(action: InsertTextAction): InsertTextAction {
+  switch (action.text.toLowerCase()) {
     case 'a':
       return {
         ...action,
-        char: String.fromCharCode(action.char.charCodeAt(0) + 128),
+        text: String.fromCharCode(action.text.charCodeAt(0) + 128),
       };
     case 'e':
     case 'i':
@@ -23,12 +23,12 @@ export function addQuote(action: AddCharAction) {
     case 'y':
       return {
         ...action,
-        char: String.fromCharCode(action.char.charCodeAt(0) + 132),
+        text: String.fromCharCode(action.text.charCodeAt(0) + 132),
       };
     case 'u':
       return {
         ...action,
-        char: String.fromCharCode(action.char.charCodeAt(0) + 133),
+        text: String.fromCharCode(action.text.charCodeAt(0) + 133),
       };
     default:
       return action;

@@ -1,5 +1,5 @@
 import { EditorAction, RootNode, ActionType } from './model';
-import { addChar } from './addChar';
+import { insertText } from './insertText';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { delChar } from './delChar';
 import { addDeadChar } from './addDeadChar';
@@ -10,8 +10,8 @@ export function calcNewTree(
   genNodeId: () => string,
 ): RootNode {
   switch (action.type) {
-    case ActionType.AddChar:
-      return addChar(action, node, genNodeId);
+    case ActionType.InsertText:
+      return insertText(action, node, genNodeId);
     case ActionType.Backspace:
       return delChar(action, node);
     case ActionType.Dead:
