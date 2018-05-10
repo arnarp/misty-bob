@@ -118,7 +118,6 @@ export function insertText(
           }
           return value.word;
         });
-        console.log({ node, cursor, action, wordMap, newTextArr });
         return {
           ...node,
           value: newTextArr.join(' '),

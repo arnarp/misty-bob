@@ -12,7 +12,7 @@ import {
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { calcNewTree } from './calcNewTree';
-import { getRawText } from './utils';
+import { getRawText, getMobileOperatingSystem } from './utils';
 declare global {
   interface Event {
     inputType?: string;
@@ -20,6 +20,7 @@ declare global {
     isComposing?: boolean;
   }
 }
+const isMobile = getMobileOperatingSystem() !== undefined;
 
 const t: TextNode = {
   id: uuid(),
@@ -188,6 +189,9 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     event.stopPropagation();
     console.log('onChange', { ...event });
     let action: EditorAction | undefined = undefined;
+    if (!isMobile) {
+      return;
+    }
     if (
       event.nativeEvent.inputType === 'insertText' &&
       event.nativeEvent.data
@@ -218,6 +222,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       };
     }
     if (action !== undefined) {
+      console.log('OnChange -> Action', action);
       this.setState(prevState => ({
         root: calcNewTree(action!, prevState.root, uuid),
       }));
@@ -246,46 +251,10 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     }
 
     if (action !== undefined) {
-      console.log('Action', action);
+      console.log('Keydown -> Action', action);
       this.setState(prevState => ({
         root: calcNewTree(action!, prevState.root, uuid)!,
-        // lastAction: action,
-        // rerender: action!.type === ActionType.Dead,
-        //   prevState.lastAction !== undefined &&
-        //   prevState.lastAction.type === ActionType.Dead &&
-        //   action!.type === ActionType.AddChar,
       }));
     }
   };
-  // private onKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   console.log('onKeyUp', { ...event }, event.key, event.nativeEvent.code);
-  //   let action: EditorAction | undefined = undefined;
-  //   if (event.key.length === 1 && !event.metaKey && !event.ctrlKey) {
-  //     action = {
-  //       type: ActionType.AddChar,
-  //       char: event.key,
-  //     };
-  //   } else if (event.key === 'Backspace') {
-  //     action = {
-  //       type: ActionType.Backspace,
-  //     };
-  //   } else if (event.key === 'Dead') {
-  //     action = {
-  //       type: ActionType.Dead,
-  //     };
-  //   }
-
-  //   if (action !== undefined) {
-  //     this.setState(prevState => ({
-  //       root: calcNewTree(action!, prevState.root, uuid)!,
-  //       lastAction: action,
-  //       // rerender: action!.type === ActionType.Dead,
-  //       //   prevState.lastAction !== undefined &&
-  //       //   prevState.lastAction.type === ActionType.Dead &&
-  //       //   action!.type === ActionType.AddChar,
-  //     }));
-  //   }
-  // };
 }
