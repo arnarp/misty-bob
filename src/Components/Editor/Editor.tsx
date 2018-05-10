@@ -190,12 +190,32 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     let action: EditorAction | undefined = undefined;
     if (
       event.nativeEvent.inputType === 'insertText' &&
-      event.nativeEvent.data &&
-      event.nativeEvent.isComposing !== undefined
+      event.nativeEvent.data
+      // event.nativeEvent.isComposing === false
     ) {
       action = {
         type: ActionType.AddChar,
         char: event.nativeEvent.data,
+        composing: false,
+      };
+    }
+    if (
+      event.nativeEvent.inputType === 'deleteContentBackward' &&
+      event.nativeEvent.isComposing === false
+    ) {
+      action = {
+        type: ActionType.Backspace,
+      };
+    }
+    if (
+      event.nativeEvent.inputType === 'insertCompositionText' &&
+      event.nativeEvent.isComposing &&
+      event.nativeEvent.data
+    ) {
+      action = {
+        type: ActionType.AddChar,
+        char: event.nativeEvent.data,
+        composing: true,
       };
     }
     if (action !== undefined) {
@@ -214,6 +234,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       action = {
         type: ActionType.AddChar,
         char: event.key,
+        composing: false,
       };
     } else if (event.key === 'Backspace') {
       action = {

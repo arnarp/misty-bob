@@ -25,7 +25,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'A' },
+        { type: ActionType.AddChar, char: 'A', composing: false },
         before,
         uuid,
       );
@@ -53,7 +53,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'A' },
+        { type: ActionType.AddChar, char: 'A', composing: false },
         before,
         uuid,
       );
@@ -72,6 +72,342 @@ describe('calcNewNode should', () => {
                 type: NodeType.Text,
                 value: 'AA',
                 cursor: 2,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('composing android backspace', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'first-paragraph',
+        children: {
+          'first-paragraph': {
+            id: 'first-paragraph',
+            type: NodeType.Paragraph,
+            cursor: 'first-text-node',
+            children: {
+              'first-text-node': {
+                id: 'first-text-node',
+                type: NodeType.Text,
+                value: 'Thank',
+                cursor: 5,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'Than', composing: true },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'first-paragraph',
+        children: {
+          'first-paragraph': {
+            id: 'first-paragraph',
+            type: NodeType.Paragraph,
+            cursor: 'first-text-node',
+            children: {
+              'first-text-node': {
+                id: 'first-text-node',
+                type: NodeType.Text,
+                value: 'Than',
+                cursor: 4,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('composing 2', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks ',
+                cursor: 7,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'h', composing: true },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks h',
+                cursor: 8,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('composing 3', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks h',
+                cursor: 8,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'hk', composing: true },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks hk',
+                cursor: 9,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('composing 4', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks for ',
+                cursor: 11,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'the', composing: true },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks for the',
+                cursor: 14,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('composing 4', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks for the',
+                cursor: 7,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'at', composing: true },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks at the',
+                cursor: 9,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('composing cursor at start of word', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks h',
+                cursor: 7,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'hk', composing: true },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks hk',
+                cursor: 9,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('composing cursor at middle of word', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks abc',
+                cursor: 8,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.AddChar, char: 'hk', composing: true },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'Thanks hk',
+                cursor: 9,
               },
             },
           },
@@ -107,7 +443,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'a' },
+        { type: ActionType.AddChar, char: 'a', composing: false },
         before,
         uuid,
       );
@@ -161,7 +497,7 @@ describe('calcNewNode should', () => {
         },
       };
       const after = calcNewTree(
-        { type: ActionType.AddChar, char: 'á' },
+        { type: ActionType.AddChar, char: 'á', composing: false },
         before,
         uuid,
       );

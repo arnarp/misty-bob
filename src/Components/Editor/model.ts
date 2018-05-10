@@ -7,6 +7,7 @@ export const enum ActionType {
 export type AddCharAction = {
   type: ActionType.AddChar;
   char: string;
+  composing: boolean;
 };
 export type BackspaceAction = {
   type: ActionType.Backspace;

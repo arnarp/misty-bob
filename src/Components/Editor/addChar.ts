@@ -61,7 +61,6 @@ export function addChar(
         if (newCursorChild.type === NodeType.Dead) {
           return node;
         }
-        console.log('addQuote', addQuote(action));
         const newChild = addChar(
           addQuote(action),
           { ...newCursorChild, cursor: newCursorChild.value.length },
@@ -92,6 +91,36 @@ export function addChar(
     case NodeType.Text: {
       if (node.cursor === undefined) {
         return node;
+      }
+      if (action.composing) {
+        let cursor = node.cursor;
+        const wordMap = node.value
+          .split(' ')
+          .map((word, index, array) => {
+            const start =
+              index === 0 ? 0 : array.slice(0, index).join(' ').length + 1;
+            return {
+              start,
+              end: start + word.length,
+              word,
+            };
+          })
+          .map(value => {
+            if (
+              node.cursor &&
+              node.cursor >= value.start &&
+              node.cursor <= value.end
+            ) {
+              cursor = value.start + action.char.length;
+              return action.char;
+            }
+            return value.word;
+          });
+        return {
+          ...node,
+          value: wordMap.join(' '),
+          cursor,
+        };
       }
       return {
         ...node,
