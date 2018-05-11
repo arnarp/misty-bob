@@ -13,6 +13,7 @@ import {
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { calcNewTree } from './calcNewTree';
 import { getRawText, getMobileOperatingSystem } from './utils';
+import * as classNames from 'classnames';
 declare global {
   interface Event {
     inputType?: string;
@@ -168,15 +169,25 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
           </p>
         );
       case NodeType.Text:
-        return (
-          <span className={n.cursor === undefined ? '' : 'Cursor'} key={n.id}>
-            {n.value}
-          </span>
-        );
       case NodeType.Dead:
         return (
-          <span key={n.id} className="Dead">
-            {n.value}
+          <span
+            className={classNames({
+              Dead: n.type === NodeType.Dead,
+            })}
+            key={n.id}
+          >
+            {n.cursor === undefined && n.value}
+            {n.cursor !== undefined && (
+              <>
+                {n.value.slice(0, n.cursor)}
+                <span className={classNames({ Cursor: this.state.hasFocus })}>
+                  {n.value.charAt(n.cursor) || ' '}
+                  <span />
+                </span>
+                {n.value.slice(n.cursor + 1)}
+              </>
+            )}
           </span>
         );
       default:

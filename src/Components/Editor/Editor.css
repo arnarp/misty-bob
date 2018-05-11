@@ -22,3 +22,24 @@
 .Editor .Dead {
   background: yellow;
 }
+
+.Editor .Cursor {
+  position: relative;
+}
+.Editor .Cursor > span {
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  top: 0;
+  left: 0;
+  animation: blink-caret 1s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from {
+    background: var(--default-text-color);
+  }
+  50% {
+    background: transparent;
+  }
+}
