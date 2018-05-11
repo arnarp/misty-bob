@@ -127,6 +127,54 @@ describe('calcNewNode should', () => {
       };
       expect(after).toEqual(expected);
     });
+    test('insert text where cursor is', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 2,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.InsertText, text: 'ö', composing: false },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arönar',
+                cursor: 3,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
     test('composing android backspace', () => {
       const before: RootNode = {
         id: 'root',
@@ -846,6 +894,65 @@ describe('calcNewNode should', () => {
       };
       expect(after).toEqual(expected);
     });
+    test('add dead node where cursor is', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: 2,
+                value: 'abba',
+              },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'd');
+      const after = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ab',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ba',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
     test('add dead node & remove previous dead node', () => {
       const before: RootNode = {
         id: 'r',
@@ -979,6 +1086,54 @@ describe('calcNewNode should', () => {
         uuid,
       );
       expect(after).toBe(before);
+    });
+    test('move cursor forward from zero', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 0,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: 1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 1,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
     });
     test('move cursor forward', () => {
       const before: RootNode = {

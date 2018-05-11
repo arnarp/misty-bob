@@ -126,7 +126,10 @@ export function insertText(
       }
       return {
         ...node,
-        value: node.value + action.text,
+        value:
+          node.value.slice(0, node.cursor) +
+          action.text +
+          node.value.slice(node.cursor),
         cursor: node.cursor + action.text.length,
       };
     }

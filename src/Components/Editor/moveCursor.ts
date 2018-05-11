@@ -40,13 +40,9 @@ export function moveCursor(
       if (childWithCursor.type === NodeType.Text) {
         if (
           childWithCursor.cursor === undefined ||
-          childWithCursor.cursor === 0
-        ) {
-          return node;
-        }
-        if (
-          childWithCursor.cursor === childWithCursor.value.length &&
-          action.value > 0
+          (childWithCursor.cursor === 0 && action.value === -1) ||
+          (childWithCursor.cursor === childWithCursor.value.length &&
+            action.value > 0)
         ) {
           return node;
         }
@@ -59,28 +55,6 @@ export function moveCursor(
             },
           },
         };
-        // } else if (action.value === -1) {
-        //   const previousChild = getPreviousChild(node.children, node.cursor);
-        //   if (
-        //     previousChild === undefined ||
-        //     previousChild.type === NodeType.Dead
-        //   ) {
-        //     return node;
-        //   }
-        //   const newChildren = {
-        //     ...node.children,
-        //   };
-        //   newChildren[previousChild.id] = {
-        //     ...previousChild,
-        //     cursor: previousChild.value.length,
-        //     value: previousChild.value + childWithCursor.value,
-        //   };
-        //   delete newChildren[node.cursor];
-        //   return {
-        //     ...node,
-        //     cursor: previousChild.id,
-        //     children: newChildren,
-        //   };
       } else {
         const previousChild = getPreviousChild(node.children, node.cursor);
         if (
