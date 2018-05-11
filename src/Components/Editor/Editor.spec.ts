@@ -794,4 +794,212 @@ describe('calcNewNode should', () => {
       expect(after).toEqual(expected);
     });
   });
+  describe('on MoveCursorAction', () => {
+    test('move cursor back', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 5,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: -1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 4,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('move cursor back but stop at beginning and return same root', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 0,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: -1 },
+        before,
+        uuid,
+      );
+      expect(after).toBe(before);
+    });
+    test('move cursor forward', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 3,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: 1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 4,
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('move cursor forward but stop at the end and return same root', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: 5,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: 1 },
+        before,
+        uuid,
+      );
+      expect(after).toBe(before);
+    });
+    test('remove dead node', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'a',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: -1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: 2,
+                value: 'a´',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+  });
 });

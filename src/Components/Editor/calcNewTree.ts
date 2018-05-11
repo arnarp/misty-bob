@@ -3,6 +3,7 @@ import { insertText } from './insertText';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { delChar } from './delChar';
 import { addDeadChar } from './addDeadChar';
+import { moveCursor } from './moveCursor';
 
 export function calcNewTree(
   action: EditorAction,
@@ -16,6 +17,8 @@ export function calcNewTree(
       return delChar(action, node);
     case ActionType.Dead:
       return addDeadChar(action, node, genNodeId);
+    case ActionType.MoveCursor:
+      return moveCursor(action, node);
     default:
       return assertUnreachable(action);
   }
