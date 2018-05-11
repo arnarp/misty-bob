@@ -1,6 +1,6 @@
 import { MoveCursorAction, NodeType, RootNode, ParagraphNode } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-import { getPreviousChildId } from './utils';
+import { getPreviousChild } from './utils';
 
 export function moveCursor(action: MoveCursorAction, node: RootNode): RootNode;
 export function moveCursor(
@@ -59,12 +59,30 @@ export function moveCursor(
             },
           },
         };
-      } else if (action.value === -1) {
-        const prevousChildId = getPreviousChildId(node.children, node.cursor);
-        if (prevousChildId === undefined) {
-          return node;
-        }
-        const previousChild = node.children[prevousChildId];
+        // } else if (action.value === -1) {
+        //   const previousChild = getPreviousChild(node.children, node.cursor);
+        //   if (
+        //     previousChild === undefined ||
+        //     previousChild.type === NodeType.Dead
+        //   ) {
+        //     return node;
+        //   }
+        //   const newChildren = {
+        //     ...node.children,
+        //   };
+        //   newChildren[previousChild.id] = {
+        //     ...previousChild,
+        //     cursor: previousChild.value.length,
+        //     value: previousChild.value + childWithCursor.value,
+        //   };
+        //   delete newChildren[node.cursor];
+        //   return {
+        //     ...node,
+        //     cursor: previousChild.id,
+        //     children: newChildren,
+        //   };
+      } else {
+        const previousChild = getPreviousChild(node.children, node.cursor);
         if (
           previousChild === undefined ||
           previousChild.type === NodeType.Dead
@@ -76,7 +94,7 @@ export function moveCursor(
         };
         newChildren[previousChild.id] = {
           ...previousChild,
-          cursor: previousChild.value.length + 1,
+          cursor: previousChild.value.length + (action.value === -1 ? 0 : 1),
           value: previousChild.value + childWithCursor.value,
         };
         delete newChildren[node.cursor];
@@ -86,7 +104,6 @@ export function moveCursor(
           children: newChildren,
         };
       }
-      return node;
     }
     default:
       return assertUnreachable(node);

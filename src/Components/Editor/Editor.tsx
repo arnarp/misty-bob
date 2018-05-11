@@ -245,20 +245,43 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     event.stopPropagation();
     console.log('onKeyDown', { ...event }, event.key, event.nativeEvent.code);
     let action: EditorAction | undefined = undefined;
-    if (event.key.length === 1 && !event.metaKey && !event.ctrlKey) {
-      action = {
-        type: ActionType.InsertText,
-        text: event.key,
-        composing: false,
-      };
-    } else if (event.key === 'Backspace') {
-      action = {
-        type: ActionType.Backspace,
-      };
-    } else if (event.key === 'Dead') {
-      action = {
-        type: ActionType.Dead,
-      };
+    type EventKey = 'Key' | 'Backspace' | 'Dead' | 'ArrowLeft' | 'ArrowRight';
+    const eventKey: EventKey =
+      event.key.length === 1 ? 'Key' : (event.key as EventKey);
+    switch (eventKey) {
+      case 'Key':
+        if (!event.metaKey && !event.ctrlKey) {
+          action = {
+            type: ActionType.InsertText,
+            text: event.key,
+            composing: false,
+          };
+        }
+        break;
+      case 'Backspace':
+        action = {
+          type: ActionType.Backspace,
+        };
+        break;
+      case 'Dead':
+        action = {
+          type: ActionType.Dead,
+        };
+        break;
+      case 'ArrowLeft':
+        action = {
+          type: ActionType.MoveCursor,
+          value: -1,
+        };
+        break;
+      case 'ArrowRight':
+        action = {
+          type: ActionType.MoveCursor,
+          value: 1,
+        };
+        break;
+      default:
+        break;
     }
 
     if (action !== undefined) {

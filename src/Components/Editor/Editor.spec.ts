@@ -740,7 +740,60 @@ describe('calcNewNode should', () => {
     });
   });
   describe('on DeadAction', () => {
-    test('add dead node', () => {
+    test('add dead node 0', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: 0,
+                value: '',
+              },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'd');
+      const after = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: '',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('add dead node 1', () => {
       const before: RootNode = {
         id: 'r',
         type: NodeType.Root,
@@ -780,6 +833,62 @@ describe('calcNewNode should', () => {
                 type: NodeType.Text,
                 cursor: undefined,
                 value: 'a',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('add dead node & remove previous dead node', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'a',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree({ type: ActionType.Dead }, before, uuid);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'a´',
               },
               d: {
                 id: 'd',
@@ -947,7 +1056,7 @@ describe('calcNewNode should', () => {
       );
       expect(after).toBe(before);
     });
-    test('remove dead node', () => {
+    test('remove dead node left', () => {
       const before: RootNode = {
         id: 'r',
         type: NodeType.Root,
@@ -976,6 +1085,60 @@ describe('calcNewNode should', () => {
       };
       const after = calcNewTree(
         { type: ActionType.MoveCursor, value: -1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: 1,
+                value: 'a´',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('remove dead node right', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'a',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: 1 },
         before,
         uuid,
       );

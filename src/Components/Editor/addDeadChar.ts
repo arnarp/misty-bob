@@ -6,6 +6,7 @@ import {
   DeadNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
+import { getPreviousChild } from './utils';
 
 export function addDeadChar(
   action: DeadAction,
@@ -57,8 +58,28 @@ export function addDeadChar(
             [newDeadNode.id]: newDeadNode,
           },
         };
+      } else {
+        // Child with cursor is a dead node. A dead node should always be
+        // preceded by a text node.
+        const previousChild = getPreviousChild(node.children, node.cursor);
+        if (
+          previousChild === undefined ||
+          previousChild.type === NodeType.Dead
+        ) {
+          return node;
+        }
+        const newPreviousChild = {
+          ...previousChild,
+          value: previousChild.value + childWithCursor.value,
+        };
+        return {
+          ...node,
+          children: {
+            ...node.children,
+            [newPreviousChild.id]: newPreviousChild,
+          },
+        };
       }
-      return node;
     }
     default:
       return assertUnreachable(node);

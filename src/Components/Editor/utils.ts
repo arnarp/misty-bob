@@ -1,4 +1,10 @@
-import { InsertTextAction, EditorNode, NodeType } from './model';
+import {
+  InsertTextAction,
+  EditorNode,
+  NodeType,
+  TextNode,
+  DeadNode,
+} from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 
 export function getPreviousChildId(
@@ -8,6 +14,38 @@ export function getPreviousChildId(
   const keys = Object.keys(children);
   const currentIndex = keys.findIndex(v => v === currentId);
   return currentIndex === 0 ? undefined : keys[currentIndex - 1];
+}
+export function getPreviousChild(
+  children: { [id: string]: TextNode | DeadNode },
+  currentId: string,
+): TextNode | DeadNode;
+export function getPreviousChild(
+  children: { [id: string]: {} },
+  currentId: string,
+) {
+  const id = getPreviousChildId(children, currentId);
+  if (id === undefined) {
+    return undefined;
+  }
+  return children[id];
+}
+export function getNextChildId(
+  children: { [id: string]: {} },
+  currentId: string,
+) {
+  const keys = Object.keys(children);
+  const currentIndex = keys.findIndex(v => v === currentId);
+  return currentIndex === keys.length - 1 ? undefined : keys[currentIndex + 1];
+}
+export function getNextChild(
+  children: { [id: string]: {} },
+  currentId: string,
+) {
+  const id = getNextChildId(children, currentId);
+  if (id === undefined) {
+    return undefined;
+  }
+  return children[id];
 }
 
 export function addQuote(action: InsertTextAction): InsertTextAction {
