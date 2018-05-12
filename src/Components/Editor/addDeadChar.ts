@@ -4,6 +4,7 @@ import {
   ParagraphNode,
   NodeType,
   DeadNode,
+  TextNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { getPreviousChild } from './utils';
@@ -46,18 +47,46 @@ export function addDeadChar(
           value: '´',
           cursor: 1,
         };
-        return {
-          ...node,
-          cursor: newDeadNode.id,
-          children: {
-            ...node.children,
-            [node.cursor]: {
-              ...childWithCursor,
-              cursor: undefined,
+        if (
+          childWithCursor.cursor &&
+          childWithCursor.cursor < childWithCursor.value.length
+        ) {
+          // We need to split upp current child with cursor and insert dead node in the middle
+          const newChildThatHadCursor: TextNode = {
+            ...childWithCursor,
+            cursor: undefined,
+            value: childWithCursor.value.slice(0, childWithCursor.cursor),
+          };
+          const newRestOfChildThatHadCursor: TextNode = {
+            id: genNodeId(),
+            type: NodeType.Text,
+            cursor: undefined,
+            value: childWithCursor.value.slice(childWithCursor.cursor),
+          };
+          return {
+            ...node,
+            cursor: newDeadNode.id,
+            children: {
+              ...node.children,
+              [newChildThatHadCursor.id]: newChildThatHadCursor,
+              [newDeadNode.id]: newDeadNode,
+              [newRestOfChildThatHadCursor.id]: newRestOfChildThatHadCursor,
             },
-            [newDeadNode.id]: newDeadNode,
-          },
-        };
+          };
+        } else {
+          return {
+            ...node,
+            cursor: newDeadNode.id,
+            children: {
+              ...node.children,
+              [node.cursor]: {
+                ...childWithCursor,
+                cursor: undefined,
+              },
+              [newDeadNode.id]: newDeadNode,
+            },
+          };
+        }
       } else {
         // Child with cursor is a dead node. A dead node should always be
         // preceded by a text node.

@@ -181,7 +181,10 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
             {n.cursor !== undefined && (
               <>
                 {n.value.slice(0, n.cursor)}
-                <span className={classNames({ Cursor: this.state.hasFocus })}>
+                <span
+                  key={new Date().toISOString()}
+                  className={classNames({ Cursor: this.state.hasFocus })}
+                >
                   {n.value.charAt(n.cursor) || ' '}
                   <span />
                 </span>

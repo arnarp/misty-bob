@@ -917,7 +917,8 @@ describe('calcNewNode should', () => {
       };
       const genIdMock = jest
         .fn<() => string>()
-        .mockImplementationOnce(() => 'd');
+        .mockImplementationOnce(() => 'd')
+        .mockImplementationOnce(() => 't2');
       const after = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
       const expected: RootNode = {
         id: 'r',
@@ -1008,6 +1009,73 @@ describe('calcNewNode should', () => {
         },
       };
       expect(after).toEqual(expected);
+    });
+    test('add dead node, remove previous dead node, merge text node', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ab',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ba',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree({ type: ActionType.Dead }, before, uuid);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ab´',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ba',
+              },
+            },
+          },
+        },
+      };
     });
   });
   describe('on MoveCursorAction', () => {
