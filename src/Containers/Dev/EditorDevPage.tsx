@@ -17,17 +17,7 @@ export class EditorDevPage extends React.PureComponent<
   render() {
     return (
       <Row as="main" sidePaddings="mediumResponsive">
-        <div style={{ width: '50%' }}>
-          <Editor
-          // value={this.state.editorValue}
-          // onChange={this.onEditorChange}
-          />
-        </div>
-        <div style={{ width: '50%' }}>
-          {/* <RichTextContent
-            content={this.state.editorState.getCurrentContent()}
-          /> */}
-        </div>
+        <Editor />
       </Row>
     );
   }

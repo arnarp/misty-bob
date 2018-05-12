@@ -846,6 +846,56 @@ describe('calcNewNode should', () => {
       const after = calcNewTree({ type: ActionType.Backspace }, before, uuid);
       expect(after).toEqual(expected);
     });
+    test('remove dead node', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: '',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree({ type: ActionType.Backspace }, before, uuid);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                cursor: 0,
+                value: '',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
   });
   describe('on DeadAction', () => {
     test('add dead node 0', () => {

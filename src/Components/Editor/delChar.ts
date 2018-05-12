@@ -8,6 +8,7 @@ import {
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { isEmpty } from '../../Utils/isEmpty';
+import { getPreviousChild } from './utils';
 
 export function delChar(action: BackspaceAction, node: RootNode): RootNode;
 export function delChar(
@@ -47,24 +48,44 @@ export function delChar(
       }
       const childWithCursor = node.children[node.cursor];
       if (childWithCursor.type === NodeType.Dead) {
-        return node; // Todo
-      }
-      const newChild = delChar(action, childWithCursor);
-      const newChildren = {
-        ...node.children,
-      };
-      if (newChild === undefined) {
-        delete newChildren[node.cursor];
-      } else {
-        newChildren[node.cursor] = newChild;
-      }
-      if (isEmpty(newChildren)) {
-        return undefined;
-      } else {
+        const previousChild = getPreviousChild(node.children, node.cursor);
+        if (
+          previousChild === undefined ||
+          previousChild.type === NodeType.Dead
+        ) {
+          return node;
+        }
+        const newChildren = {
+          ...node.children,
+          [previousChild.id]: {
+            ...previousChild,
+            cursor: previousChild.value.length,
+          },
+        };
+        delete newChildren[childWithCursor.id];
         return {
           ...node,
+          cursor: previousChild.id,
           children: newChildren,
         };
+      } else {
+        const newChild = delChar(action, childWithCursor);
+        const newChildren = {
+          ...node.children,
+        };
+        if (newChild === undefined) {
+          delete newChildren[node.cursor];
+        } else {
+          newChildren[node.cursor] = newChild;
+        }
+        if (isEmpty(newChildren)) {
+          return undefined;
+        } else {
+          return {
+            ...node,
+            children: newChildren,
+          };
+        }
       }
     }
     case NodeType.Text: {
