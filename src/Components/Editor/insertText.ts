@@ -7,7 +7,7 @@ import {
   EditorNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-import { getPreviousChildId, addQuote } from './utils';
+import { addQuote, getPreviousChild, getNextChild } from './utils';
 
 export function insertText(
   action: InsertTextAction,
@@ -57,20 +57,27 @@ export function insertText(
       if (cursorChild.type === NodeType.Dead) {
         const newChildren = { ...node.children };
         delete newChildren[node.cursor];
-        const previousChildId = getPreviousChildId(node.children, node.cursor);
-        if (previousChildId === undefined) {
-          return node;
-        }
-        const newCursorChild = node.children[previousChildId];
-        if (newCursorChild.type === NodeType.Dead) {
+        const previousChild = getPreviousChild(node.children, node.cursor);
+        const nextChild = getNextChild(node.children, node.cursor);
+        if (
+          previousChild === undefined ||
+          previousChild.type === NodeType.Dead
+        ) {
           return node;
         }
         const newChild = insertText(
           addQuote(action),
-          { ...newCursorChild, cursor: newCursorChild.value.length },
+          { ...previousChild, cursor: previousChild.value.length },
           genNodeId,
         );
         newChildren[newChild.id] = newChild;
+        if (nextChild !== undefined && nextChild.type === NodeType.Text) {
+          delete newChildren[nextChild.id];
+          newChildren[newChild.id] = {
+            ...newChild,
+            value: newChild.value + nextChild.value,
+          };
+        }
         return {
           ...node,
           cursor: newChild.id,

@@ -667,6 +667,66 @@ describe('calcNewNode should', () => {
       };
       expect(after).toEqual(expected);
     });
+    test('remove dead node & merge text nodes', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ab',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ba',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.InsertText, text: 'a', composing: false },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: 3,
+                value: 'abába',
+              },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
   });
   describe('on BackspaceAction', () => {
     test('return same tree if empty', () => {
@@ -1076,6 +1136,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
+      expect(after).toEqual(expected);
     });
   });
   describe('on MoveCursorAction', () => {
