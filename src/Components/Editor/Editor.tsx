@@ -9,6 +9,7 @@ import {
   ActionType,
   ParagraphNode,
   TextNode,
+  NodeId,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { calcNewTree } from './calcNewTree';
@@ -57,67 +58,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
   readonly state: EditorState = initialState;
   editorRef = React.createRef<HTMLDivElement>();
   cursorRef = React.createRef<HTMLParagraphElement>();
-
-  componentDidUpdate(prevProps: EditorProps, prevState: EditorState) {
-    // if (this.state.hasFocus && this.cursorRef.current) {
-    //   const selection = window.getSelection();
-    //   const range = document.createRange();
-    //   range.setStartAfter(this.cursorRef.current);
-    //   range.collapse(true);
-    //   selection.removeAllRanges();
-    //   selection.addRange(range);
-    // }
-    // if (this.state.rerender) {
-    //   console.log('forceupdate');
-    //   // this.forceUpdate();
-    //   this.setState(() => ({
-    //     rerender: false,
-    //   }));
-    // }
-    // if (
-    //   this.editorRef.current &&
-    //   this.state.lastAction &&
-    //   this.state.lastAction.type === ActionType.Dead
-    // ) {
-    //   console.log(this.editorRef.current);
-    //   const deadElements = this.editorRef.current.getElementsByClassName(
-    //     'Dead',
-    //   );
-    //   console.log(deadElements);
-    //   if (deadElements.length === 1) {
-    //     deadElements[0].innerHTML = deadElements[0].innerHTML.slice(0, -1);
-    //   }
-    // }
-    // if (
-    //   this.editorRef.current &&
-    //   prevState.lastAction &&
-    //   prevState.lastAction.type === ActionType.Dead &&
-    //   this.state.lastAction &&
-    //   this.state.lastAction.type === ActionType.AddChar
-    // ) {
-    //   const cursorElements = this.editorRef.current.getElementsByClassName(
-    //     'Cursor',
-    //   );
-    //   if (cursorElements.length === 1) {
-    //     console.log(
-    //       cursorElements[0].innerHTML,
-    //       cursorElements[0].innerHTML.slice(0, -1),
-    //     );
-    //     console.log(
-    //       'setting cursor value',
-    //       getCursorNodeValue(this.state.root),
-    //     );
-    //     cursorElements[0].innerHTML = getCursorNodeValue(this.state.root) || '';
-    //   }
-    // }
-  }
-
-  // getSnapshotBeforeUpdate() {
-  //   if (this.editorRef.current) {
-  //     this.editorRef.current.innerHTML = '';
-  //   }
-  //   return null;
-  // }
+  textareaRef = React.createRef<HTMLTextAreaElement>();
 
   render() {
     console.log('render', this.state);
@@ -141,18 +82,25 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
         onPasteCapture={event => {
           console.log('onPastCapture', { ...event });
         }}
-        onFocus={() => {
-          this.setState(() => ({ hasFocus: true }));
-          // if (this.state.root.children && this.state.root.)
-        }}
-        onBlur={() => {
-          this.setState(() => ({ hasFocus: false }));
+        onClick={event => {
+          console.log('onClick', { ...event });
+          if (this.textareaRef.current) {
+            this.textareaRef.current.focus();
+          }
         }}
       >
         <textarea
+          ref={this.textareaRef}
           value={getRawText(this.state.root)}
           onKeyDown={this.onKeyDown}
           onChange={this.onChange}
+          onFocus={() => {
+            this.setState(() => ({ hasFocus: true }));
+            // if (this.state.root.children && this.state.root.)
+          }}
+          onBlur={() => {
+            this.setState(() => ({ hasFocus: false }));
+          }}
         />
         {this.renderNode(this.state.root)}
       </div>
@@ -180,7 +128,21 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
             {n.cursor === undefined && n.value}
             {n.cursor !== undefined && (
               <>
-                {n.value.slice(0, n.cursor)}
+                {n.value
+                  .slice(0, n.cursor)
+                  .split('')
+                  .map((v, i) => (
+                    <span
+                      key={`${n.id}_${i}`}
+                      onClick={event => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.onLeafClick(n.id, i);
+                      }}
+                    >
+                      {v}
+                    </span>
+                  ))}
                 <span
                   key={new Date().toISOString()}
                   className={classNames({ Cursor: this.state.hasFocus })}
@@ -188,7 +150,21 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
                   {n.value.charAt(n.cursor) || ' '}
                   <span />
                 </span>
-                {n.value.slice(n.cursor + 1)}
+                {n.value
+                  .slice(n.cursor + 1)
+                  .split('')
+                  .map((v, i) => (
+                    <span
+                      key={`${n.id}_${i + n.cursor! + 1}`}
+                      onClick={event => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.onLeafClick(n.id, i + n.cursor! + 1);
+                      }}
+                    >
+                      {v}
+                    </span>
+                  ))}
               </>
             )}
           </span>
@@ -196,6 +172,17 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       default:
         assertUnreachable(n);
     }
+  };
+
+  private onLeafClick = (nodeId: NodeId, cursorPos: number) => {
+    this.setState(prevState => ({
+      hasFocus: true,
+      root: calcNewTree(
+        { type: ActionType.SetCursor, nodeId, pos: cursorPos },
+        prevState.root,
+        uuid,
+      ),
+    }));
   };
 
   private onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

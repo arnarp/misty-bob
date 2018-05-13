@@ -4,6 +4,7 @@ import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { delChar } from './delChar';
 import { addDeadChar } from './addDeadChar';
 import { moveCursor } from './moveCursor';
+import { setCursor } from './setCursor';
 
 export function calcNewTree(
   action: EditorAction,
@@ -19,6 +20,8 @@ export function calcNewTree(
       return addDeadChar(action, node, genNodeId);
     case ActionType.MoveCursor:
       return moveCursor(action, node);
+    case ActionType.SetCursor:
+      return setCursor(action, node);
     default:
       return assertUnreachable(action);
   }

@@ -1,5 +1,5 @@
 import * as uuid from 'uuid';
-import { NodeType, ActionType, RootNode } from './model';
+import { NodeType, ActionType, RootNode, SetCursorAction } from './model';
 import { calcNewTree } from './calcNewTree';
 
 describe('calcNewNode should', () => {
@@ -1497,6 +1497,173 @@ describe('calcNewNode should', () => {
         },
       };
       expect(after).toEqual(expected);
+    });
+  });
+  describe('on SetCursorAction', () => {
+    test('set cursor position', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: { id: 't', type: NodeType.Text, value: 'AA', cursor: 2 },
+            },
+          },
+        },
+      };
+      const action: SetCursorAction = {
+        type: ActionType.SetCursor,
+        nodeId: 't',
+        pos: 0,
+      };
+      const after = calcNewTree(action, before, uuid);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: { id: 't', type: NodeType.Text, value: 'AA', cursor: 0 },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('set cursor position 2', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: { id: 't1', type: NodeType.Text, value: 'AA', cursor: 2 },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'bb',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      const action: SetCursorAction = {
+        type: ActionType.SetCursor,
+        nodeId: 't2',
+        pos: 1,
+      };
+      const after = calcNewTree(action, before, uuid);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'AA',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: { id: 't2', type: NodeType.Text, value: 'bb', cursor: 1 },
+            },
+          },
+        },
+      };
+      expect(after).toEqual(expected);
+    });
+    test('return same tree if set cursor is current cursor', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: { id: 't', type: NodeType.Text, value: 'AA', cursor: 2 },
+            },
+          },
+        },
+      };
+      const action: SetCursorAction = {
+        type: ActionType.SetCursor,
+        nodeId: 't',
+        pos: 2,
+      };
+      const after = calcNewTree(action, before, uuid);
+      expect(after).toBe(before);
+    });
+    test('return same tree if set cursor is current cursor 2', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t: { id: 't1', type: NodeType.Text, value: 'AA', cursor: 2 },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'bb',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      const action: SetCursorAction = {
+        type: ActionType.SetCursor,
+        nodeId: 't1',
+        pos: 2,
+      };
+      const after = calcNewTree(action, before, uuid);
+      expect(after).toBe(before);
     });
   });
 });

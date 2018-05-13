@@ -3,6 +3,7 @@ export const enum ActionType {
   Backspace = 'Backspace',
   Dead = 'Dead',
   MoveCursor = 'MoveCursor',
+  SetCursor = 'SetCursor',
 }
 
 export type InsertTextAction = {
@@ -20,12 +21,18 @@ export type MoveCursorAction = {
   type: ActionType.MoveCursor;
   value: -1 | 1;
 };
+export type SetCursorAction = {
+  type: ActionType.SetCursor;
+  nodeId: NodeId;
+  pos: number;
+};
 
 export type EditorAction =
   | InsertTextAction
   | BackspaceAction
   | DeadAction
-  | MoveCursorAction;
+  | MoveCursorAction
+  | SetCursorAction;
 
 export const enum NodeType {
   Root = 'R',
