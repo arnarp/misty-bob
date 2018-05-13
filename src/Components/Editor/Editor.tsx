@@ -112,7 +112,19 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
         return Object.values(n.children).map(this.renderNode);
       case NodeType.Paragraph:
         return (
-          <p key={n.id} ref={this.cursorRef}>
+          <p
+            key={n.id}
+            ref={this.cursorRef}
+            onClick={event => {
+              event.stopPropagation();
+              event.preventDefault();
+              const values = Object.values(n.children);
+              const lastNode = values[values.length - 1];
+              if (lastNode !== undefined) {
+                this.onLeafClick(lastNode.id, lastNode.value.length);
+              }
+            }}
+          >
             {Object.values(n.children).map(this.renderNode)}
           </p>
         );
