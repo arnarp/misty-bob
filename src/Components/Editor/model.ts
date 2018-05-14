@@ -1,5 +1,3 @@
-import { Overwrite } from '../../types';
-
 export const enum ActionType {
   InsertText = 'InsertText',
   Backspace = 'Backspace',
@@ -9,29 +7,29 @@ export const enum ActionType {
   SetCursor = 'SetCursor',
 }
 
-export type InsertTextAction = {
+export interface InsertTextAction {
   type: ActionType.InsertText;
   text: string;
   composing: boolean;
-};
-export type BackspaceAction = {
+}
+export interface BackspaceAction {
   type: ActionType.Backspace;
-};
-export type EnterAction = {
+}
+export interface EnterAction {
   type: ActionType.Enter;
-};
-export type DeadAction = {
+}
+export interface DeadAction {
   type: ActionType.Dead;
-};
-export type MoveCursorAction = {
+}
+export interface MoveCursorAction {
   type: ActionType.MoveCursor;
   value: -1 | 1;
-};
-export type SetCursorAction = {
+}
+export interface SetCursorAction {
   type: ActionType.SetCursor;
   nodeId: NodeId;
   pos: number;
-};
+}
 
 export type EditorAction =
   | InsertTextAction
@@ -48,33 +46,40 @@ export const enum NodeType {
   Dead = 'D',
 }
 export type NodeId = string;
-export type RootNode = Readonly<{
+export interface RootNode {
   id: NodeId;
   type: NodeType.Root;
   children: Readonly<{ [id: string]: ParagraphNode }>;
   cursor: NodeId;
-}>;
-export type ParagraphNode = Readonly<{
+}
+export interface ParagraphNode {
   id: NodeId;
   type: NodeType.Paragraph;
   children: Readonly<{ [id: string]: LeafNode }>;
   cursor?: NodeId;
-}>;
-export type ParagraphNodeWithCursor = Readonly<
-  Overwrite<ParagraphNode, { cursor: NodeId }>
->;
-export type TextNode = Readonly<{
+}
+export interface ParagraphNodeWithCursor extends ParagraphNode {
+  readonly cursor: NodeId;
+}
+
+interface BaseTextNode {
+  id: NodeId;
+  value: string;
+  cursor?: number;
+}
+
+export interface TextNode extends BaseTextNode {
   id: NodeId;
   type: NodeType.Text;
   value: string;
   cursor?: number;
-}>;
-export type DeadNode = Readonly<{
+}
+export interface DeadNode extends BaseTextNode {
   id: NodeId;
   type: NodeType.Dead;
   value: '´';
   cursor: 1;
-}>;
+}
 export type EditorNode = RootNode | ParagraphNode | TextNode | DeadNode;
 export type ContainerNode = RootNode | ParagraphNode;
 export type LeafNode = TextNode | DeadNode;
