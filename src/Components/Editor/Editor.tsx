@@ -67,21 +67,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
         ref={this.editorRef}
         tabIndex={1}
         className="Editor"
-        // contentEditable={!this.props.readOnly}
-        suppressContentEditableWarning
         role="textbox"
-        // onInput={event => {}}
-        // onKeyDown={this.onKeyDown}
-        // onKeyDown={this.onKeyDown}
-        // onKeyPress={() => console.log('onKeyPress')}
-        // onKeyUp={this.onKeyUp}
-        // onChange={event => console.log('onChange', { ...event })}
-        onPaste={event => {
-          console.log('onPaste', { ...event });
-        }}
-        onPasteCapture={event => {
-          console.log('onPastCapture', { ...event });
-        }}
         onClick={event => {
           console.log('onClick', { ...event });
           if (this.textareaRef.current) {
@@ -100,6 +86,22 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
           }}
           onBlur={() => {
             this.setState(() => ({ hasFocus: false }));
+          }}
+          onInput={event => console.log('onInput', { ...event })}
+          onPaste={event => {
+            console.log('onPaste', { ...event });
+            event.clipboardData.items[0].getAsString(text => {
+              console.log('onPaste text', text);
+              this.setState(prevState => ({
+                root: calcNewTree(
+                  { type: ActionType.InsertText, text, composing: false },
+                  prevState.root,
+                )!,
+              }));
+            });
+          }}
+          onPasteCapture={event => {
+            console.log('onPastCapture', { ...event });
           }}
         />
         {this.renderNode(this.state.root)}
@@ -249,8 +251,6 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
   };
 
   private onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
     console.log('onKeyDown', { ...event }, event.key, event.nativeEvent.code);
     let action: EditorAction | undefined = undefined;
     type EventKey =
@@ -304,6 +304,8 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     }
 
     if (action !== undefined) {
+      event.preventDefault();
+      event.stopPropagation();
       console.log('Keydown -> Action', action);
       this.setState(prevState => ({
         root: calcNewTree(action!, prevState.root, uuid)!,
