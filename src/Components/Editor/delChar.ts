@@ -5,10 +5,12 @@ import {
   TextNode,
   EditorNode,
   NodeType,
+  ActionType,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { isEmpty } from '../../Utils/isEmpty';
 import { getPreviousChild } from './utils';
+import { setCursor } from './setCursor';
 
 export function delChar(action: BackspaceAction, node: RootNode): RootNode;
 export function delChar(
@@ -29,18 +31,38 @@ export function delChar(
       const newChildren = {
         ...node.children,
       };
+      const newRoot = {
+        ...node,
+        children: newChildren,
+      };
+      const previousChild = getPreviousChild(node.children, node.cursor);
+      if (newChild === undefined && previousChild === undefined) {
+        return node;
+      }
       if (newChild === undefined) {
         delete newChildren[node.cursor];
+        if (previousChild !== undefined) {
+          newRoot.cursor = previousChild.id;
+          const previousChildChildrens = Object.values(previousChild.children);
+          const previousChildLastChild =
+            previousChildChildrens[previousChildChildrens.length - 1];
+          newRoot.children[newRoot.cursor] = setCursor(
+            {
+              type: ActionType.SetCursor,
+              nodeId: previousChildLastChild.id,
+              pos: previousChildLastChild.value.length,
+            },
+            previousChild,
+          );
+        }
       } else {
         newChildren[node.cursor] = newChild;
       }
       if (isEmpty(newChildren)) {
         return node;
       }
-      return {
-        ...node,
-        children: newChildren,
-      };
+
+      return newRoot;
     }
     case NodeType.Paragraph: {
       if (node.cursor === undefined) {

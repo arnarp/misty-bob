@@ -902,6 +902,129 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('delete paragraph if not the last one', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'A',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: { id: 't2', type: NodeType.Text, value: '', cursor: 0 },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree({ type: ActionType.Backspace }, before);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'A',
+                cursor: 1,
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
+    });
+    test(`don't remove paragraph if deleting last char and return same root`, () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: '',
+                cursor: 0,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: '',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree({ type: ActionType.Backspace }, before);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: '',
+                cursor: 0,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: '',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
+      expect(before).toBe(actual);
+    });
   });
   describe('on DeadAction', () => {
     test('add dead node 0', () => {

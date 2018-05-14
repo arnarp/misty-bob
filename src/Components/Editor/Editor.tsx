@@ -70,12 +70,12 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
         // contentEditable={!this.props.readOnly}
         suppressContentEditableWarning
         role="textbox"
-        onInput={event => {}}
+        // onInput={event => {}}
         // onKeyDown={this.onKeyDown}
         // onKeyDown={this.onKeyDown}
-        onKeyPress={() => console.log('onKeyPress')}
+        // onKeyPress={() => console.log('onKeyPress')}
         // onKeyUp={this.onKeyUp}
-        onChange={event => console.log('onChange', { ...event })}
+        // onChange={event => console.log('onChange', { ...event })}
         onPaste={event => {
           console.log('onPaste', { ...event });
         }}
@@ -247,7 +247,13 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     event.stopPropagation();
     console.log('onKeyDown', { ...event }, event.key, event.nativeEvent.code);
     let action: EditorAction | undefined = undefined;
-    type EventKey = 'Key' | 'Backspace' | 'Dead' | 'ArrowLeft' | 'ArrowRight';
+    type EventKey =
+      | 'Key'
+      | 'Backspace'
+      | 'Dead'
+      | 'ArrowLeft'
+      | 'ArrowRight'
+      | 'Enter';
     const eventKey: EventKey =
       event.key.length === 1 ? 'Key' : (event.key as EventKey);
     switch (eventKey) {
@@ -280,6 +286,11 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
         action = {
           type: ActionType.MoveCursor,
           value: 1,
+        };
+        break;
+      case 'Enter':
+        action = {
+          type: ActionType.Enter,
         };
         break;
       default:

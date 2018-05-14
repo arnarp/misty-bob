@@ -1,3 +1,4 @@
+import * as uuid from 'uuid';
 import { EditorAction, RootNode, ActionType } from './model';
 import { insertText } from './insertText';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
@@ -10,7 +11,7 @@ import { insertNewline } from './insertNewline';
 export function calcNewTree(
   action: EditorAction,
   node: RootNode,
-  genNodeId: () => string,
+  genNodeId: () => string = uuid,
 ): RootNode {
   switch (action.type) {
     case ActionType.InsertText:

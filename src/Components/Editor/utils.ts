@@ -5,6 +5,7 @@ import {
   TextNode,
   DeadNode,
   LeafNode,
+  ParagraphNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 
@@ -16,6 +17,10 @@ export function getPreviousChildId(
   const currentIndex = keys.findIndex(v => v === currentId);
   return currentIndex === 0 ? undefined : keys[currentIndex - 1];
 }
+export function getPreviousChild(
+  children: { [id: string]: ParagraphNode },
+  currentId: string,
+): ParagraphNode | undefined;
 export function getPreviousChild(
   children: { [id: string]: TextNode | DeadNode },
   currentId: string,
