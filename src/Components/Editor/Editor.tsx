@@ -87,11 +87,9 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
           onBlur={() => {
             this.setState(() => ({ hasFocus: false }));
           }}
-          onInput={event => console.log('onInput', { ...event })}
           onPaste={event => {
             console.log('onPaste', { ...event });
             event.clipboardData.items[0].getAsString(text => {
-              console.log('onPaste text', text);
               this.setState(prevState => ({
                 root: calcNewTree(
                   { type: ActionType.InsertText, text, composing: false },
@@ -99,9 +97,6 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
                 )!,
               }));
             });
-          }}
-          onPasteCapture={event => {
-            console.log('onPastCapture', { ...event });
           }}
         />
         {this.renderNode(this.state.root)}
