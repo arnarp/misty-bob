@@ -5,6 +5,7 @@ import { delChar } from './delChar';
 import { addDeadChar } from './addDeadChar';
 import { moveCursor } from './moveCursor';
 import { setCursor } from './setCursor';
+import { insertNewline } from './insertNewline';
 
 export function calcNewTree(
   action: EditorAction,
@@ -22,6 +23,8 @@ export function calcNewTree(
       return moveCursor(action, node);
     case ActionType.SetCursor:
       return setCursor(action, node);
+    case ActionType.Enter:
+      return insertNewline(node, genNodeId);
     default:
       return assertUnreachable(action);
   }

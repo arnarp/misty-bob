@@ -1,6 +1,7 @@
 export const enum ActionType {
   InsertText = 'InsertText',
   Backspace = 'Backspace',
+  Enter = 'Enter',
   Dead = 'Dead',
   MoveCursor = 'MoveCursor',
   SetCursor = 'SetCursor',
@@ -13,6 +14,9 @@ export type InsertTextAction = {
 };
 export type BackspaceAction = {
   type: ActionType.Backspace;
+};
+export type EnterAction = {
+  type: ActionType.Enter;
 };
 export type DeadAction = {
   type: ActionType.Dead;
@@ -30,6 +34,7 @@ export type SetCursorAction = {
 export type EditorAction =
   | InsertTextAction
   | BackspaceAction
+  | EnterAction
   | DeadAction
   | MoveCursorAction
   | SetCursorAction;
