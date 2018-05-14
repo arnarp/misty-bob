@@ -28,6 +28,10 @@ export function delChar(
   switch (node.type) {
     case NodeType.Root: {
       const newChild = delChar(action, node.children[node.cursor]);
+      const previousChild = getPreviousChild(node.children, node.cursor);
+      if (newChild === undefined && previousChild === undefined) {
+        return node;
+      }
       const newChildren = {
         ...node.children,
       };
@@ -35,10 +39,6 @@ export function delChar(
         ...node,
         children: newChildren,
       };
-      const previousChild = getPreviousChild(node.children, node.cursor);
-      if (newChild === undefined && previousChild === undefined) {
-        return node;
-      }
       if (newChild === undefined) {
         delete newChildren[node.cursor];
         if (previousChild !== undefined) {
@@ -57,9 +57,6 @@ export function delChar(
         }
       } else {
         newChildren[node.cursor] = newChild;
-      }
-      if (isEmpty(newChildren)) {
-        return node;
       }
 
       return newRoot;
