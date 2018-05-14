@@ -187,6 +187,12 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
   };
 
   private onLeafClick = (nodeId: NodeId, cursorPos: number) => {
+    if (
+      this.textareaRef.current &&
+      this.textareaRef.current !== document.activeElement
+    ) {
+      this.textareaRef.current.focus();
+    }
     this.setState(prevState => ({
       hasFocus: true,
       root: calcNewTree(
