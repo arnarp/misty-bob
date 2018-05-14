@@ -1,3 +1,5 @@
+import { Overwrite } from '../../types';
+
 export const enum ActionType {
   InsertText = 'InsertText',
   Backspace = 'Backspace',
@@ -58,6 +60,9 @@ export type ParagraphNode = Readonly<{
   children: Readonly<{ [id: string]: LeafNode }>;
   cursor?: NodeId;
 }>;
+export type ParagraphNodeWithCursor = Readonly<
+  Overwrite<ParagraphNode, { cursor: NodeId }>
+>;
 export type TextNode = Readonly<{
   id: NodeId;
   type: NodeType.Text;

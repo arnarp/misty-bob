@@ -1,5 +1,11 @@
 import * as uuid from 'uuid';
-import { NodeType, ActionType, RootNode, SetCursorAction } from './model';
+import {
+  NodeType,
+  ActionType,
+  RootNode,
+  SetCursorAction,
+  EditorNode,
+} from './model';
 import { calcNewTree } from './calcNewTree';
 
 describe('calcNewNode should', () => {
@@ -77,7 +83,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('return tree with text added and cursor moved 2', () => {
       const before: RootNode = {
@@ -125,7 +131,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('insert text where cursor is', () => {
       const before: RootNode = {
@@ -173,7 +179,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('composing android backspace', () => {
       const before: RootNode = {
@@ -221,7 +227,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('composing 1', () => {
       const before: RootNode = {
@@ -269,7 +275,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('composing 2', () => {
       const before: RootNode = {
@@ -317,7 +323,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('composing 3', () => {
       const before: RootNode = {
@@ -365,7 +371,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('composing 4', () => {
       const before: RootNode = {
@@ -413,7 +419,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('composing 4', () => {
       const before: RootNode = {
@@ -461,7 +467,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('composing cursor at start of word', () => {
       const before: RootNode = {
@@ -509,7 +515,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('composing cursor at middle of word', () => {
       const before: RootNode = {
@@ -557,7 +563,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('remove dead node', () => {
       const before: RootNode = {
@@ -611,7 +617,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('remove dead node 2', () => {
       const before: RootNode = {
@@ -665,7 +671,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('remove dead node & merge text nodes', () => {
       const before: RootNode = {
@@ -725,7 +731,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
   });
   describe('on BackspaceAction', () => {
@@ -819,7 +825,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test(`don't remove paragraph if deleting last char`, () => {
       const before: RootNode = {
@@ -844,7 +850,7 @@ describe('calcNewNode should', () => {
       };
       const expected = before;
       const after = calcNewTree({ type: ActionType.Backspace }, before, uuid);
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('remove dead node', () => {
       const before: RootNode = {
@@ -894,7 +900,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
   });
   describe('on DeadAction', () => {
@@ -949,7 +955,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('add dead node 1', () => {
       const before: RootNode = {
@@ -1002,7 +1008,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('add dead node where cursor is', () => {
       const before: RootNode = {
@@ -1062,7 +1068,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('add dead node & remove previous dead node', () => {
       const before: RootNode = {
@@ -1118,7 +1124,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('add dead node, remove previous dead node, merge text node', () => {
       const before: RootNode = {
@@ -1186,7 +1192,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
   });
   describe('on MoveCursorAction', () => {
@@ -1236,7 +1242,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('move cursor back but stop at beginning and return same root', () => {
       const before: RootNode = {
@@ -1312,7 +1318,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('move cursor forward', () => {
       const before: RootNode = {
@@ -1360,7 +1366,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('move cursor forward but stop at the end and return same root', () => {
       const before: RootNode = {
@@ -1442,7 +1448,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('remove dead node right', () => {
       const before: RootNode = {
@@ -1496,7 +1502,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
   });
   describe('on SetCursorAction', () => {
@@ -1537,7 +1543,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('set cursor position 2', () => {
       const before: RootNode = {
@@ -1602,7 +1608,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
     });
     test('return same tree if set cursor is current cursor', () => {
       const before: RootNode = {
@@ -1716,7 +1722,255 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expect(after).toEqual(expected);
+      expectToEqual(after, expected);
+    });
+    test('insert newline 2', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: { id: 't1', type: NodeType.Text, value: 'AA', cursor: 1 },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'p2')
+        .mockImplementationOnce(() => 't2');
+      const after = calcNewTree({ type: ActionType.Enter }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'A',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: { id: 't2', type: NodeType.Text, value: 'A', cursor: 1 },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
+    test('insert newline 3', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: { id: 't1', type: NodeType.Text, value: 'AA', cursor: 1 },
+            },
+          },
+          p3: {
+            id: 'p3',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t3: {
+                id: 't3',
+                type: NodeType.Text,
+                value: 'P3',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'p2')
+        .mockImplementationOnce(() => 't2');
+      const after = calcNewTree({ type: ActionType.Enter }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'A',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: { id: 't2', type: NodeType.Text, value: 'A', cursor: 1 },
+            },
+          },
+          p3: {
+            id: 'p3',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t3: {
+                id: 't3',
+                type: NodeType.Text,
+                value: 'P3',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
+    test('insert newline 4', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'A',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: { id: 't2', type: NodeType.Text, value: 'A', cursor: 1 },
+            },
+          },
+          p3: {
+            id: 'p3',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t3: {
+                id: 't3',
+                type: NodeType.Text,
+                value: 'P3',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'p4')
+        .mockImplementationOnce(() => 't4');
+      const after = calcNewTree({ type: ActionType.Enter }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p4',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'A',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'A',
+                cursor: undefined,
+              },
+            },
+          },
+          p4: {
+            id: 'p4',
+            type: NodeType.Paragraph,
+            cursor: 't4',
+            children: {
+              t4: { id: 't4', type: NodeType.Text, value: '', cursor: 0 },
+            },
+          },
+          p3: {
+            id: 'p3',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t3: {
+                id: 't3',
+                type: NodeType.Text,
+                value: 'P3',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
     });
   });
 });
+
+function expectToEqual(actual: EditorNode, expected: EditorNode) {
+  if (actual.type === NodeType.Root && expected.type === NodeType.Root) {
+    expect(actual).toEqual(expected);
+  }
+  if (
+    (actual.type === NodeType.Root || actual.type === NodeType.Paragraph) &&
+    (expected.type === NodeType.Root || expected.type === NodeType.Paragraph)
+  ) {
+    expect(Object.keys(actual.children)).toEqual(
+      Object.keys(expected.children),
+    );
+    Object.keys(actual.children).forEach(i => {
+      expectToEqual(actual.children[i], expected.children[i]);
+    });
+  }
+}
