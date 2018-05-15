@@ -1,56 +1,43 @@
 import {
   RootNode,
-  EditorNode,
   ParagraphNode,
   NodeType,
   ParagraphNodeWithCursor,
 } from './model';
-import { assertUnreachable } from '../../Utils/assertUnreachable';
 
 export function insertNewline(
   node: RootNode,
   genNodeId: () => string,
-): RootNode;
-export function insertNewline(node: EditorNode, genNodeId: () => string) {
-  switch (node.type) {
-    case NodeType.Root: {
-      const childWithCursor = node.children[node.cursor];
-      if (childWithCursor.cursor === undefined) {
-        return node;
-      }
-      const splitResult = splitParagraph(
-        childWithCursor as ParagraphNodeWithCursor,
-        genNodeId,
-      );
-      if (splitResult === undefined) {
-        return node;
-      }
-      const newChildren = {};
-      const childrenKeys = Object.keys(node.children);
-      const childWithCursorIndex = childrenKeys.findIndex(
-        i => i === childWithCursor.id,
-      );
-      childrenKeys.slice(0, childWithCursorIndex).forEach(i => {
-        newChildren[i] = node.children[i];
-      });
-      newChildren[splitResult.hadCursor.id] = splitResult.hadCursor;
-      newChildren[splitResult.hasCursor.id] = splitResult.hasCursor;
-      childrenKeys.slice(childWithCursorIndex + 1).forEach(i => {
-        newChildren[i] = node.children[i];
-      });
-      return {
-        ...node,
-        cursor: splitResult.hasCursor.id,
-        children: newChildren,
-      };
-    }
-    case NodeType.Paragraph:
-    case NodeType.Text:
-    case NodeType.Dead:
-      return node;
-    default:
-      return assertUnreachable(node);
+): RootNode {
+  const childWithCursor = node.children[node.cursor];
+  if (childWithCursor.cursor === undefined) {
+    return node;
   }
+  const splitResult = splitParagraph(
+    childWithCursor as ParagraphNodeWithCursor,
+    genNodeId,
+  );
+  if (splitResult === undefined) {
+    return node;
+  }
+  const newChildren = {};
+  const childrenKeys = Object.keys(node.children);
+  const childWithCursorIndex = childrenKeys.findIndex(
+    i => i === childWithCursor.id,
+  );
+  childrenKeys.slice(0, childWithCursorIndex).forEach(i => {
+    newChildren[i] = node.children[i];
+  });
+  newChildren[splitResult.hadCursor.id] = splitResult.hadCursor;
+  newChildren[splitResult.hasCursor.id] = splitResult.hasCursor;
+  childrenKeys.slice(childWithCursorIndex + 1).forEach(i => {
+    newChildren[i] = node.children[i];
+  });
+  return {
+    ...node,
+    cursor: splitResult.hasCursor.id,
+    children: newChildren,
+  };
 }
 
 function splitParagraph(
