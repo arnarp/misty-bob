@@ -50,13 +50,13 @@ export function removeDeadNode(node: ContainerNode) {
           ...previousChild,
           cursor: previousChild.value.length + childWithCursor.value.length,
           value: `${previousChild.value}${childWithCursor.value}${
-            shouldMergeWithNextNode ? nextChild.value : ''
+            shouldMergeWithNextNode ? nextChild!.value : ''
           }`,
         },
       };
       delete newChildren[childWithCursor.id];
       if (shouldMergeWithNextNode) {
-        delete newChildren[nextChild.id];
+        delete newChildren[nextChild!.id];
       }
       return { ...node, children: newChildren, cursor: previousChild.id };
     }

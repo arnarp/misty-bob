@@ -1580,6 +1580,80 @@ describe('calcNewNode should', () => {
       );
       expect(after).toBe(before);
     });
+    test('move cursor back and to previous paragraph', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'lína 1',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'lína 2',
+                cursor: 0,
+              },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree(
+        { type: ActionType.MoveCursor, value: -1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'lína 1',
+                cursor: 6,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'lína 2',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
+    });
     test('move cursor forward from zero', () => {
       const before: RootNode = {
         id: 'root',

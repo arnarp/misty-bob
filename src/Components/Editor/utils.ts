@@ -24,7 +24,7 @@ export function getPreviousChild(
 export function getPreviousChild(
   children: { [id: string]: TextNode | DeadNode },
   currentId: string,
-): TextNode | DeadNode;
+): LeafNode | undefined;
 export function getPreviousChild(
   children: { [id: string]: {} },
   currentId: string,
@@ -43,10 +43,15 @@ export function getNextChildId(
   const currentIndex = keys.findIndex(v => v === currentId);
   return currentIndex === keys.length - 1 ? undefined : keys[currentIndex + 1];
 }
+
+export function getNextChild(
+  children: { [id: string]: ParagraphNode },
+  currentId: string,
+): ParagraphNode | undefined;
 export function getNextChild(
   children: { [id: string]: LeafNode },
   currentId: string,
-): LeafNode;
+): LeafNode | undefined;
 export function getNextChild(
   children: { [id: string]: {} },
   currentId: string,
