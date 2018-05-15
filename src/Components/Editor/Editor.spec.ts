@@ -1282,7 +1282,7 @@ describe('calcNewNode should', () => {
       const genIdMock = jest
         .fn<() => string>()
         .mockImplementationOnce(() => 'd');
-      const after = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
+      const actual = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
       const expected: RootNode = {
         id: 'r',
         type: NodeType.Root,
@@ -1309,7 +1309,7 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      expectToEqual(after, expected);
+      expectToEqual(actual, expected);
     });
     test('add dead node where cursor is', () => {
       const before: RootNode = {
@@ -1978,6 +1978,86 @@ describe('calcNewNode should', () => {
       };
       const after = calcNewTree(action, before, uuid);
       expect(after).toBe(before);
+    });
+    test('convert dead node to text node before setting the cursor', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'abba',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'baab',
+              },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree(
+        { type: ActionType.SetCursor, nodeId: 't2', pos: 2 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'abba´',
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: 2,
+                value: 'baab',
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
     });
   });
   describe('on EnterAction', () => {

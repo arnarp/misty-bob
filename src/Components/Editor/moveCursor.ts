@@ -1,6 +1,5 @@
 import { MoveCursorAction, NodeType, RootNode, ParagraphNode } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-import { getPreviousChild } from './utils';
 
 export function moveCursor(action: MoveCursorAction, node: RootNode): RootNode;
 export function moveCursor(
@@ -11,6 +10,9 @@ export function moveCursor(
   action: MoveCursorAction,
   node: RootNode | ParagraphNode,
 ): RootNode | ParagraphNode {
+  if (node.cursor === undefined) {
+    return node;
+  }
   switch (node.type) {
     case NodeType.Root: {
       const childWithCursor = node.children[node.cursor];
@@ -30,54 +32,30 @@ export function moveCursor(
       };
     }
     case NodeType.Paragraph: {
-      if (node.cursor === undefined) {
-        return node;
-      }
       const childWithCursor = node.children[node.cursor];
-      if (childWithCursor === undefined) {
+      if (
+        childWithCursor === undefined ||
+        childWithCursor.type === NodeType.Dead
+      ) {
         return node;
       }
-      if (childWithCursor.type === NodeType.Text) {
-        if (
-          childWithCursor.cursor === undefined ||
-          (childWithCursor.cursor === 0 && action.value === -1) ||
-          (childWithCursor.cursor === childWithCursor.value.length &&
-            action.value > 0)
-        ) {
-          return node;
-        }
-        return {
-          ...node,
-          children: {
-            [node.cursor]: {
-              ...childWithCursor,
-              cursor: childWithCursor.cursor + action.value,
-            },
-          },
-        };
-      } else {
-        const previousChild = getPreviousChild(node.children, node.cursor);
-        if (
-          previousChild === undefined ||
-          previousChild.type === NodeType.Dead
-        ) {
-          return node;
-        }
-        const newChildren = {
-          ...node.children,
-        };
-        newChildren[previousChild.id] = {
-          ...previousChild,
-          cursor: previousChild.value.length + (action.value === -1 ? 0 : 1),
-          value: previousChild.value + childWithCursor.value,
-        };
-        delete newChildren[node.cursor];
-        return {
-          ...node,
-          cursor: previousChild.id,
-          children: newChildren,
-        };
+      if (
+        childWithCursor.cursor === undefined ||
+        (childWithCursor.cursor === 0 && action.value === -1) ||
+        (childWithCursor.cursor === childWithCursor.value.length &&
+          action.value > 0)
+      ) {
+        return node;
       }
+      return {
+        ...node,
+        children: {
+          [node.cursor]: {
+            ...childWithCursor,
+            cursor: childWithCursor.cursor + action.value,
+          },
+        },
+      };
     }
     default:
       return assertUnreachable(node);

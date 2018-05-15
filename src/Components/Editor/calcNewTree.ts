@@ -22,9 +22,9 @@ export function calcNewTree(
     case ActionType.Dead:
       return addDeadChar(action, removeDeadNode(node), genNodeId);
     case ActionType.MoveCursor:
-      return moveCursor(action, node);
+      return moveCursor(action, removeDeadNode(node));
     case ActionType.SetCursor:
-      return setCursor(action, node);
+      return setCursor(action, removeDeadNode(node));
     case ActionType.Enter:
       return insertNewline(node, genNodeId);
     default:
