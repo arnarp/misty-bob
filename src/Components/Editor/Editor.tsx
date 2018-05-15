@@ -89,10 +89,18 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
           }}
           onPaste={event => {
             console.log('onPaste', { ...event });
-            event.clipboardData.items[0].getAsString(text => {
+            event.clipboardData.items[0].getAsString((text: string) => {
+              console.log('onPaste text', {
+                text,
+                val: text.replace(String.fromCharCode(10), ' '),
+              });
               this.setState(prevState => ({
                 root: calcNewTree(
-                  { type: ActionType.InsertText, text, composing: false },
+                  {
+                    type: ActionType.InsertText,
+                    text: text.replace(String.fromCharCode(10), ' '),
+                    composing: false,
+                  },
                   prevState.root,
                 )!,
               }));

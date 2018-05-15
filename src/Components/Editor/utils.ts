@@ -150,3 +150,7 @@ export function getMobileOperatingSystem() {
 
   return undefined;
 }
+
+export function textNodesAreMergable(a: TextNode, b: TextNode): boolean {
+  return true;
+}

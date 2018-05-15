@@ -827,6 +827,50 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('remove char from node with cursor 2', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: 3,
+                value: 'ab´cd',
+              },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree({ type: ActionType.Backspace }, before, uuid);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: 2,
+                value: 'abcd',
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
+    });
     test(`don't remove paragraph if deleting last char`, () => {
       const before: RootNode = {
         id: 'root',
@@ -895,6 +939,62 @@ describe('calcNewNode should', () => {
                 type: NodeType.Text,
                 cursor: 0,
                 value: '',
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
+    test('remove dead node and merge', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'ab',
+              },
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: 1,
+                value: '´',
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: 'cd',
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree({ type: ActionType.Backspace }, before, uuid);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: 2,
+                value: 'abcd',
               },
             },
           },
