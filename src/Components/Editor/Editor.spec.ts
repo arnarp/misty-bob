@@ -2343,6 +2343,63 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('remove dead node & insert newline', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'AA',
+                cursor: undefined,
+              },
+              d: { id: 'd', type: NodeType.Dead, value: '´', cursor: 1 },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'p2')
+        .mockImplementationOnce(() => 't2');
+      const after = calcNewTree({ type: ActionType.Enter }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'AA´',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: { id: 't2', type: NodeType.Text, value: '', cursor: 0 },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
   });
 });
 

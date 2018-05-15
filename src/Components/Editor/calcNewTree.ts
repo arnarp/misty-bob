@@ -26,7 +26,7 @@ export function calcNewTree(
     case ActionType.SetCursor:
       return setCursor(action, removeDeadNode(node));
     case ActionType.Enter:
-      return insertNewline(node, genNodeId);
+      return insertNewline(removeDeadNode(node), genNodeId);
     default:
       return assertUnreachable(action);
   }
