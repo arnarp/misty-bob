@@ -1750,6 +1750,66 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('move cursor forward between text nodes', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'ar',
+                cursor: 2,
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'nar',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: 1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'ar',
+                cursor: undefined,
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'nar',
+                cursor: 1,
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
     test('move cursor forward but stop at the end and return same root', () => {
       const before: RootNode = {
         id: 'root',
