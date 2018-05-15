@@ -61,6 +61,24 @@ export function moveCursor(
           };
         }
       }
+      if (isCursorMovingToNextNode && nextChild !== undefined) {
+        const leafs = Object.values(nextChild.children);
+        const lastLeaf = leafs[leafs.length - 1];
+        if (lastLeaf.type !== NodeType.Dead) {
+          newCursor = nextChild.id;
+          newChildren[nextChild.id] = {
+            ...nextChild,
+            cursor: lastLeaf.id,
+            children: {
+              ...nextChild.children,
+              [lastLeaf.id]: {
+                ...lastLeaf,
+                cursor: 0,
+              },
+            },
+          };
+        }
+      }
 
       return {
         ...node,
