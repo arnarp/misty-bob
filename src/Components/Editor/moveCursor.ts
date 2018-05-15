@@ -90,19 +90,18 @@ export function moveCursor(
       const childWithCursor = node.children[node.cursor];
       if (
         childWithCursor === undefined ||
-        childWithCursor.type === NodeType.Dead
+        childWithCursor.type === NodeType.Dead ||
+        childWithCursor.cursor === undefined
       ) {
-        return node;
-      }
-      if (childWithCursor.cursor === undefined) {
         return node;
       }
       const isCursorMovingToPreviousNode =
         childWithCursor.cursor === 0 && action.value === -1;
       const isCursorMovingToNextNode =
         childWithCursor.cursor === childWithCursor.value.length &&
-        action.value > 0;
+        action.value === 1;
       const newChildren = {
+        ...node.children,
         [node.cursor]: {
           ...childWithCursor,
           cursor:
@@ -114,6 +113,7 @@ export function moveCursor(
       const previousChild = getPreviousChild(node.children, node.cursor);
       const nextChild = getNextChild(node.children, node.cursor);
       let newCursor = node.cursor as string | undefined;
+
       if (
         isCursorMovingToPreviousNode &&
         previousChild !== undefined &&

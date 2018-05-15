@@ -1654,6 +1654,66 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(actual, expected);
     });
+    test('move cursor back between text nodes', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'ar',
+                cursor: undefined,
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'nar',
+                cursor: 0,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: -1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'ar',
+                cursor: 1,
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'nar',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
     test('move cursor forward from zero', () => {
       const before: RootNode = {
         id: 'root',
@@ -1743,6 +1803,66 @@ describe('calcNewNode should', () => {
                 type: NodeType.Text,
                 value: 'arnar',
                 cursor: 4,
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
+    test('move cursor forward 2', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'ar',
+                cursor: undefined,
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'nar',
+                cursor: 0,
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: 1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'ar',
+                cursor: undefined,
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'nar',
+                cursor: 1,
               },
             },
           },
