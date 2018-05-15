@@ -20,7 +20,7 @@ export function calcNewTree(
     case ActionType.Backspace:
       return delChar(action, removeDeadNode(node));
     case ActionType.Dead:
-      return addDeadChar(action, node, genNodeId);
+      return addDeadChar(action, removeDeadNode(node), genNodeId);
     case ActionType.MoveCursor:
       return moveCursor(action, node);
     case ActionType.SetCursor:

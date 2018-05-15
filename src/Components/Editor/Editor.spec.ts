@@ -873,17 +873,17 @@ describe('calcNewNode should', () => {
     });
     test(`don't remove paragraph if deleting last char`, () => {
       const before: RootNode = {
-        id: 'root',
+        id: 'r',
         type: NodeType.Root,
-        cursor: 'first-paragraph',
+        cursor: 'p',
         children: {
-          'first-paragraph': {
-            id: 'first-paragraph',
+          p: {
+            id: 'p',
             type: NodeType.Paragraph,
-            cursor: 'first-text-node',
+            cursor: 't',
             children: {
-              'first-text-node': {
-                id: 'first-text-node',
+              t: {
+                id: 't',
                 type: NodeType.Text,
                 value: '',
                 cursor: 0,
@@ -1380,7 +1380,7 @@ describe('calcNewNode should', () => {
           p: {
             id: 'p',
             type: NodeType.Paragraph,
-            cursor: 'd',
+            cursor: 'd1',
             children: {
               t: {
                 id: 't',
@@ -1388,8 +1388,8 @@ describe('calcNewNode should', () => {
                 cursor: undefined,
                 value: 'a',
               },
-              d: {
-                id: 'd',
+              d1: {
+                id: 'd1',
                 type: NodeType.Dead,
                 cursor: 1,
                 value: '´',
@@ -1398,7 +1398,10 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      const after = calcNewTree({ type: ActionType.Dead }, before, uuid);
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'd2');
+      const after = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
       const expected: RootNode = {
         id: 'r',
         type: NodeType.Root,
@@ -1407,7 +1410,7 @@ describe('calcNewNode should', () => {
           p: {
             id: 'p',
             type: NodeType.Paragraph,
-            cursor: 'd',
+            cursor: 'd2',
             children: {
               t: {
                 id: 't',
@@ -1415,8 +1418,8 @@ describe('calcNewNode should', () => {
                 cursor: undefined,
                 value: 'a´',
               },
-              d: {
-                id: 'd',
+              d2: {
+                id: 'd2',
                 type: NodeType.Dead,
                 cursor: 1,
                 value: '´',
@@ -1436,7 +1439,7 @@ describe('calcNewNode should', () => {
           p: {
             id: 'p',
             type: NodeType.Paragraph,
-            cursor: 'd',
+            cursor: 'd1',
             children: {
               t1: {
                 id: 't1',
@@ -1444,8 +1447,8 @@ describe('calcNewNode should', () => {
                 cursor: undefined,
                 value: 'ab',
               },
-              d: {
-                id: 'd',
+              d1: {
+                id: 'd1',
                 type: NodeType.Dead,
                 cursor: 1,
                 value: '´',
@@ -1460,7 +1463,11 @@ describe('calcNewNode should', () => {
           },
         },
       };
-      const after = calcNewTree({ type: ActionType.Dead }, before, uuid);
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'd2')
+        .mockImplementationOnce(() => 't3');
+      const after = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
       const expected: RootNode = {
         id: 'r',
         type: NodeType.Root,
@@ -1469,7 +1476,7 @@ describe('calcNewNode should', () => {
           p: {
             id: 'p',
             type: NodeType.Paragraph,
-            cursor: 'd',
+            cursor: 'd2',
             children: {
               t1: {
                 id: 't1',
@@ -1477,14 +1484,14 @@ describe('calcNewNode should', () => {
                 cursor: undefined,
                 value: 'ab´',
               },
-              d: {
-                id: 'd',
+              d2: {
+                id: 'd2',
                 type: NodeType.Dead,
                 cursor: 1,
                 value: '´',
               },
-              t2: {
-                id: 't2',
+              t3: {
+                id: 't3',
                 type: NodeType.Text,
                 cursor: undefined,
                 value: 'ba',
