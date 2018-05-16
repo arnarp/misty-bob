@@ -117,9 +117,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
             onClick={event => {
               event.stopPropagation();
               event.preventDefault();
-              const collection = event.currentTarget.getElementsByClassName(
-                'Char',
-              );
+              const collection = event.currentTarget.querySelectorAll('.Char');
               if (collection.length === 0) {
                 // Should not happen. All paragraphs should have at least " ".
                 return;
