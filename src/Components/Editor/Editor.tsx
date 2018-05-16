@@ -49,14 +49,11 @@ type EditorProps = {
 const initialState = {
   root: root,
   hasFocus: false,
-  // rerender: false,
-  // lastAction: undefined as undefined | EditorAction,
 };
 type EditorState = Readonly<typeof initialState>;
 
 export class Editor extends React.PureComponent<EditorProps, EditorState> {
   readonly state: EditorState = initialState;
-  editorRef = React.createRef<HTMLDivElement>();
   cursorRef = React.createRef<HTMLParagraphElement>();
   textareaRef = React.createRef<HTMLTextAreaElement>();
 
@@ -64,8 +61,6 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     console.log('render', this.state);
     return (
       <div
-        ref={this.editorRef}
-        tabIndex={1}
         className="Editor"
         role="textbox"
         onClick={event => {
@@ -82,7 +77,6 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
           onChange={this.onChange}
           onFocus={() => {
             this.setState(() => ({ hasFocus: true }));
-            // if (this.state.root.children && this.state.root.)
           }}
           onBlur={() => {
             this.setState(() => ({ hasFocus: false }));
@@ -123,11 +117,29 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
             onClick={event => {
               event.stopPropagation();
               event.preventDefault();
-              const values = Object.values(n.children);
-              const lastNode = values[values.length - 1];
-              if (lastNode !== undefined) {
-                this.onLeafClick(lastNode.id, lastNode.value.length);
+              const collection = event.currentTarget.getElementsByClassName(
+                'Char',
+              );
+              if (collection.length === 0) {
+                // Should not happen. All paragraphs should have at least " ".
+                return;
               }
+              let closestElement = collection.item(0);
+              let closestElementDist = Number.MAX_VALUE;
+              for (let i = 0; i < collection.length; i++) {
+                const element = collection.item(i);
+                const rect = element.getBoundingClientRect();
+                const dist = Math.sqrt(
+                  Math.pow(rect.left - event.clientX, 2) +
+                    Math.pow(rect.top + rect.height / 2 - event.clientY, 2),
+                );
+                if (dist < closestElementDist) {
+                  closestElement = element;
+                  closestElementDist = dist;
+                }
+              }
+              const [nodeId, cursor] = closestElement.id.split('_');
+              this.setCursorOnLeafNode(nodeId, Number(cursor));
             }}
           >
             {Object.values(n.children).map(this.renderNode)}
@@ -142,48 +154,23 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
             })}
             key={n.id}
           >
-            {n.cursor === undefined && n.value}
-            {n.cursor !== undefined && (
-              <>
-                {n.value
-                  .slice(0, n.cursor)
-                  .split('')
-                  .map((v, i) => (
-                    <span
-                      key={`${n.id}_${i}`}
-                      onClick={event => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        this.onLeafClick(n.id, i);
-                      }}
-                    >
-                      {v}
-                    </span>
-                  ))}
+            {Array.from(Array(n.value.length + 1).keys()).map(index => {
+              const char = n.value.charAt(index);
+              const hasBlinkingCursor =
+                n.cursor === index && this.state.hasFocus;
+              return (
                 <span
-                  key={new Date().toISOString()}
-                  className={classNames({ Cursor: this.state.hasFocus })}
+                  id={`${n.id}_${index}`}
+                  className={classNames('Char', {
+                    Cursor: hasBlinkingCursor,
+                  })}
+                  key={`${n.id}_${index}`}
                 >
-                  {n.value.charAt(n.cursor) || ' '}
-                  <span />
+                  {char || (index === 0 ? ' ' : char)}
+                  {hasBlinkingCursor && <span key={new Date().toISOString()} />}
                 </span>
-                {n.value
-                  .slice(n.cursor + 1)
-                  .split('')
-                  .map((v, i) => (
-                    <span
-                      key={`${n.id}_${i + n.cursor! + 1}`}
-                      onClick={event => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        this.onLeafClick(n.id, i + n.cursor! + 1);
-                      }}
-                    >
-                      {v}
-                    </span>
-                  ))}
-              </>
-            )}
+              );
+            })}
           </span>
         );
       default:
@@ -191,7 +178,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     }
   };
 
-  private onLeafClick = (nodeId: NodeId, cursorPos: number) => {
+  private setCursorOnLeafNode = (nodeId: NodeId, cursorPos: number) => {
     if (
       this.textareaRef.current &&
       this.textareaRef.current !== document.activeElement
