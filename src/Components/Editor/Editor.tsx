@@ -300,27 +300,16 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
   ) => {
     event.stopPropagation();
     event.preventDefault();
-    const collection = event.currentTarget.querySelectorAll('.Char');
-    if (collection.length === 0) {
-      // Should not happen. All paragraphs should have at least " ".
+    const rects = this.queryBoundingClientRects('.Char', event.currentTarget);
+    const closestRect = this.getClosestRectQueryItem(rects, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+    if (closestRect === undefined) {
       return;
     }
-    let closestElement = collection.item(0);
-    let closestElementDist = Number.MAX_VALUE;
-    for (let i = 0; i < collection.length; i++) {
-      const element = collection.item(i);
-      const rect = element.getBoundingClientRect();
-      const dist = calcDistance(
-        { x: rect.left, y: rect.top + rect.height / 2 },
-        { x: event.clientX, y: event.clientY },
-      );
-      if (dist < closestElementDist) {
-        closestElement = element;
-        closestElementDist = dist;
-      }
-    }
-    const [nodeId, cursor] = closestElement.id.split('_');
-    this.setCursorOnLeafNode(nodeId, Number(cursor));
+    const [nodeId, index] = closestRect.element.id.split('_');
+    this.setCursorOnLeafNode(nodeId, Number(index));
   };
 
   private createArrowUpDownAction(
