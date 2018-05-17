@@ -9,7 +9,7 @@ import {
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { isEmpty } from '../../Utils/isEmpty';
-import { getPreviousChild } from './utils';
+import { getPreviousChild, createCursor } from './utils';
 import { setCursor } from './setCursor';
 
 export function delChar(action: BackspaceAction, node: RootNode): RootNode;
@@ -92,10 +92,12 @@ export function delChar(
       if (node.value.length === 0) {
         return undefined;
       }
-      const newCursor = Math.max(node.cursor - 1, 0);
+      const newCursor = createCursor(Math.max(node.cursor.to - 1, 0));
       return {
         ...node,
-        value: node.value.slice(0, newCursor) + node.value.slice(newCursor + 1),
+        value:
+          node.value.slice(0, newCursor.to) +
+          node.value.slice(newCursor.to + 1),
         cursor: newCursor,
       };
     }

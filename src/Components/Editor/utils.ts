@@ -6,6 +6,7 @@ import {
   DeadNode,
   LeafNode,
   BlockNode,
+  Cursor,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 
@@ -171,4 +172,20 @@ export type Point = {
 
 export function calcDistance(a: Point, b: Point) {
   return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+}
+
+export function createDeadNode(genNodeId: () => string): DeadNode {
+  return {
+    id: genNodeId(),
+    type: NodeType.Dead,
+    value: '´',
+    cursor: createCursor<1>(1),
+  };
+}
+
+export function createCursor<T>(from: T, to?: T): Cursor<T> {
+  return {
+    from,
+    to: to === undefined ? from : to,
+  };
 }

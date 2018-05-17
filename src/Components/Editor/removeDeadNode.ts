@@ -1,6 +1,11 @@
 import { RootNode, NodeType, ContainerNode, BlockNode } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-import { getPreviousChild, getNextChild, textNodesAreMergable } from './utils';
+import {
+  getPreviousChild,
+  getNextChild,
+  textNodesAreMergable,
+  createCursor,
+} from './utils';
 
 export function removeDeadNode(node: RootNode): RootNode;
 export function removeDeadNode(node: BlockNode): BlockNode;
@@ -49,7 +54,9 @@ export function removeDeadNode(node: ContainerNode) {
         ...node.children,
         [previousChild.id]: {
           ...previousChild,
-          cursor: previousChild.value.length + childWithCursor.value.length,
+          cursor: createCursor(
+            previousChild.value.length + childWithCursor.value.length,
+          ),
           value: `${previousChild.value}${childWithCursor.value}${
             shouldMergeWithNextNode ? nextChild!.value : ''
           }`,

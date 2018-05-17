@@ -51,6 +51,10 @@ export interface BaseNode {
   id: NodeId;
   type: NodeType;
 }
+export type Cursor<T> = {
+  from: T;
+  to: T;
+};
 export interface RootNode extends BaseNode {
   type: NodeType.Root;
   children: Readonly<{ [id: string]: BlockNode }>;
@@ -72,16 +76,15 @@ export interface HeaderNode extends BaseBlockNode {
 }
 interface BaseTextNode extends BaseNode {
   value: string;
-  cursor?: number;
+  cursor?: Cursor<number>;
 }
 export interface TextNode extends BaseTextNode {
   type: NodeType.Text;
-  cursor?: number;
 }
 export interface DeadNode extends BaseTextNode {
   type: NodeType.Dead;
   value: '´';
-  cursor: 1;
+  cursor: { from: 1; to: 1 };
 }
 export type EditorNode = RootNode | BlockNode | LeafNode;
 export type ContainerNode = RootNode | BlockNode;

@@ -1,12 +1,6 @@
-import {
-  DeadAction,
-  RootNode,
-  NodeType,
-  DeadNode,
-  TextNode,
-  BlockNode,
-} from './model';
+import { DeadAction, RootNode, NodeType, TextNode, BlockNode } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
+import { createDeadNode } from './utils';
 
 export function addDeadChar(
   action: DeadAction,
@@ -43,27 +37,22 @@ export function addDeadChar(
       if (childWithCursor.type === NodeType.Dead) {
         return node;
       }
-      const newDeadNode: DeadNode = {
-        id: genNodeId(),
-        type: NodeType.Dead,
-        value: '´',
-        cursor: 1,
-      };
+      const newDeadNode = createDeadNode(genNodeId);
       if (
         childWithCursor.cursor &&
-        childWithCursor.cursor < childWithCursor.value.length
+        childWithCursor.cursor.to < childWithCursor.value.length
       ) {
         // We need to split upp current child with cursor and insert dead node in the middle
         const newChildThatHadCursor: TextNode = {
           ...childWithCursor,
           cursor: undefined,
-          value: childWithCursor.value.slice(0, childWithCursor.cursor),
+          value: childWithCursor.value.slice(0, childWithCursor.cursor.to),
         };
         const newRestOfChildThatHadCursor: TextNode = {
           id: genNodeId(),
           type: NodeType.Text,
           cursor: undefined,
-          value: childWithCursor.value.slice(childWithCursor.cursor),
+          value: childWithCursor.value.slice(childWithCursor.cursor.to),
         };
         return {
           ...node,

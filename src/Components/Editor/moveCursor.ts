@@ -1,6 +1,6 @@
 import { MoveCursorAction, NodeType, RootNode, BlockNode } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-import { getNextChild, getPreviousChild } from './utils';
+import { getNextChild, getPreviousChild, createCursor } from './utils';
 
 export function moveCursor(action: MoveCursorAction, node: RootNode): RootNode;
 export function moveCursor(
@@ -55,7 +55,7 @@ export function moveCursor(
               ...previousChild.children,
               [lastLeaf.id]: {
                 ...lastLeaf,
-                cursor: lastLeaf.value.length,
+                cursor: createCursor(lastLeaf.value.length),
               },
             },
           };
@@ -73,7 +73,7 @@ export function moveCursor(
               ...nextChild.children,
               [lastLeaf.id]: {
                 ...lastLeaf,
-                cursor: 0,
+                cursor: createCursor(0),
               },
             },
           };
@@ -97,9 +97,9 @@ export function moveCursor(
         return node;
       }
       const isCursorMovingToPreviousNode =
-        childWithCursor.cursor === 0 && action.value === -1;
+        childWithCursor.cursor.to === 0 && action.value === -1;
       const isCursorMovingToNextNode =
-        childWithCursor.cursor === childWithCursor.value.length &&
+        childWithCursor.cursor.to === childWithCursor.value.length &&
         action.value === 1;
       const newChildren = {
         ...node.children,
@@ -108,7 +108,7 @@ export function moveCursor(
           cursor:
             isCursorMovingToPreviousNode || isCursorMovingToNextNode
               ? undefined
-              : childWithCursor.cursor + action.value,
+              : createCursor(childWithCursor.cursor.to + action.value),
         },
       };
       const previousChild = getPreviousChild(node.children, node.cursor);
@@ -122,7 +122,7 @@ export function moveCursor(
       ) {
         newChildren[previousChild.id] = {
           ...previousChild,
-          cursor: previousChild.value.length - 1,
+          cursor: createCursor(previousChild.value.length - 1),
         };
         newCursor = previousChild.id;
       }
@@ -134,7 +134,7 @@ export function moveCursor(
       ) {
         newChildren[nextChild.id] = {
           ...nextChild,
-          cursor: 1,
+          cursor: createCursor(1),
         };
         newCursor = nextChild.id;
       }

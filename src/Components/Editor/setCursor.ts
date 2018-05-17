@@ -8,6 +8,7 @@ import {
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { isEmpty } from '../../Utils/isEmpty';
+import { createCursor } from './utils';
 
 export function setCursor(action: SetCursorAction, node: RootNode): RootNode;
 export function setCursor(action: SetCursorAction, node: BlockNode): BlockNode;
@@ -74,14 +75,15 @@ export function setCursor(
       if (
         (node.id === action.nodeId &&
           node.cursor !== undefined &&
-          node.cursor === action.pos) ||
+          node.cursor.to === action.pos) ||
         (node.id !== action.nodeId && node.cursor === undefined)
       ) {
         return node;
       }
       return {
         ...node,
-        cursor: action.nodeId === node.id ? action.pos : undefined,
+        cursor:
+          action.nodeId === node.id ? createCursor(action.pos) : undefined,
       };
     }
     case NodeType.Dead:

@@ -19,6 +19,7 @@ import {
   getMobileOperatingSystem,
   calcDistance,
   Point,
+  createCursor,
 } from './utils';
 import * as classNames from 'classnames';
 declare global {
@@ -40,7 +41,7 @@ const isMobile = getMobileOperatingSystem() !== undefined;
 const t: TextNode = {
   id: uuid(),
   type: NodeType.Text,
-  cursor: 0,
+  cursor: createCursor(0),
   value: '',
 };
 const p: ParagraphNode = {
@@ -145,7 +146,9 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
             {Array.from(Array(n.value.length + 1).keys()).map(index => {
               const char = n.value.charAt(index);
               const hasBlinkingCursor =
-                n.cursor === index && this.state.hasFocus;
+                n.cursor !== undefined &&
+                n.cursor.to === index &&
+                this.state.hasFocus;
               return (
                 <span
                   id={`${n.id}_${index}`}

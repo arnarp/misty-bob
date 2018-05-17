@@ -4,6 +4,7 @@ import {
   NodeType,
   ParagraphNodeWithCursor,
 } from './model';
+import { createCursor } from './utils';
 
 export function insertNewline(
   node: RootNode,
@@ -50,7 +51,7 @@ function splitParagraph(
   const newChildWithCursorId = genNodeId();
   const newTextNodeId = genNodeId();
   const newTextNodeValue = leafNodeWithCursor.value.slice(
-    leafNodeWithCursor.cursor,
+    leafNodeWithCursor.cursor && leafNodeWithCursor.cursor.to,
   );
   if (leafNodeWithCursor.type === NodeType.Dead) {
     return undefined;
@@ -63,7 +64,10 @@ function splitParagraph(
         [node.cursor]: {
           ...leafNodeWithCursor,
           cursor: undefined,
-          value: leafNodeWithCursor.value.slice(0, leafNodeWithCursor.cursor),
+          value: leafNodeWithCursor.value.slice(
+            0,
+            leafNodeWithCursor.cursor && leafNodeWithCursor.cursor.to,
+          ),
         },
       },
     },
@@ -75,7 +79,7 @@ function splitParagraph(
         [newTextNodeId]: {
           id: newTextNodeId,
           type: NodeType.Text,
-          cursor: newTextNodeValue.length,
+          cursor: createCursor(newTextNodeValue.length),
           value: newTextNodeValue,
         },
       },

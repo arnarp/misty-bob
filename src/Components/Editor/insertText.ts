@@ -7,7 +7,12 @@ import {
   BlockNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-import { addQuote, getPreviousChild, getNextChild } from './utils';
+import {
+  addQuote,
+  getPreviousChild,
+  getNextChild,
+  createCursor,
+} from './utils';
 
 export function insertText(
   action: InsertTextAction,
@@ -68,7 +73,10 @@ export function insertText(
         }
         const newChild = insertText(
           addQuote(action),
-          { ...previousChild, cursor: previousChild.value.length },
+          {
+            ...previousChild,
+            cursor: createCursor(previousChild.value.length),
+          },
           genNodeId,
         );
         newChildren[newChild.id] = newChild;
@@ -118,10 +126,10 @@ export function insertText(
         const newTextArr = wordMap.map(value => {
           if (
             node.cursor !== undefined &&
-            node.cursor >= value.start &&
-            node.cursor <= value.end
+            node.cursor.to >= value.start &&
+            node.cursor.to <= value.end
           ) {
-            cursor = value.start + action.text.length;
+            cursor = createCursor(value.start + action.text.length);
             return action.text;
           }
           return value.word;
@@ -135,10 +143,10 @@ export function insertText(
       return {
         ...node,
         value:
-          node.value.slice(0, node.cursor) +
+          node.value.slice(0, node.cursor.to) +
           action.text +
-          node.value.slice(node.cursor),
-        cursor: node.cursor + action.text.length,
+          node.value.slice(node.cursor.to),
+        cursor: createCursor(node.cursor.to + action.text.length),
       };
     }
     case NodeType.Dead:
