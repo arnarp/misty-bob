@@ -4,16 +4,13 @@ import {
   EditorNode,
   NodeType,
   RootNode,
-  ParagraphNode,
+  BlockNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { isEmpty } from '../../Utils/isEmpty';
 
 export function setCursor(action: SetCursorAction, node: RootNode): RootNode;
-export function setCursor(
-  action: SetCursorAction,
-  node: ParagraphNode,
-): ParagraphNode;
+export function setCursor(action: SetCursorAction, node: BlockNode): BlockNode;
 export function setCursor(action: SetCursorAction, node: LeafNode): LeafNode;
 export function setCursor(
   action: SetCursorAction,
@@ -46,6 +43,7 @@ export function setCursor(
       }
       return node;
     }
+    case NodeType.Header:
     case NodeType.Paragraph: {
       const newChildren = {};
       let newCursor = undefined as string | undefined;

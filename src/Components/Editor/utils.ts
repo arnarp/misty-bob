@@ -5,7 +5,7 @@ import {
   TextNode,
   DeadNode,
   LeafNode,
-  ParagraphNode,
+  BlockNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 
@@ -17,10 +17,11 @@ export function getPreviousChildId(
   const currentIndex = keys.findIndex(v => v === currentId);
   return currentIndex === 0 ? undefined : keys[currentIndex - 1];
 }
+
 export function getPreviousChild(
-  children: { [id: string]: ParagraphNode },
+  children: { [id: string]: BlockNode },
   currentId: string,
-): ParagraphNode | undefined;
+): BlockNode | undefined;
 export function getPreviousChild(
   children: { [id: string]: TextNode | DeadNode },
   currentId: string,
@@ -35,6 +36,7 @@ export function getPreviousChild(
   }
   return children[id];
 }
+
 export function getNextChildId(
   children: { [id: string]: {} },
   currentId: string,
@@ -45,9 +47,9 @@ export function getNextChildId(
 }
 
 export function getNextChild(
-  children: { [id: string]: ParagraphNode },
+  children: { [id: string]: BlockNode },
   currentId: string,
-): ParagraphNode | undefined;
+): BlockNode | undefined;
 export function getNextChild(
   children: { [id: string]: LeafNode },
   currentId: string,
@@ -95,6 +97,7 @@ export function getCursorNodeValue(node: EditorNode): undefined | string {
   switch (node.type) {
     case NodeType.Root:
     case NodeType.Paragraph:
+    case NodeType.Header:
       return getCursorNodeValue(node.children[node.cursor]);
     case NodeType.Text:
     case NodeType.Dead:
@@ -110,6 +113,7 @@ export function getRawText(node: EditorNode): string {
       return Object.keys(node.children)
         .map(childId => getRawText(node.children[childId]))
         .join('\r\n');
+    case NodeType.Header:
     case NodeType.Paragraph:
       return Object.keys(node.children)
         .map(childId => getRawText(node.children[childId]))

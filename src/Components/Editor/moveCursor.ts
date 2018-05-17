@@ -1,16 +1,16 @@
-import { MoveCursorAction, NodeType, RootNode, ParagraphNode } from './model';
+import { MoveCursorAction, NodeType, RootNode, BlockNode } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { getNextChild, getPreviousChild } from './utils';
 
 export function moveCursor(action: MoveCursorAction, node: RootNode): RootNode;
 export function moveCursor(
   action: MoveCursorAction,
-  node: ParagraphNode,
-): ParagraphNode;
+  node: BlockNode,
+): BlockNode;
 export function moveCursor(
   action: MoveCursorAction,
-  node: RootNode | ParagraphNode,
-): RootNode | ParagraphNode {
+  node: RootNode | BlockNode,
+): RootNode | BlockNode {
   if (node.cursor === undefined) {
     return node;
   }
@@ -86,6 +86,7 @@ export function moveCursor(
         children: newChildren,
       };
     }
+    case NodeType.Header:
     case NodeType.Paragraph: {
       const childWithCursor = node.children[node.cursor];
       if (

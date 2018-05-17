@@ -1,10 +1,10 @@
 import {
   InsertTextAction,
   RootNode,
-  ParagraphNode,
   TextNode,
   NodeType,
   EditorNode,
+  BlockNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { addQuote, getPreviousChild, getNextChild } from './utils';
@@ -16,9 +16,9 @@ export function insertText(
 ): RootNode;
 export function insertText(
   action: InsertTextAction,
-  node: ParagraphNode,
+  node: BlockNode,
   genNodeId: () => string,
-): ParagraphNode;
+): BlockNode;
 export function insertText(
   action: InsertTextAction,
   node: TextNode,
@@ -49,6 +49,7 @@ export function insertText(
         children: newChildren,
       };
     }
+    case NodeType.Header:
     case NodeType.Paragraph: {
       if (node.cursor === undefined) {
         return node;

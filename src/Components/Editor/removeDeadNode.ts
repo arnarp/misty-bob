@@ -1,9 +1,9 @@
-import { RootNode, ParagraphNode, NodeType, ContainerNode } from './model';
+import { RootNode, NodeType, ContainerNode, BlockNode } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { getPreviousChild, getNextChild, textNodesAreMergable } from './utils';
 
 export function removeDeadNode(node: RootNode): RootNode;
-export function removeDeadNode(node: ParagraphNode): ParagraphNode;
+export function removeDeadNode(node: BlockNode): BlockNode;
 export function removeDeadNode(node: ContainerNode) {
   if (node.cursor === undefined) {
     return node;
@@ -26,6 +26,7 @@ export function removeDeadNode(node: ContainerNode) {
         },
       };
     }
+    case NodeType.Header:
     case NodeType.Paragraph: {
       const childWithCursor = node.children[node.cursor];
       if (

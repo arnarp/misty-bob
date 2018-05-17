@@ -1,11 +1,11 @@
 import {
   BackspaceAction,
   RootNode,
-  ParagraphNode,
   TextNode,
   EditorNode,
   NodeType,
   ActionType,
+  BlockNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { isEmpty } from '../../Utils/isEmpty';
@@ -15,8 +15,8 @@ import { setCursor } from './setCursor';
 export function delChar(action: BackspaceAction, node: RootNode): RootNode;
 export function delChar(
   action: BackspaceAction,
-  node: ParagraphNode,
-): ParagraphNode | undefined;
+  node: BlockNode,
+): BlockNode | undefined;
 export function delChar(
   action: BackspaceAction,
   node: TextNode,
@@ -64,6 +64,7 @@ export function delChar(
 
       return newRoot;
     }
+    case NodeType.Header:
     case NodeType.Paragraph: {
       const childWithCursor = node.children[node.cursor];
       if (childWithCursor.type === NodeType.Dead) {

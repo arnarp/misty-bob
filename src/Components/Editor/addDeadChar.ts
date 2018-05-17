@@ -1,13 +1,12 @@
 import {
   DeadAction,
   RootNode,
-  ParagraphNode,
   NodeType,
   DeadNode,
   TextNode,
+  BlockNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
-// import { getPreviousChild } from './utils';
 
 export function addDeadChar(
   action: DeadAction,
@@ -16,14 +15,14 @@ export function addDeadChar(
 ): RootNode;
 export function addDeadChar(
   action: DeadAction,
-  node: ParagraphNode,
+  node: BlockNode,
   genNodeId: () => string,
-): ParagraphNode;
+): BlockNode;
 export function addDeadChar(
   action: DeadAction,
-  node: RootNode | ParagraphNode,
+  node: RootNode | BlockNode,
   genNodeId: () => string,
-): RootNode | ParagraphNode {
+): RootNode | BlockNode {
   if (node.cursor === undefined) {
     return node;
   }
@@ -38,6 +37,7 @@ export function addDeadChar(
         },
       };
     }
+    case NodeType.Header:
     case NodeType.Paragraph: {
       const childWithCursor = node.children[node.cursor];
       if (childWithCursor.type === NodeType.Dead) {

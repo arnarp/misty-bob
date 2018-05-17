@@ -124,12 +124,15 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     switch (n.type) {
       case NodeType.Root:
         return Object.values(n.children).map(this.renderNode);
-      case NodeType.Paragraph:
+      case NodeType.Header:
+      case NodeType.Paragraph: {
+        const El = n.type === NodeType.Header ? `h${n.level}` : 'p';
         return (
-          <p key={n.id} onClick={this.onTextContainerClick}>
+          <El key={n.id} onClick={this.onBlockNodeClick}>
             {Object.values(n.children).map(this.renderNode)}
-          </p>
+          </El>
         );
+      }
       case NodeType.Text:
       case NodeType.Dead:
         return (
@@ -295,7 +298,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     }
   };
 
-  private onTextContainerClick = (
+  private onBlockNodeClick = (
     event: React.MouseEvent<HTMLParagraphElement>,
   ) => {
     event.stopPropagation();

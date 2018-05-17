@@ -42,44 +42,48 @@ export type EditorAction =
 export const enum NodeType {
   Root = 'R',
   Paragraph = 'P',
+  Header = 'H',
   Text = 'T',
   Dead = 'D',
 }
 export type NodeId = string;
-export interface RootNode {
+export interface BaseNode {
   id: NodeId;
+  type: NodeType;
+}
+export interface RootNode extends BaseNode {
   type: NodeType.Root;
-  children: Readonly<{ [id: string]: ParagraphNode }>;
+  children: Readonly<{ [id: string]: BlockNode }>;
   cursor: NodeId;
 }
-export interface ParagraphNode {
-  id: NodeId;
-  type: NodeType.Paragraph;
+export interface BaseBlockNode extends BaseNode {
   children: Readonly<{ [id: string]: LeafNode }>;
   cursor?: NodeId;
+}
+export interface ParagraphNode extends BaseBlockNode {
+  type: NodeType.Paragraph;
 }
 export interface ParagraphNodeWithCursor extends ParagraphNode {
   readonly cursor: NodeId;
 }
-
-interface BaseTextNode {
-  id: NodeId;
+export interface HeaderNode extends BaseBlockNode {
+  type: NodeType.Header;
+  level: 1 | 2 | 3 | 4 | 5 | 6;
+}
+interface BaseTextNode extends BaseNode {
   value: string;
   cursor?: number;
 }
-
 export interface TextNode extends BaseTextNode {
-  id: NodeId;
   type: NodeType.Text;
-  value: string;
   cursor?: number;
 }
 export interface DeadNode extends BaseTextNode {
-  id: NodeId;
   type: NodeType.Dead;
   value: '´';
   cursor: 1;
 }
-export type EditorNode = RootNode | ParagraphNode | TextNode | DeadNode;
-export type ContainerNode = RootNode | ParagraphNode;
+export type EditorNode = RootNode | BlockNode | LeafNode;
+export type ContainerNode = RootNode | BlockNode;
+export type BlockNode = ParagraphNode | HeaderNode;
 export type LeafNode = TextNode | DeadNode;
