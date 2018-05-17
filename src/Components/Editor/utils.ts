@@ -159,3 +159,12 @@ export function getMobileOperatingSystem() {
 export function textNodesAreMergable(a: TextNode, b: TextNode): boolean {
   return true;
 }
+
+export type Point = {
+  readonly x: number;
+  readonly y: number;
+};
+
+export function calcDistance(a: Point, b: Point) {
+  return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+}

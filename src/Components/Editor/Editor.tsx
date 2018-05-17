@@ -10,10 +10,16 @@ import {
   ParagraphNode,
   TextNode,
   NodeId,
+  SetCursorAction,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { calcNewTree } from './calcNewTree';
-import { getRawText, getMobileOperatingSystem } from './utils';
+import {
+  getRawText,
+  getMobileOperatingSystem,
+  calcDistance,
+  Point,
+} from './utils';
 import * as classNames from 'classnames';
 declare global {
   interface Event {
@@ -22,6 +28,13 @@ declare global {
     isComposing?: boolean;
   }
 }
+type RectQueryItem = {
+  element: Element;
+  left: number;
+  top: number;
+  height: number;
+  centerY: number;
+};
 const isMobile = getMobileOperatingSystem() !== undefined;
 
 const t: TextNode = {
@@ -54,7 +67,8 @@ type EditorState = Readonly<typeof initialState>;
 
 export class Editor extends React.PureComponent<EditorProps, EditorState> {
   readonly state: EditorState = initialState;
-  cursorRef = React.createRef<HTMLParagraphElement>();
+  cursorRef = React.createRef<HTMLSpanElement>();
+  editorRef = React.createRef<HTMLDivElement>();
   textareaRef = React.createRef<HTMLTextAreaElement>();
 
   render() {
@@ -62,6 +76,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     return (
       <div
         className="Editor"
+        ref={this.editorRef}
         role="textbox"
         onClick={event => {
           console.log('onClick', { ...event });
@@ -111,35 +126,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
         return Object.values(n.children).map(this.renderNode);
       case NodeType.Paragraph:
         return (
-          <p
-            key={n.id}
-            ref={this.cursorRef}
-            onClick={event => {
-              event.stopPropagation();
-              event.preventDefault();
-              const collection = event.currentTarget.querySelectorAll('.Char');
-              if (collection.length === 0) {
-                // Should not happen. All paragraphs should have at least " ".
-                return;
-              }
-              let closestElement = collection.item(0);
-              let closestElementDist = Number.MAX_VALUE;
-              for (let i = 0; i < collection.length; i++) {
-                const element = collection.item(i);
-                const rect = element.getBoundingClientRect();
-                const dist = Math.sqrt(
-                  Math.pow(rect.left - event.clientX, 2) +
-                    Math.pow(rect.top + rect.height / 2 - event.clientY, 2),
-                );
-                if (dist < closestElementDist) {
-                  closestElement = element;
-                  closestElementDist = dist;
-                }
-              }
-              const [nodeId, cursor] = closestElement.id.split('_');
-              this.setCursorOnLeafNode(nodeId, Number(cursor));
-            }}
-          >
+          <p key={n.id} onClick={this.onTextContainerClick}>
             {Object.values(n.children).map(this.renderNode)}
           </p>
         );
@@ -162,6 +149,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
                   className={classNames('Char', {
                     Cursor: hasBlinkingCursor,
                   })}
+                  ref={hasBlinkingCursor ? this.cursorRef : undefined}
                   key={`${n.id}_${index}`}
                 >
                   {char || (index === 0 ? ' ' : char)}
@@ -247,6 +235,8 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       | 'Dead'
       | 'ArrowLeft'
       | 'ArrowRight'
+      | 'ArrowUp'
+      | 'ArrowDown'
       | 'Enter';
     const eventKey: EventKey =
       event.key.length === 1 ? 'Key' : (event.key as EventKey);
@@ -282,6 +272,10 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
           value: 1,
         };
         break;
+      case 'ArrowUp':
+      case 'ArrowDown':
+        action = this.createArrowUpDownAction(eventKey);
+        break;
       case 'Enter':
         action = {
           type: ActionType.Enter,
@@ -300,4 +294,92 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       }));
     }
   };
+
+  private onTextContainerClick = (
+    event: React.MouseEvent<HTMLParagraphElement>,
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const collection = event.currentTarget.querySelectorAll('.Char');
+    if (collection.length === 0) {
+      // Should not happen. All paragraphs should have at least " ".
+      return;
+    }
+    let closestElement = collection.item(0);
+    let closestElementDist = Number.MAX_VALUE;
+    for (let i = 0; i < collection.length; i++) {
+      const element = collection.item(i);
+      const rect = element.getBoundingClientRect();
+      const dist = calcDistance(
+        { x: rect.left, y: rect.top + rect.height / 2 },
+        { x: event.clientX, y: event.clientY },
+      );
+      if (dist < closestElementDist) {
+        closestElement = element;
+        closestElementDist = dist;
+      }
+    }
+    const [nodeId, cursor] = closestElement.id.split('_');
+    this.setCursorOnLeafNode(nodeId, Number(cursor));
+  };
+
+  private createArrowUpDownAction(
+    type: 'ArrowUp' | 'ArrowDown',
+  ): SetCursorAction | undefined {
+    if (this.cursorRef.current === null || this.editorRef.current === null) {
+      return undefined;
+    }
+    const cursorSpanRect = this.cursorRef.current.getBoundingClientRect();
+    const rects = this.queryBoundingClientRects(
+      '.Char',
+      this.editorRef.current,
+    ).filter(
+      i =>
+        type === 'ArrowUp'
+          ? i.top < cursorSpanRect.top
+          : i.top > cursorSpanRect.top,
+    );
+    const closestRect = this.getClosestRectQueryItem(rects, {
+      x: cursorSpanRect.left,
+      y: cursorSpanRect.top,
+    });
+    if (closestRect === undefined) {
+      return undefined;
+    }
+    const [nodeId, index] = closestRect.element.id.split('_');
+    return { type: ActionType.SetCursor, nodeId, pos: Number(index) };
+  }
+
+  private queryBoundingClientRects(selector: string, htmlNode: HTMLElement) {
+    const collection = htmlNode.querySelectorAll(selector);
+    const results: Array<RectQueryItem> = [];
+    for (let i = 0; i < collection.length; i++) {
+      const element = collection.item(i);
+      const rect = element.getBoundingClientRect();
+      results.push({
+        element,
+        left: rect.left,
+        top: rect.top,
+        height: rect.height,
+        centerY: rect.top + rect.height / 2,
+      });
+    }
+    return results;
+  }
+
+  private getClosestRectQueryItem(
+    items: RectQueryItem[],
+    point: Point,
+  ): RectQueryItem | undefined {
+    let closestElement = items[0];
+    let closestDist = Number.MAX_VALUE;
+    items.forEach(i => {
+      const dist = calcDistance({ x: i.left, y: i.centerY }, point);
+      if (dist < closestDist) {
+        closestElement = i;
+        closestDist = dist;
+      }
+    });
+    return closestElement;
+  }
 }
