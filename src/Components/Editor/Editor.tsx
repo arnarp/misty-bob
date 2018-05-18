@@ -95,7 +95,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
             this.setState(() => ({ hasFocus: true }));
           }}
           onBlur={() => {
-            this.setState(() => ({ hasFocus: false }));
+            // this.setState(() => ({ hasFocus: false }));
           }}
           onPaste={event => {
             console.log('onPaste', { ...event });
@@ -157,6 +157,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
                   })}
                   ref={hasBlinkingCursor ? this.cursorRef : undefined}
                   key={`${n.id}_${index}`}
+                  onDoubleClick={ev => console.log('onDoubleClick', { ...ev })}
                 >
                   {char || (index === 0 ? ' ' : char)}
                   {hasBlinkingCursor && <span key={new Date().toISOString()} />}

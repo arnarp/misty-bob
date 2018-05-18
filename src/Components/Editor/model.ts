@@ -5,6 +5,7 @@ export const enum ActionType {
   Dead = 'Dead',
   MoveCursor = 'MoveCursor',
   SetCursor = 'SetCursor',
+  SelectWord = 'SelectWord',
 }
 
 export interface InsertTextAction {
@@ -30,6 +31,11 @@ export interface SetCursorAction {
   nodeId: NodeId;
   pos: number;
 }
+export interface SelectWordAction {
+  type: ActionType.SelectWord;
+  nodeId: NodeId;
+  index: number;
+}
 
 export type EditorAction =
   | InsertTextAction
@@ -37,7 +43,8 @@ export type EditorAction =
   | EnterAction
   | DeadAction
   | MoveCursorAction
-  | SetCursorAction;
+  | SetCursorAction
+  | SelectWordAction;
 
 export const enum NodeType {
   Root = 'R',

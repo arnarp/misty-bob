@@ -2819,6 +2819,356 @@ describe('calcNewNode should', () => {
       expectToEqual(after, expected);
     });
   });
+  describe('on SelectWordAction', () => {
+    test('should select word 1', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: { from: 0, to: 0 },
+              },
+            },
+          },
+        },
+      };
+      const actual0 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 0 },
+        before,
+        uuid,
+      );
+      const actual1 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 1 },
+        before,
+        uuid,
+      );
+      const actual2 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 2 },
+        before,
+        uuid,
+      );
+      const actual3 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 3 },
+        before,
+        uuid,
+      );
+      const actual4 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 4 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: { from: 0, to: 5 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual0, expected);
+      expectToEqual(actual1, expected);
+      expectToEqual(actual2, expected);
+      expectToEqual(actual3, expected);
+      expectToEqual(actual4, expected);
+    });
+    test('should select word 2', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 0, to: 0 },
+              },
+            },
+          },
+        },
+      };
+      const actual0 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 0 },
+        before,
+        uuid,
+      );
+      const actual1 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 1 },
+        before,
+        uuid,
+      );
+      const actual2 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 2 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 0, to: 3 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual0, expected);
+      expectToEqual(actual1, expected);
+      expectToEqual(actual2, expected);
+    });
+    test('should select word 3', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 0, to: 0 },
+              },
+            },
+          },
+        },
+      };
+      const actual0 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 4 },
+        before,
+        uuid,
+      );
+      const actual1 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 5 },
+        before,
+        uuid,
+      );
+      const actual2 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 6 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 4, to: 7 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual0, expected);
+      expectToEqual(actual1, expected);
+      expectToEqual(actual2, expected);
+    });
+    test('should select word 4', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 0, to: 0 },
+              },
+            },
+          },
+        },
+      };
+      const actual0 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 8 },
+        before,
+        uuid,
+      );
+      const actual1 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 9 },
+        before,
+        uuid,
+      );
+      const actual2 = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 10 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 8, to: 11 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual0, expected);
+      expectToEqual(actual1, expected);
+      expectToEqual(actual2, expected);
+    });
+    test('should select whitespace', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 0, to: 0 },
+              },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 3 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 3, to: 4 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
+    });
+    test('should select whitespace 2', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar  biz foo',
+                cursor: { from: 0, to: 0 },
+              },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree(
+        { type: ActionType.SelectWord, nodeId: 't', index: 3 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar  biz foo',
+                cursor: { from: 3, to: 5 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
+    });
+  });
 });
 
 function expectToEqual(actual: EditorNode, expected: EditorNode) {

@@ -7,6 +7,8 @@ import {
   LeafNode,
   BlockNode,
   Cursor,
+  NodeId,
+  ContainerNode,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
 
@@ -188,4 +190,23 @@ export function createCursor<T>(from: T, to?: T): Cursor<T> {
     from,
     to: to === undefined ? from : to,
   };
+}
+
+export function containsNode(nodeId: NodeId, node: ContainerNode): boolean {
+  switch (node.type) {
+    case NodeType.Root: {
+      if (Object.keys(node.children).includes(nodeId)) {
+        return true;
+      }
+      return Object.values(node.children).some(child =>
+        containsNode(nodeId, child),
+      );
+    }
+    case NodeType.Header:
+    case NodeType.Paragraph: {
+      return Object.keys(node.children).includes(nodeId);
+    }
+    default:
+      return assertUnreachable(node);
+  }
 }

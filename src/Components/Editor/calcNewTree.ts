@@ -8,6 +8,7 @@ import { moveCursor } from './moveCursor';
 import { setCursor } from './setCursor';
 import { insertNewline } from './insertNewline';
 import { removeDeadNode } from './removeDeadNode';
+import { selectWord } from './selectWord';
 
 export function calcNewTree(
   action: EditorAction,
@@ -27,6 +28,8 @@ export function calcNewTree(
       return setCursor(action, removeDeadNode(node));
     case ActionType.Enter:
       return insertNewline(removeDeadNode(node), genNodeId);
+    case ActionType.SelectWord:
+      return selectWord(action, node);
     default:
       return assertUnreachable(action);
   }
