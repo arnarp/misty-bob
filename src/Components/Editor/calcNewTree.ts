@@ -9,6 +9,7 @@ import { setCursor } from './setCursor';
 import { insertNewline } from './insertNewline';
 import { removeDeadNode } from './removeDeadNode';
 import { selectWord } from './selectWord';
+import { deleteCursorRange } from './deleteCursorRange';
 
 export function calcNewTree(
   action: EditorAction,
@@ -17,7 +18,7 @@ export function calcNewTree(
 ): RootNode {
   switch (action.type) {
     case ActionType.InsertText:
-      return insertText(action, node, genNodeId);
+      return insertText(action, deleteCursorRange(node), genNodeId);
     case ActionType.Backspace:
       return delChar(action, removeDeadNode(node));
     case ActionType.Dead:

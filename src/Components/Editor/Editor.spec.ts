@@ -4,9 +4,9 @@ import {
   ActionType,
   RootNode,
   SetCursorAction,
-  EditorNode,
 } from './model';
 import { calcNewTree } from './calcNewTree';
+import { expectToEqual } from './expectToEqual';
 
 describe('calcNewNode should', () => {
   describe('on InsertTextAction', () => {
@@ -733,6 +733,53 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('remove selection and insert text', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz foo',
+                cursor: { from: 8, to: 11 },
+              },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree(
+        { type: ActionType.InsertText, text: 'k', composing: false },
+        before,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'bar biz k',
+                cursor: { from: 9, to: 9 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
+    });
   });
   describe('on BackspaceAction', () => {
     test('return same tree if empty', () => {
@@ -787,15 +834,15 @@ describe('calcNewNode should', () => {
       const before: RootNode = {
         id: 'root',
         type: NodeType.Root,
-        cursor: 'first-paragraph',
+        cursor: 'p1',
         children: {
-          'first-paragraph': {
-            id: 'first-paragraph',
+          'p1': {
+            id: 'p1',
             type: NodeType.Paragraph,
-            cursor: 'first-text-node',
+            cursor: 't1',
             children: {
-              'first-text-node': {
-                id: 'first-text-node',
+              't1': {
+                id: 't1',
                 type: NodeType.Text,
                 value: 'aaa',
                 cursor: { from: 3, to: 3 },
@@ -808,15 +855,15 @@ describe('calcNewNode should', () => {
       const expected: RootNode = {
         id: 'root',
         type: NodeType.Root,
-        cursor: 'first-paragraph',
+        cursor: 'p1',
         children: {
-          'first-paragraph': {
-            id: 'first-paragraph',
+          'p1': {
+            id: 'p1',
             type: NodeType.Paragraph,
-            cursor: 'first-text-node',
+            cursor: 't1',
             children: {
-              'first-text-node': {
-                id: 'first-text-node',
+              't1': {
+                id: 't1',
                 type: NodeType.Text,
                 value: 'aa',
                 cursor: { from: 2, to: 2 },
@@ -3170,20 +3217,3 @@ describe('calcNewNode should', () => {
     });
   });
 });
-
-function expectToEqual(actual: EditorNode, expected: EditorNode) {
-  if (actual.type === NodeType.Root && expected.type === NodeType.Root) {
-    expect(actual).toEqual(expected);
-  }
-  if (
-    (actual.type === NodeType.Root || actual.type === NodeType.Paragraph) &&
-    (expected.type === NodeType.Root || expected.type === NodeType.Paragraph)
-  ) {
-    expect(Object.keys(actual.children)).toEqual(
-      Object.keys(expected.children),
-    );
-    Object.keys(actual.children).forEach(i => {
-      expectToEqual(actual.children[i], expected.children[i]);
-    });
-  }
-}
