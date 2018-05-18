@@ -1,10 +1,5 @@
 import * as uuid from 'uuid';
-import {
-  NodeType,
-  ActionType,
-  RootNode,
-  SetCursorAction,
-} from './model';
+import { NodeType, ActionType, RootNode, SetCursorAction } from './model';
 import { calcNewTree } from './calcNewTree';
 import { expectToEqual } from './expectToEqual';
 
@@ -836,12 +831,12 @@ describe('calcNewNode should', () => {
         type: NodeType.Root,
         cursor: 'p1',
         children: {
-          'p1': {
+          p1: {
             id: 'p1',
             type: NodeType.Paragraph,
             cursor: 't1',
             children: {
-              't1': {
+              t1: {
                 id: 't1',
                 type: NodeType.Text,
                 value: 'aaa',
@@ -857,12 +852,12 @@ describe('calcNewNode should', () => {
         type: NodeType.Root,
         cursor: 'p1',
         children: {
-          'p1': {
+          p1: {
             id: 'p1',
             type: NodeType.Paragraph,
             cursor: 't1',
             children: {
-              't1': {
+              t1: {
                 id: 't1',
                 type: NodeType.Text,
                 value: 'aa',
@@ -1259,6 +1254,50 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(actual, expected);
       expect(before).toBe(actual);
+    });
+    test('remove selection', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'aaa bbb ccc',
+                cursor: { from: 4, to: 7 },
+              },
+            },
+          },
+        },
+      };
+      const actual = calcNewTree({ type: ActionType.Backspace }, before, uuid);
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'aaa  ccc',
+                cursor: { from: 4, to: 4 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
     });
   });
   describe('on DeadAction', () => {

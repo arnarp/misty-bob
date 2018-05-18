@@ -11,6 +11,7 @@ import { assertUnreachable } from '../../Utils/assertUnreachable';
 import { isEmpty } from '../../Utils/isEmpty';
 import { getPreviousChild, createCursor } from './utils';
 import { setCursor } from './setCursor';
+import { deleteCursorRange } from './deleteCursorRange';
 
 export function delChar(action: BackspaceAction, node: RootNode): RootNode;
 export function delChar(
@@ -30,6 +31,10 @@ export function delChar(
   }
   switch (node.type) {
     case NodeType.Root: {
+      const delSelectionNode = deleteCursorRange(node);
+      if (node !== delSelectionNode) {
+        return delSelectionNode;
+      }
       const newChild = delChar(action, node.children[node.cursor]);
       const previousChild = getPreviousChild(node.children, node.cursor);
       if (newChild === undefined && previousChild === undefined) {
