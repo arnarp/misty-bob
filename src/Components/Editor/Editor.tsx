@@ -9,7 +9,6 @@ import {
   ActionType,
   ParagraphNode,
   TextNode,
-  NodeId,
   SetCursorAction,
 } from './model';
 import { assertUnreachable } from '../../Utils/assertUnreachable';
@@ -29,6 +28,7 @@ declare global {
     isComposing?: boolean;
   }
 }
+
 type RectQueryItem = {
   element: Element;
   left: number;
@@ -95,7 +95,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
             this.setState(() => ({ hasFocus: true }));
           }}
           onBlur={() => {
-            // this.setState(() => ({ hasFocus: false }));
+            this.setState(() => ({ hasFocus: false }));
           }}
           onPaste={event => {
             console.log('onPaste', { ...event });
@@ -129,7 +129,11 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       case NodeType.Paragraph: {
         const El = n.type === NodeType.Header ? `h${n.level}` : 'p';
         return (
-          <El key={n.id} onClick={this.onBlockNodeClick}>
+          <El
+            key={n.id}
+            onClick={this.onBlockNodeClick}
+            onDoubleClick={this.onBlockDoubleClick}
+          >
             {Object.values(n.children).map(this.renderNode)}
           </El>
         );
@@ -154,10 +158,15 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
                   id={`${n.id}_${index}`}
                   className={classNames('Char', {
                     Cursor: hasBlinkingCursor,
+                    Select:
+                      n.cursor !== undefined &&
+                      this.state.hasFocus &&
+                      n.cursor.from !== n.cursor.to &&
+                      n.cursor.from <= index &&
+                      n.cursor.to > index,
                   })}
                   ref={hasBlinkingCursor ? this.cursorRef : undefined}
                   key={`${n.id}_${index}`}
-                  onDoubleClick={ev => console.log('onDoubleClick', { ...ev })}
                 >
                   {char || (index === 0 ? ' ' : char)}
                   {hasBlinkingCursor && <span key={new Date().toISOString()} />}
@@ -169,23 +178,6 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       default:
         assertUnreachable(n);
     }
-  };
-
-  private setCursorOnLeafNode = (nodeId: NodeId, cursorPos: number) => {
-    if (
-      this.textareaRef.current &&
-      this.textareaRef.current !== document.activeElement
-    ) {
-      this.textareaRef.current.focus();
-    }
-    this.setState(prevState => ({
-      hasFocus: true,
-      root: calcNewTree(
-        { type: ActionType.SetCursor, nodeId, pos: cursorPos },
-        prevState.root,
-        uuid,
-      ),
-    }));
   };
 
   private onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -303,10 +295,24 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
   };
 
   private onBlockNodeClick = (
-    event: React.MouseEvent<HTMLParagraphElement>,
+    event: React.MouseEvent<HTMLParagraphElement> & {
+      /**
+       * A count of consecutive clicks that happened in a short amount of time, incremented by one.
+       */
+      readonly detail: number;
+    },
   ) => {
+    console.log('onBlockNodeClick', { ...event });
     event.stopPropagation();
     event.preventDefault();
+
+    if (
+      this.textareaRef.current &&
+      this.textareaRef.current !== document.activeElement
+    ) {
+      this.textareaRef.current.focus();
+    }
+
     const rects = this.queryBoundingClientRects('.Char', event.currentTarget);
     const closestRect = this.getClosestRectQueryItem(rects, {
       x: event.clientX,
@@ -316,8 +322,29 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
       return;
     }
     const [nodeId, index] = closestRect.element.id.split('_');
-    this.setCursorOnLeafNode(nodeId, Number(index));
+    if (event.detail === 1) {
+      this.setState(prevState => ({
+        hasFocus: true,
+        root: calcNewTree(
+          { type: ActionType.SetCursor, nodeId, pos: Number(index) },
+          prevState.root,
+        ),
+      }));
+    }
+    if (event.detail === 2) {
+      this.setState(prevState => ({
+        hasFocus: true,
+        root: calcNewTree(
+          { type: ActionType.SelectWord, nodeId, index: Number(index) },
+          prevState.root,
+        ),
+      }));
+    }
   };
+
+  private onBlockDoubleClick = (
+    event: React.MouseEvent<HTMLParagraphElement>,
+  ) => {};
 
   private createArrowUpDownAction(
     type: 'ArrowUp' | 'ArrowDown',
