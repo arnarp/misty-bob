@@ -1467,6 +1467,61 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('add dead node where cursor is with space', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: { from: 0, to: 0 },
+                value: ' abba',
+              },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'd')
+        .mockImplementationOnce(() => 't2');
+      const after = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {id: 't1', type: NodeType.Text, cursor: undefined, value: ''},
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: { from: 1, to: 1 },
+                value: '´',
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: ' abba',
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
     test('add dead node & remove previous dead node', () => {
       const before: RootNode = {
         id: 'r',
@@ -1597,6 +1652,61 @@ describe('calcNewNode should', () => {
         },
       };
       expectToEqual(after, expected);
+    });
+    test('replace selection', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                cursor: { from: 0, to: 3 },
+                value: 'aaa bbb',
+              },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'd')
+        .mockImplementationOnce(() => 't2');
+      const actual = calcNewTree({ type: ActionType.Dead }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 'd',
+            children: {
+              t1: {id: 't1', type: NodeType.Text, cursor: undefined, value: ''},
+              d: {
+                id: 'd',
+                type: NodeType.Dead,
+                cursor: { from: 1, to: 1 },
+                value: '´',
+              },
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                cursor: undefined,
+                value: ' bbb',
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(actual, expected);
     });
   });
   describe('on MoveCursorAction', () => {
