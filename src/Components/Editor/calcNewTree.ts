@@ -32,7 +32,7 @@ export function calcNewTree(
     case ActionType.SetCursor:
       return setCursor(action, removeDeadNode(node));
     case ActionType.Enter:
-      return insertNewline(removeDeadNode(node), genNodeId);
+      return insertNewline(deleteCursorRange(removeDeadNode(node)), genNodeId);
     case ActionType.SelectWord:
       return selectWord(action, node);
     default:

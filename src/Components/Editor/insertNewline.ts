@@ -1,30 +1,19 @@
-import {
-  RootNode,
-  ParagraphNode,
-  NodeType,
-  ParagraphNodeWithCursor,
-} from './model';
+import { RootNode, NodeType, BlockNode } from './model';
 import { createCursor } from './utils';
 
 export function insertNewline(
   node: RootNode,
   genNodeId: () => string,
 ): RootNode {
-  const childWithCursor = node.children[node.cursor];
-  if (childWithCursor.cursor === undefined) {
-    return node;
-  }
-  const splitResult = splitParagraph(
-    childWithCursor as ParagraphNodeWithCursor,
-    genNodeId,
-  );
+  const blockNodeWithCursor = node.children[node.cursor];
+  const splitResult = splitParagraph(blockNodeWithCursor, genNodeId);
   if (splitResult === undefined) {
     return node;
   }
   const newChildren = {};
   const childrenKeys = Object.keys(node.children);
   const childWithCursorIndex = childrenKeys.findIndex(
-    i => i === childWithCursor.id,
+    i => i === blockNodeWithCursor.id,
   );
   childrenKeys.slice(0, childWithCursorIndex).forEach(i => {
     newChildren[i] = node.children[i];
@@ -42,11 +31,12 @@ export function insertNewline(
 }
 
 function splitParagraph(
-  node: ParagraphNodeWithCursor,
+  node: BlockNode,
   genNodeId: () => string,
-):
-  | { hadCursor: ParagraphNode; hasCursor: ParagraphNodeWithCursor }
-  | undefined {
+): { hadCursor: BlockNode; hasCursor: BlockNode } | undefined {
+  if (node.cursor === undefined) {
+    return undefined;
+  }
   const leafNodeWithCursor = node.children[node.cursor];
   const newChildWithCursorId = genNodeId();
   const newTextNodeId = genNodeId();
@@ -79,7 +69,7 @@ function splitParagraph(
         [newTextNodeId]: {
           id: newTextNodeId,
           type: NodeType.Text,
-          cursor: createCursor(newTextNodeValue.length),
+          cursor: createCursor(0),
           value: newTextNodeValue,
         },
       },

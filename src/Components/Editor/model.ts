@@ -74,9 +74,6 @@ export interface BaseBlockNode extends BaseNode {
 export interface ParagraphNode extends BaseBlockNode {
   type: NodeType.Paragraph;
 }
-export interface ParagraphNodeWithCursor extends ParagraphNode {
-  readonly cursor: NodeId;
-}
 export interface HeaderNode extends BaseBlockNode {
   type: NodeType.Header;
   level: 1 | 2 | 3 | 4 | 5 | 6;

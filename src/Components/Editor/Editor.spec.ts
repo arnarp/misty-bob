@@ -2568,6 +2568,81 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('set cursor position 3', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'AA',
+                cursor: { from: 0, to: 2 },
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'bb',
+                cursor: undefined,
+              },
+            },
+          },
+        },
+      };
+      const action: SetCursorAction = {
+        type: ActionType.SetCursor,
+        nodeId: 't2',
+        pos: 1,
+      };
+      const after = calcNewTree(action, before, uuid);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'AA',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: 'bb',
+                cursor: { from: 1, to: 1 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    });
     test('return same tree if set cursor is current cursor', () => {
       const before: RootNode = {
         id: 'r',
@@ -2835,7 +2910,7 @@ describe('calcNewNode should', () => {
                 id: 't2',
                 type: NodeType.Text,
                 value: 'A',
-                cursor: { from: 1, to: 1 },
+                cursor: { from: 0, to: 0 },
               },
             },
           },
@@ -2909,7 +2984,7 @@ describe('calcNewNode should', () => {
                 id: 't2',
                 type: NodeType.Text,
                 value: 'A',
-                cursor: { from: 1, to: 1 },
+                cursor: { from: 0, to: 0 },
               },
             },
           },
@@ -3110,6 +3185,67 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('clear selection and then insert newline', () => {
+      const before: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p1',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: 't1',
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'AA bb cc',
+                cursor: { from: 3, to: 5 },
+              },
+            },
+          },
+        },
+      };
+      const genIdMock = jest
+        .fn<() => string>()
+        .mockImplementationOnce(() => 'p2')
+        .mockImplementationOnce(() => 't2');
+      const after = calcNewTree({ type: ActionType.Enter }, before, genIdMock);
+      const expected: RootNode = {
+        id: 'r',
+        type: NodeType.Root,
+        cursor: 'p2',
+        children: {
+          p1: {
+            id: 'p1',
+            type: NodeType.Paragraph,
+            cursor: undefined,
+            children: {
+              t1: {
+                id: 't1',
+                type: NodeType.Text,
+                value: 'AA ',
+                cursor: undefined,
+              },
+            },
+          },
+          p2: {
+            id: 'p2',
+            type: NodeType.Paragraph,
+            cursor: 't2',
+            children: {
+              t2: {
+                id: 't2',
+                type: NodeType.Text,
+                value: ' cc',
+                cursor: { from: 0, to: 0 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    })
   });
   describe('on SelectWordAction', () => {
     test('should select word 1', () => {
