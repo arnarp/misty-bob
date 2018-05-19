@@ -40,7 +40,7 @@ export function removeDeadNode(node: ContainerNode) {
       ) {
         return node;
       }
-      // A DeadNode should always be preceeded by at least one text node
+      // A DeadNode should always be preceded by at least one text node
       const previousChild = getPreviousChild(node.children, node.cursor);
       if (previousChild === undefined || previousChild.type === NodeType.Dead) {
         return node;
