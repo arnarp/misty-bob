@@ -5,7 +5,7 @@ import { auth, messaging, refreshFCMToken, firestore } from '../firebase';
 import { Routes } from './Routes';
 import { OnboardingPage } from '../Containers/Onboarding';
 import { b64DecodeUnicode } from '../Utils/converters';
-import { UserClaims, UserInfo, UserMeta, mapDocument } from 'src/types';
+import { UserClaims, UserInfo, UserMeta, mapDocument } from '../types';
 import { AppBar } from './AppBar';
 
 async function getClaims(

@@ -5,7 +5,7 @@ import { DocumentTitle } from '../../Components/SideEffects/DocumentTitle';
 import { Col } from '../../Components/Layout/Col';
 import { TextInput, reduceValidators } from '../../Components/Inputs/TextInput';
 import { RequiredTextInputValidator } from '../../Components/Inputs/TextInputValidators';
-import { RichTextEditor } from '../../Components/Editor';
+import { RichTextEditor } from '../../Components/RichTextEditor';
 import { Button } from '../../Components/Buttons';
 import { NewPostDocument, UserInfo, UserClaims } from 'src/types';
 import { firestore } from '../../firebase';
