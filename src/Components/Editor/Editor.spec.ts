@@ -2346,6 +2346,102 @@ describe('calcNewNode should', () => {
       };
       expectToEqual(after, expected);
     });
+    test('if only on text node has range selection, move cursor to selection to to', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: { from: 0, to: 5 },
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: 1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: { from: 5, to: 5 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    })
+    test('if only on text node has range selection, move cursor to selection to from', () => {
+      const before: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: { from: 0, to: 5 },
+              },
+            },
+          },
+        },
+      };
+      const after = calcNewTree(
+        { type: ActionType.MoveCursor, value: -1 },
+        before,
+        uuid,
+      );
+      const expected: RootNode = {
+        id: 'root',
+        type: NodeType.Root,
+        cursor: 'p',
+        children: {
+          p: {
+            id: 'p',
+            type: NodeType.Paragraph,
+            cursor: 't',
+            children: {
+              t: {
+                id: 't',
+                type: NodeType.Text,
+                value: 'arnar',
+                cursor: { from: 0, to: 0 },
+              },
+            },
+          },
+        },
+      };
+      expectToEqual(after, expected);
+    })
   });
   describe('on SetCursorAction', () => {
     test('set cursor position', () => {

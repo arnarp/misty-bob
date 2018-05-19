@@ -97,8 +97,11 @@ export function moveCursor(
         return node;
       }
       const isCursorMovingToPreviousNode =
-        childWithCursor.cursor.to === 0 && action.value === -1;
+        childWithCursor.cursor.from === childWithCursor.cursor.to &&
+        childWithCursor.cursor.to === 0 &&
+        action.value === -1;
       const isCursorMovingToNextNode =
+        childWithCursor.cursor.from === childWithCursor.cursor.to &&
         childWithCursor.cursor.to === childWithCursor.value.length &&
         action.value === 1;
       const newChildren = {
@@ -108,7 +111,13 @@ export function moveCursor(
           cursor:
             isCursorMovingToPreviousNode || isCursorMovingToNextNode
               ? undefined
-              : createCursor(childWithCursor.cursor.to + action.value),
+              : createCursor(
+                  childWithCursor.cursor.from === childWithCursor.cursor.to
+                    ? childWithCursor.cursor.to + action.value
+                    : action.value === -1
+                      ? childWithCursor.cursor.from
+                      : childWithCursor.cursor.to,
+                ),
         },
       };
       const previousChild = getPreviousChild(node.children, node.cursor);
